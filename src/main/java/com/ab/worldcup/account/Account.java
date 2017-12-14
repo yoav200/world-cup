@@ -10,18 +10,22 @@ import javax.persistence.Id;
 public class Account {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private final String username;
+    private String username;
 
-    private final String password;
+    private String password;
 
-    private final String firstName;
+    private String firstName;
 
-    private final String lastName;
+    private String lastName;
 
-    private final String email;
+    private String email;
+
+    private Account() {
+
+    }
 
     public Account(String username, String password, String firstName, String lastName, String email) {
         this.username = username;
@@ -54,7 +58,6 @@ public class Account {
     public String getLastName() {
         return lastName;
     }
-
 
     public String getEmail() {
         return email;

@@ -1,6 +1,8 @@
-create table Account (id identity,
-						username varchar unique,
-						password varchar not null,
-						firstName varchar not null,
-						lastName varchar not null,
-						primary key (id));
+CREATE TABLE Account (
+  id        SERIAL PRIMARY KEY,
+  username  VARCHAR UNIQUE,
+  password  VARCHAR NOT NULL,
+  firstName VARCHAR NOT NULL,
+  lastName  VARCHAR NOT NULL,
+  PRIMARY KEY (id)
+);
