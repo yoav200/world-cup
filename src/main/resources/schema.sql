@@ -4,5 +4,5 @@ CREATE TABLE Account (
   password  VARCHAR NOT NULL,
   firstName VARCHAR NOT NULL,
   lastName  VARCHAR NOT NULL,
-  PRIMARY KEY (id)
+  email  VARCHAR UNIQUE
 );
