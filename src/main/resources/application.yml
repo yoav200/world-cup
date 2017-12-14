@@ -1,0 +1,43 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: world-cup
+  social:
+    facebook:
+      #appId: 567099173632370
+      #appSecret: 48881cb7c41606110de542893702ecaa
+      appId: 1762511607385710
+      appSecret: 769d50cceb6e1f4d3c79196ed6b6c845
+    google:
+      appId: 20728652223-s6o8nplhd6phbdb3eiiqdq0kdkjuhaj5.apps.googleusercontent.com
+      appSecret: lqtm3bHmgy6tEOQ2gGfjQ3Ef
+  h2:
+    console:
+      enabled: true
+      path: /h2
+
+  datasource:
+    username: admin
+    password: admin
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+     hibernate:
+       order_updates: true
+       order_inserts: true
+       jdbc:
+         batch_size: 200
+         batch_versioned_data: true
+
+  output:
+    ansi:
+      enabled: always
+
+# Set the file size limit (default 1Mb). If you want to specify that files be
+# unlimited set the multipart.maxFileSize property to -1.
+multipart:
+  maxFileSize: 3Mb

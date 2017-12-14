@@ -1,0 +1,69 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../../../favicon.ico">
+
+    <title>FIFA World Cup - Betting application</title>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <!-- Custom styles for this template -->
+    <link href="css/app.css" rel="stylesheet">
+    <style type="text/css">
+        [ng\:cloak], [ng-cloak], .ng-cloak {
+            display: none !important;
+        }
+    </style>
+
+</head>
+
+<body data-ng-app="worldcup" class="ng-cloak">
+
+
+
+    <div data-ui-view="navbar"></div>
+    <!--<div data-ng-include='"app/shared/header.view.html"' ng-controller='headerCtrl'></div>-->
+
+    <!-- Begin page content -->
+    <div data-ui-view="content" class="container">
+       <!-- <div class="page-header">
+            <h1>Sticky footer with fixed navbar</h1>
+        </div>
+        <p class="lead">Pin a fixed-height footer to the bottom of the viewport in desktop browsers with this custom HTML and CSS. A fixed navbar has been added with <code>padding-top: 60px;</code> on the <code>body &gt; .container</code>.</p>
+        <p>Back to <a href="../sticky-footer">the default sticky footer</a> minus the navbar.</p>-->
+    </div>
+
+    <!-- Vendor: jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Vendor: Angular -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
+    <!-- Vendor: Angular animate -->
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-animate.min.js"></script>
+    <!-- Vendor: Angular animate -->
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-sanitize.min.js"></script>
+
+    <!-- Vendor: Angularjs ui router -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.3.2/angular-ui-router.min.js"></script>
+    <!-- Vendor: Bootstrap Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!-- Vendor: bootstrap UI -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/2.2.0/ui-bootstrap-tpls.min.js"></script>
+
+    <!-- create the app module first -->
+    <script src="app.js"></script>
+    <!-- controllers -->
+    <script src="app/navbar/navbar.controller.js"></script>
+    <script src="app/home/home.controller.js"></script>
+    <script src="app/teams/teams.controller.js"></script>
+    <script src="app/games/games.controller.js"></script>
+    <script src="app/bets/bets.controller.js"></script>
+    <script src="app/login/login.controller.js"></script>
+
+    <script src="app/components/user.service.js"></script>
+
+</body>
+</html>

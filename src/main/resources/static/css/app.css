@@ -1,0 +1,75 @@
+
+html {
+    min-height: 100%;
+}
+
+body {
+    min-height: 2000px;
+    padding-top: 70px;
+    background-color: silver;
+}
+
+
+/* Custom page CSS
+-------------------------------------------------- */
+
+#bg-overlay{
+    position: fixed;
+    left: 0;
+    top: 71px;
+    border: 1px solid black;
+    width: 100%;
+    height: 100%;
+    opacity: 0.5;
+    /* -webkit-background-size: cover; */
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    background: url(/img/logo-colors.jpg) no-repeat center center fixed;
+    z-index: -1;
+}
+.bg-color {
+    width: 100%;
+    height: 100%;
+    background: url(/img/logo-large-red.png) no-repeat center center fixed;
+}
+
+.bg-blue {
+    width: 100%;
+    height: 100%;
+    background: url(/img/logo-large-blue.jpg) no-repeat center center fixed;
+}
+.bg-red {
+    width: 100%;
+    height: 100%;
+    background: url(/img/logo-large-red.png) no-repeat center center fixed;
+}
+
+
+.login-fb {
+    background: url(/img/Round-Social-Media-Icons.jpg) -20px 127px;
+    width: 35px;
+    height: 35px;
+    display: inline-block;
+}
+.login-google {
+    background: url(/img/Round-Social-Media-Icons.jpg) -98px -207px;
+    width: 35px;
+    height: 35px;
+    display: inline-block;
+}
+
+
+/*!
+ * IE10 viewport hack for Surface/desktop Windows 8 bug
+ * Copyright 2014-2015 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ */
+
+/*
+ * See the Getting Started docs for more information:
+ * http://getbootstrap.com/getting-started/#support-ie10-width
+ */
+@-ms-viewport     { width: device-width; }
+@-o-viewport      { width: device-width; }
+@viewport         { width: device-width; }
