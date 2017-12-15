@@ -14,3 +14,12 @@ CREATE TABLE Account (
   country         VARCHAR,
   language        VARCHAR
 );
+
+
+CREATE TABLE Team (
+  id              SERIAL PRIMARY KEY,
+  name            VARCHAR UNIQUE,
+  code            VARCHAR,
+  shortName       VARCHAR,
+  crestUrl        VARCHAR
+);

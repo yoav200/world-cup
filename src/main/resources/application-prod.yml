@@ -1,14 +1,13 @@
 spring:
   datasource:
-      url: ${JDBC_DATABASE_URL}
-      username: ${JDBC_DATABASE_USERNAME}
-      password: ${JDBC_DATABASE_PASSWORD}
+    url: ${JDBC_DATABASE_URL}
+    username: ${JDBC_DATABASE_USERNAME}
+    password: ${JDBC_DATABASE_PASSWORD}
 
-    jpa:
-      database-platform: postgresql
-      hibernate:
-        ddl-auto: none
-
-    h2:
-      console:
-        enabled: false
+  jpa:
+    database-platform: postgresql
+    hibernate:
+      ddl-auto: none
+  h2:
+   console:
+     enabled: false

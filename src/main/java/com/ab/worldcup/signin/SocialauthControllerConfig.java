@@ -1,30 +1,18 @@
 package com.ab.worldcup.signin;
 
+import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
-
+@Data
 @Configuration
-@EnableConfigurationProperties
-@ConfigurationProperties("app.socialauth")
-public class SocialAuthConfig {
+@ConfigurationProperties(prefix = "worldcup.socialauth")
+public class SocialauthControllerConfig {
 
     private String baseCallbackUrl;
 
     public String successPageUrl;
 
     public String accessDeniedPageUrl;
-
-    public String getBaseCallbackUrl() {
-        return baseCallbackUrl;
-    }
-
-    public String getSuccessPageUrl() {
-        return successPageUrl;
-    }
-
-    public String getAccessDeniedPageUrl() {
-        return accessDeniedPageUrl;
-    }
 }

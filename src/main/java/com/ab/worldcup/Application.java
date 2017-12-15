@@ -14,14 +14,12 @@ import org.springframework.core.io.support.PropertiesLoaderUtils;
 
 import java.util.Properties;
 
-@ComponentScan(basePackages = "com.ab.worldcup")
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = "com.ab.worldcup")
 public class Application {
 
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
     }
-
 
     @Bean
     public SocialAuthConfig socialAuthConfig() throws Exception {

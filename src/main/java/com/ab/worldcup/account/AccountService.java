@@ -56,7 +56,7 @@ public class AccountService implements UserDetailsService {
     }
 
     public void registerWithProfie(Profile profile) throws EmailAlreadyInUseException {
-        Account account = accountRepository.findByEmailAndProviderId(profile.getEmail(), profile.getProviderId());
+        Account account = accountRepository.findByEmail(profile.getEmail());
 
         if(account != null && !account.getProviderId().equals(profile.getProviderId())) {
             throw new EmailAlreadyInUseException(account.getEmail());

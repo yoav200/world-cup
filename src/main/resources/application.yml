@@ -1,12 +1,6 @@
 server:
   port: 8080
 
-app:
-  socialauth:
-    base-callback-url: "http://localhost:8080/socialauth/"
-    success-page-url: "/#/welcome"
-    access-denied-page-url: "/#/access-denied"
-
 spring:
   application:
     name: world-cup
@@ -16,13 +10,15 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create-drop
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     properties:
-     hibernate:
-       order_updates: true
-       order_inserts: true
-       jdbc:
-         batch_size: 200
-         batch_versioned_data: true
+      hibernate:
+        order_updates: true
+        order_inserts: true
+        jdbc:
+          batch_size: 200
+          batch_versioned_data: true
   h2:
     console:
       enabled: true
@@ -32,7 +28,8 @@ spring:
     ansi:
       enabled: always
 
-# Set the file size limit (default 1Mb). If you want to specify that files be
-# unlimited set the multipart.maxFileSize property to -1.
-multipart:
-  maxFileSize: 3Mb
+worldcup:
+  socialauth:
+    base-callback-url: "http://localhost:8080"
+    success-page-url: "#/welcome"
+    access-denied-page-url: "#/access-denied"

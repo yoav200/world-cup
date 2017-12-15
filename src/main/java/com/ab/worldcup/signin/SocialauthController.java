@@ -19,18 +19,8 @@ import java.util.HashMap;
 @RequestMapping({"/socialauth"})
 public class SocialauthController {
 
-    //@Autowired
-    //private SocialAuthConfig socialAuthConfig;
-
-    //@Value("${app.socialauth.base-callbackurl-url}")
-    private String baseCallbackUrl = "http://localhost:8080";
-
-    //@Value("${app.socialauth.success-page-url}")
-    public String successPageUrl = "#/welcome";
-
-    //@Value("${app.socialauth.access-denied-page-url}")
-    public String accessDeniedPageUrl = "#/access-denied";
-
+    @Autowired
+    private SocialauthControllerConfig config;
 
     @Autowired
     private SocialAuthTemplate socialAuthTemplate;
@@ -46,10 +36,10 @@ public class SocialauthController {
     @RequestMapping(params = {"id"})
     public String connect(@RequestParam("id") String providerId, HttpServletRequest request) throws Exception {
         this.logger.debug("Getting Authentication URL for :" + providerId);
-        String callbackURL = this.baseCallbackUrl + request.getServletPath();
+        String callbackURL = config.getBaseCallbackUrl() + request.getServletPath();
         String url = this.socialAuthManager.getAuthenticationUrl(providerId, callbackURL);
         if (callbackURL.equals(url)) {
-            url = this.successPageUrl;
+            url = config.getSuccessPageUrl();
             this.socialAuthManager.connect(new HashMap<>());
         }
         this.socialAuthTemplate.setSocialAuthManager(this.socialAuthManager);
@@ -59,25 +49,25 @@ public class SocialauthController {
     @RequestMapping(params = {"oauth_token"})
     private String oauthCallback(HttpServletRequest request) {
         this.callback(request);
-        return "redirect:/" + this.successPageUrl;
+        return "redirect:/" + config.getSuccessPageUrl();
     }
 
     @RequestMapping(params = {"code"})
     private String oauth2Callback(HttpServletRequest request) {
         this.callback(request);
-        return "redirect:/" + this.successPageUrl;
+        return "redirect:/" + config.getSuccessPageUrl();
     }
 
     @RequestMapping(params = {"wrap_verification_code"})
     private String hotmailCallback(HttpServletRequest request) {
         this.callback(request);
-        return "redirect:/" + this.successPageUrl;
+        return "redirect:/" + config.getSuccessPageUrl();
     }
 
     @RequestMapping(params = {"openid.claimed_id"})
     private String openidCallback(HttpServletRequest request) {
         this.callback(request);
-        return "redirect:/" + this.successPageUrl;
+        return "redirect:/" + config.getSuccessPageUrl();
     }
 
     private void callback(HttpServletRequest request) {
@@ -98,31 +88,31 @@ public class SocialauthController {
     @RequestMapping(params = {"error", "error_reason"})
     private String fbCancel(@RequestParam("error_reason") String error) {
         this.logger.debug("Facebook send an error : " + error);
-        return "user_denied".equals(error) ? "redirect:/" + this.accessDeniedPageUrl : "redirect:/";
+        return "user_denied".equals(error) ? "redirect:/" + config.getAccessDeniedPageUrl() : "redirect:/";
     }
 
     @RequestMapping(params = {"openid.mode=cancel"})
     private String googleCancel(@RequestParam("openid.mode") String error) {
         this.logger.debug("Google send an error : " + error);
-        return "cancel".equals(error) ? "redirect:/" + this.accessDeniedPageUrl : "redirect:/";
+        return "cancel".equals(error) ? "redirect:/" + config.getAccessDeniedPageUrl() : "redirect:/";
     }
 
     @RequestMapping(params = {"wrap_error_reason"})
     private String hotmailCancel(@RequestParam("wrap_error_reason") String error) {
         this.logger.debug("Hotmail send an error : " + error);
-        return "user_denied".equals(error) ? "redirect:/" + this.accessDeniedPageUrl : "redirect:/";
+        return "user_denied".equals(error) ? "redirect:/" + config.getAccessDeniedPageUrl() : "redirect:/";
     }
 
     @RequestMapping(params = {"oauth_problem"})
     private String myspaceCancel(@RequestParam("oauth_problem") String error) {
         this.logger.debug("MySpace send an error : " + error);
-        return "user_refused".equals(error) ? "redirect:/" + this.accessDeniedPageUrl : "redirect:/";
+        return "user_refused".equals(error) ? "redirect:/" + config.getAccessDeniedPageUrl() : "redirect:/";
     }
 
     @RequestMapping(params = {"error"})
     private String gitHubCancel(@RequestParam("error") String error) {
         this.logger.debug("Provider send an error : " + error);
-        return "access_denied".equals(error) ? "redirect:/" + this.accessDeniedPageUrl : "redirect:/";
+        return "access_denied".equals(error) ? "redirect:/" + config.getAccessDeniedPageUrl() : "redirect:/";
     }
 
 }
