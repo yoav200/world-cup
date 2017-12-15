@@ -3,7 +3,7 @@
 /**
  * Main AngularJS Web Application
  */
-var app = angular.module('worldcup', ['ui.router', 'ui.bootstrap', 'ngAnimate', 'ngSanitize']);
+var app = angular.module('worldcup', ['ui.router', 'ui.bootstrap', 'ngResource',  'ngAnimate', 'ngSanitize']);
 
 
 /**
@@ -42,6 +42,15 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $locatio
                 controller: 'homeCtrl'
             }
         }
+    }).state('join', {
+        parent: 'site',
+        url: "/join",
+        views: {
+            'content@': {
+                templateUrl: 'app/login/login.view.html',
+                controller: 'loginController'
+            }
+        }
     }).state('teams', {
         parent: 'site',
         url: "/teams",
@@ -77,15 +86,6 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $locatio
             'content@': {
                 templateUrl: 'app/bets/bets.view.html',
                 controller: 'betsCtrl'
-            }
-        }
-    }).state('login', {
-        parent: 'site',
-        url: "/login/{provider}",
-        views: {
-            'content@': {
-                templateUrl: 'app/login/login.view.html',
-                controller: 'loginController'
             }
         }
     });

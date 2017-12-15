@@ -1,27 +1,18 @@
 server:
   port: 8080
 
+app:
+  socialauth:
+    base-callback-url: "http://localhost:8080/socialauth/"
+    success-page-url: "/#/welcome"
+    access-denied-page-url: "/#/access-denied"
+
 spring:
   application:
     name: world-cup
-  social:
-    facebook:
-      #appId: 567099173632370
-      #appSecret: 48881cb7c41606110de542893702ecaa
-      appId: 1762511607385710
-      appSecret: 769d50cceb6e1f4d3c79196ed6b6c845
-    google:
-      appId: 20728652223-s6o8nplhd6phbdb3eiiqdq0kdkjuhaj5.apps.googleusercontent.com
-      appSecret: lqtm3bHmgy6tEOQ2gGfjQ3Ef
-  h2:
-    console:
-      enabled: true
-      path: /h2
-
   datasource:
     username: admin
     password: admin
-
   jpa:
     hibernate:
       ddl-auto: create-drop
@@ -32,6 +23,10 @@ spring:
        jdbc:
          batch_size: 200
          batch_versioned_data: true
+  h2:
+    console:
+      enabled: true
+      path: /h2
 
   output:
     ansi:

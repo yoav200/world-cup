@@ -1,7 +1,10 @@
 package com.ab.worldcup.account;
 
+import org.brickred.socialauth.Profile;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -10,6 +13,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 
+import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
+
 @Service
 public class AccountService implements UserDetailsService {
 
@@ -17,13 +22,13 @@ public class AccountService implements UserDetailsService {
     private AccountRepository accountRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        final Account account = accountRepository.findByUsername(username);
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        final Account account = accountRepository.findByEmail(email);
         if (account == null) {
-            throw new UsernameNotFoundException(username);
+            throw new UsernameNotFoundException(email);
         }
         return new User(
-                username,
+                email,
                 account.getPassword(),
                 true,
                 true,
@@ -31,4 +36,45 @@ public class AccountService implements UserDetailsService {
                 true,
                 Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
     }
+
+    private Account signup(Profile userProfile) {
+        Account account = Account.builder()
+                .email(userProfile.getEmail())
+                .password(randomAlphabetic(8))
+                .firstName(userProfile.getFirstName())
+                .lastName(userProfile.getLastName())
+                .fullName(userProfile.getFullName())
+                .displayName(userProfile.getDisplayName())
+                .gender(userProfile.getGender())
+                .location(userProfile.getLocation())
+                .validatedId(userProfile.getValidatedId())
+                .profileImageUrl(userProfile.getProfileImageURL())
+                .providerId(userProfile.getProviderId())
+                .country(userProfile.getCountry())
+                .language(userProfile.getLanguage()).build();
+        return accountRepository.save(account);
+    }
+
+    public void registerWithProfie(Profile profile) throws EmailAlreadyInUseException {
+        Account account = accountRepository.findByEmailAndProviderId(profile.getEmail(), profile.getProviderId());
+
+        if(account != null && !account.getProviderId().equals(profile.getProviderId())) {
+            throw new EmailAlreadyInUseException(account.getEmail());
+        }
+
+        if(account == null) {
+            account = signup(profile);
+        }
+
+        SecurityContextHolder.getContext().setAuthentication(
+                new UsernamePasswordAuthenticationToken(
+                        account.getEmail(),
+                        account.getPassword(),
+                        Collections.singletonList(new SimpleGrantedAuthority("USER"))));
+    }
+
+    public Account findAccountByEmail(String email) {
+        return  accountRepository.findByEmail(email);
+    }
+
 }

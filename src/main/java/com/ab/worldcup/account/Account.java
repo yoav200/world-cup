@@ -1,65 +1,57 @@
 package com.ab.worldcup.account;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
+@Builder
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
+@Setter(value = AccessLevel.PACKAGE)
+@Getter
+@ToString
+@EqualsAndHashCode
 public class Account {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @JsonIgnore
     private Long id;
 
-    private String username;
-
+    @JsonIgnore
     private String password;
+
+    private String email;
 
     private String firstName;
 
     private String lastName;
 
-    private String email;
+    private String fullName;
 
-    private Account() {
+    private String displayName;
 
-    }
+    private String gender;
 
-    public Account(String username, String password, String firstName, String lastName, String email) {
-        this.username = username;
-        this.password = password;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-    }
+    @JsonIgnore
+    private String location;
 
-    public Long getId() {
-        return id;
-    }
+    @JsonIgnore
+    private String validatedId;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    private String profileImageUrl;
 
-    public String getUsername() {
-        return username;
-    }
+    @JsonIgnore
+    private String providerId;
 
-    public String getPassword() {
-        return password;
-    }
+    private String country;
 
-    public String getFirstName() {
-        return firstName;
-    }
+    private String language;
 
-    public String getLastName() {
-        return lastName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
 }

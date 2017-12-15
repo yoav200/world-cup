@@ -17,19 +17,18 @@
                 <li ng-class="{ active: isActive('/teams') }"><a href="#/teams">The Teams</a></li>
                 <li ng-class="{ active: isActive('/games') }"><a href="#/games">Games</a></li>
                 <li class="dropdown" ng-class="{ active: isActiveStartWith('/bets/') }">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Bets <span class="caret"></span></a>
+                    <a href="#/bets" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Bets <span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li ng-class="{ active: isActive('/bets/mine') }"><a href="#/bets/mine">My bets</a></li>
                         <li role="separator" class="divider"></li>
                         <li ng-class="{ active: isActive('/bets/statistics') }"><a href="#/bets/statistics">Statistics</a></li>
                     </ul>
                 </li>
-                <li><a href="#">Contact</a></li>
+                <li><a href="#/">Contact</a></li>
             </ul>
 
             <ul class="nav navbar-nav navbar-right" data-ng-hide="user.authenticate">
-                <li><a data-ng-click="socialLogin('facebook')"><span class="login-fb"></span></a></li>
-                <li><a data-ng-click="socialLogin('google')"><span class="login-google"></span></a></li>
+                <li><a href="#/join">Join</a></li>
             </ul>
 
             <ul class="nav navbar-nav navbar-right" data-ng-show="user.authenticate">

@@ -12,15 +12,14 @@ angular.module('worldcup').controller('navbarController', function ($rootScope, 
 
     $http({
         method : "GET",
-        url : "login/identity"
+        url : "account/identity"
     }).then(function mySuccess(response) {
         console.log(response);
-        if(response && response.data && response.data.key) {
+        if(response && response.data) {
             $scope.user = {
                 authenticate : true,
-                displayName : response.data.displayName,
-                imageUrl : response.data.imageUrl,
-                provider : response.data.key.providerId
+                displayName : response.data.fullName,
+                imageUrl : response.data.profileImageUrl
             };
         }
     }, function error(error) {

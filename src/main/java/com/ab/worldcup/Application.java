@@ -1,12 +1,20 @@
 package com.ab.worldcup;
 
+import com.ab.worldcup.signin.SocialAuthTemplate;
+import org.brickred.socialauth.SocialAuthConfig;
+import org.brickred.socialauth.SocialAuthManager;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.social.config.annotation.EnableSocial;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.support.PropertiesLoaderUtils;
+
+import java.util.Properties;
 
 @ComponentScan(basePackages = "com.ab.worldcup")
-@EnableSocial
 @SpringBootApplication
 public class Application {
 
@@ -15,19 +23,29 @@ public class Application {
     }
 
 
-//    @Bean
-//    public CommandLineRunner commandLineRunner(ApplicationContext ctx) {
-//        return args -> {
-//
-//            System.out.println("Let's inspect the beans provided by Spring Boot:");
-//
-//            String[] beanNames = ctx.getBeanDefinitionNames();
-//            Arrays.sort(beanNames);
-//            for (String beanName : beanNames) {
-//                System.out.println(beanName);
-//            }
-//
-//        };
-//    }
+    @Bean
+    public SocialAuthConfig socialAuthConfig() throws Exception {
+        Properties properties = PropertiesLoaderUtils.loadProperties(new ClassPathResource("oauth_consumer.properties"));
+
+        SocialAuthConfig socialAuthConfig = new SocialAuthConfig();
+        socialAuthConfig.setApplicationProperties(properties);
+        return socialAuthConfig;
+    }
+
+
+    @Bean
+    @Scope(value = "session", proxyMode = ScopedProxyMode.TARGET_CLASS)
+    public SocialAuthTemplate SocialAuthTemplate() {
+        return new SocialAuthTemplate();
+    }
+
+    @Bean
+    @Scope(value = "session", proxyMode = ScopedProxyMode.TARGET_CLASS)
+    public SocialAuthManager socialAuthManager(SocialAuthConfig socialAuthConfig) throws Exception {
+        SocialAuthManager socialAuthManager = new SocialAuthManager();
+        socialAuthManager.setSocialAuthConfig(socialAuthConfig);
+        return socialAuthManager;
+    }
+
 
 }
