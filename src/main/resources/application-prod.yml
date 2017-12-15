@@ -1,15 +1,11 @@
 spring:
   datasource:
-      driver-class-name:
-      url:
-      username:
-      password:
-      test-on-borrow: true
-      test-on-connect: true
-      validation-query:
+      url: ${JDBC_DATABASE_URL}
+      username: ${JDBC_DATABASE_USERNAME}
+      password: ${JDBC_DATABASE_PASSWORD}
 
     jpa:
-      database-platform:
+      database-platform: postgresql
       hibernate:
         ddl-auto: none
 
