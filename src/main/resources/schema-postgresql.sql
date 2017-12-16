@@ -15,11 +15,13 @@ CREATE TABLE Account (
   language        VARCHAR
 );
 
-
 CREATE TABLE Team (
   id              SERIAL PRIMARY KEY,
   name            VARCHAR UNIQUE,
   code            VARCHAR,
-  shortName       VARCHAR,
-  crestUrl        VARCHAR
+  fifaRanking     INT,
+  appearances     INT,
+  titles          INT,
+  confederation   VARCHAR NOT NULL,
+  groupId       VARCHAR NOT NULL
 );

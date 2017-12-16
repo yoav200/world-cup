@@ -1,23 +1,19 @@
 package com.ab.worldcup.team;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.annotations.Immutable;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 @Immutable
 @Getter
 @ToString
 @NoArgsConstructor
+@EqualsAndHashCode
 public class Team {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @JsonIgnore
@@ -25,10 +21,17 @@ public class Team {
 
     private String name;
 
-    private String shortName;
-
     private String code;
 
-    private String crestUrl;
+    private Integer fifaRanking;
 
+    private Integer appearances;
+
+    private Integer titles;
+
+    @Enumerated(EnumType.STRING)
+    private Confederation confederation;
+
+    @Enumerated(EnumType.STRING)
+    private Group groupId;
 }

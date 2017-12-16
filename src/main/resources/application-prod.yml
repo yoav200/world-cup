@@ -5,9 +5,11 @@ spring:
     password: ${JDBC_DATABASE_PASSWORD}
 
   jpa:
-    database-platform: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: none
+    show-sql: false
+
   h2:
    console:
      enabled: false

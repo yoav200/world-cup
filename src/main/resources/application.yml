@@ -19,6 +19,8 @@ spring:
         jdbc:
           batch_size: 200
           batch_versioned_data: true
+    show-sql: true
+
   h2:
     console:
       enabled: true
