@@ -18,10 +18,10 @@ CREATE TABLE Account (
 CREATE TABLE Team (
   id              SERIAL PRIMARY KEY,
   name            VARCHAR UNIQUE,
-  code            VARCHAR,
+  code            VARCHAR NOT NULL,
   fifaRanking     INT,
   appearances     INT,
   titles          INT,
   confederation   VARCHAR NOT NULL,
-  groupId       VARCHAR NOT NULL
+  groupId         VARCHAR NOT NULL
 );
