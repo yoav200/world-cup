@@ -25,3 +25,55 @@ CREATE TABLE Team (
   confederation   VARCHAR NOT NULL,
   groupId         VARCHAR NOT NULL
 );
+
+CREATE TABLE Match (
+  id              SERIAL PRIMARY KEY,
+  kickoff         TIMESTAMPZ
+);
+
+CREATE TABLE GroupMatch (
+  matchId         REFERENCES Match (id),
+  homeTeam        REFERENCES Team (id),
+  awayTeam        REFERENCES Team (id),
+  groupId         VARCHAR NOT NULL
+);
+
+CREATE TABLE KnockoutMatch (
+  matchId         REFERENCES Match (id),
+  matchCode       VARCHAR NOT NULL,
+);
+
+CREATE TABLE Bet (
+  id          SERIAL PRIMARY KEY,
+  desription  VARCHAR NOT NULL,
+  type        VARCHAR NOT NULL,
+  matchId     REFERENCES Match (id),
+  stageId     VARCHAR NOT NULL
+);
+
+CREATE TABLE KnockoutTeam (
+  matchId         REFERENCES KnockoutMatch (matchId),
+  homeTeam        REFERENCES Team (id),
+  awayTeam        REFERENCES Team (id)
+);
+
+CREATE TABLE MatchResult(
+  matchId         REFERENCES Match (id),
+  homeTeamGoals   INT,
+  awayTeamGoals   INT,
+  winner          VARCHAR NOT NULL
+);
+
+CREATE TABLE UserBet(
+  accountId       REFERENCES Account (id),
+  betId           REFERENCES Bet (id),
+  homeTeamGoals   INT,
+  awayTeamGoals   INT,
+  winner          VARCHAR NOT NULL
+);
+
+CREATE TABLE Qualifiers(
+  teamId       REFERENCES Team(id),
+  stageId      VARCHAR NOT NULL
+);
+
