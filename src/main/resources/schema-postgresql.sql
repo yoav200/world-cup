@@ -27,19 +27,19 @@ CREATE TABLE Team (
 );
 
 CREATE TABLE Match (
-  id              SERIAL PRIMARY KEY,
+  matchId         SERIAL PRIMARY KEY,
   kickoff         TIMESTAMPZ
 );
 
 CREATE TABLE GroupMatch (
-  matchId         REFERENCES Match (id),
+  matchId         REFERENCES Match (matchId),
   homeTeam        REFERENCES Team (id),
   awayTeam        REFERENCES Team (id),
   groupId         VARCHAR NOT NULL
 );
 
 CREATE TABLE KnockoutMatch (
-  matchId         REFERENCES Match (id),
+  matchId         REFERENCES Match (matchId),
   matchCode       VARCHAR NOT NULL,
 );
 

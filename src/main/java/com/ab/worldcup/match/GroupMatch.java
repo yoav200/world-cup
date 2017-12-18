@@ -16,10 +16,13 @@ import javax.persistence.*;
 @EqualsAndHashCode
 @Immutable
 public class GroupMatch extends Match{
+
     @ManyToOne
+    @JoinColumn(name="homeTeam",referencedColumnName="id")
     private Team homeTeam;
 
     @ManyToOne
+    @JoinColumn(name="awayTeam",referencedColumnName="id")
     private Team awayTeam;
 
     @Enumerated(EnumType.STRING)

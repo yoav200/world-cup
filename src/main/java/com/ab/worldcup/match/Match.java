@@ -11,12 +11,12 @@ import java.sql.Timestamp;
 @ToString
 @EqualsAndHashCode
 @Inheritance(strategy = InheritanceType.JOINED)
-public class Match {
+public abstract class Match {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonIgnore
-    private Long id;
+    private Long matchId;
 
     private Timestamp kickoff;
 
