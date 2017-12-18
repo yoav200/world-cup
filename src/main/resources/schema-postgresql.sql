@@ -41,24 +41,27 @@ CREATE TABLE GroupMatch (
 CREATE TABLE KnockoutMatch (
   matchId         REFERENCES Match (matchId),
   matchCode       VARCHAR NOT NULL,
+  stageId         VARCHAR NOT NULL,
+  homeTeamCode    VARCHAR NOT NULL,
+  awayTeamCode    VARCHAR NOT NULL
 );
 
 CREATE TABLE Bet (
   id          SERIAL PRIMARY KEY,
   desription  VARCHAR NOT NULL,
   type        VARCHAR NOT NULL,
-  matchId     REFERENCES Match (id),
+  matchId     REFERENCES Match (matchId),
   stageId     VARCHAR NOT NULL
 );
 
 CREATE TABLE KnockoutTeam (
-  matchId         REFERENCES KnockoutMatch (matchId),
+  matchId         REFERENCES KnockoutMatch (matchId) PRIMARY KEY,
   homeTeam        REFERENCES Team (id),
   awayTeam        REFERENCES Team (id)
 );
 
 CREATE TABLE MatchResult(
-  matchId         REFERENCES Match (id),
+  matchId         REFERENCES Match (matchId) PRIMARY KEY,
   homeTeamGoals   INT,
   awayTeamGoals   INT,
   winner          VARCHAR NOT NULL
@@ -76,4 +79,5 @@ CREATE TABLE Qualifiers(
   teamId       REFERENCES Team(id),
   stageId      VARCHAR NOT NULL
 );
+
 

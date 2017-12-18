@@ -18,6 +18,6 @@ public abstract class Match {
     @JsonIgnore
     private Long matchId;
 
-    private Timestamp kickoff;
+    protected Timestamp kickoff;
 
 }

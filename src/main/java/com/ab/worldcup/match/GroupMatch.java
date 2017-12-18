@@ -28,4 +28,8 @@ public class GroupMatch extends Match{
     @Enumerated(EnumType.STRING)
     private Group groupId;
 
+    @Override
+    public String toString() {
+        return this.kickoff + " Group " + groupId.name() + " - " + homeTeam.getName() + " - " + awayTeam.getName();
+    }
 }
