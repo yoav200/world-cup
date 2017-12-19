@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.sql.Timestamp;
 
 @Entity
@@ -11,7 +12,7 @@ import java.sql.Timestamp;
 @ToString
 @EqualsAndHashCode
 @Inheritance(strategy = InheritanceType.JOINED)
-public abstract class Match {
+public abstract class Match implements Serializable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

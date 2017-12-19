@@ -30,4 +30,5 @@ public class MatchService {
     private void init(){
         getAllMatches().stream().forEach(t-> logger.info(t.toString()) );
     }
+
 }

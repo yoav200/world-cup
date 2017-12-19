@@ -1,7 +1,6 @@
 package com.ab.worldcup.bet;
 
 import com.ab.worldcup.match.Stage;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 

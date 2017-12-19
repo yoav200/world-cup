@@ -32,14 +32,14 @@ CREATE TABLE Match (
 );
 
 CREATE TABLE GroupMatch (
-  matchId         REFERENCES Match (matchId),
+  matchId         REFERENCES Match (matchId) PRIMARY KEY,
   homeTeam        REFERENCES Team (id),
   awayTeam        REFERENCES Team (id),
   groupId         VARCHAR NOT NULL
 );
 
 CREATE TABLE KnockoutMatch (
-  matchId         REFERENCES Match (matchId),
+  matchId         REFERENCES Match (matchId) PRIMARY KEY,
   matchCode       VARCHAR NOT NULL,
   stageId         VARCHAR NOT NULL,
   homeTeamCode    VARCHAR NOT NULL,
@@ -70,14 +70,20 @@ CREATE TABLE MatchResult(
 CREATE TABLE UserBet(
   accountId       REFERENCES Account (id),
   betId           REFERENCES Bet (id),
+  homeTeam        REFERENCES Team (id),
+  awayTeam        REFERENCES Team (id),
   homeTeamGoals   INT,
   awayTeamGoals   INT,
-  winner          VARCHAR NOT NULL
+  winner          VARCHAR NOT NULL,
+  qualifier       REFERENCES Team (id),
+  PRIMARY KEY(accountId, betId),
+  CONSTRAINT no_duplicate_bet UNIQUE (accountId, betId)
 );
 
 CREATE TABLE Qualifiers(
-  teamId       REFERENCES Team(id),
-  stageId      VARCHAR NOT NULL
+  knockoutTeamCode  VARCHAR PRIMARY KEY,
+  teamId            REFERENCES Team(id),
+  stageId           VARCHAR NOT NULL
 );
 
 

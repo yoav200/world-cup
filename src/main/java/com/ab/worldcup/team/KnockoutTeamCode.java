@@ -32,5 +32,7 @@ public enum KnockoutTeamCode {
     WINNER_SF1,
     WINNER_SF2,
     LOSER_SF1,
-    LOSER_SF2
+    LOSER_SF2,
+    WINNER_THIRD_PLACE,
+    WINNER_FINAL
 }

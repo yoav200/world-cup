@@ -9,13 +9,14 @@ import org.hibernate.annotations.Immutable;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import java.io.Serializable;
 
 @Entity
 @Getter
 @ToString
 @EqualsAndHashCode
 @Immutable
-public class KnockoutMatch extends Match{
+public class KnockoutMatch extends Match implements Serializable{
 
     @Enumerated(EnumType.STRING)
     private KnockoutMatchCode matchCode;
