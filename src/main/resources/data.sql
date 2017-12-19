@@ -68,7 +68,7 @@ INSERT INTO Match (matchId, kickoff) VALUES
 
 INSERT INTO Team (id, name, code, appearances, titles, fifaRanking, confederation, groupId) VALUES
   -- Africa
-  (1, 'EGYPT', 'egy', 31 , 2, 0, 'AFRICA', 'A'),
+  (1, 'EGYPT', 'egy', 2 , 0, 31, 'AFRICA', 'A'),
   (2, 'MOROCCO', 'mar', 4 , 0, 40, 'AFRICA','B'),
   (3, 'NIGERIA', 'nga', 5 , 0, 50, 'AFRICA', 'D'),
   (4, 'SENEGAL', 'sen', 1 , 0, 23, 'AFRICA', 'H'),
@@ -78,7 +78,7 @@ INSERT INTO Team (id, name, code, appearances, titles, fifaRanking, confederatio
   (7, 'IR IRAN', 'irn', 4 , 0, 32, 'ASIA','B'),
   (8, 'JAPAN', 'jpn', 5 , 0, 55, 'ASIA', 'H'),
   (9, 'KOREA REPUBLIC', 'kor', 9 , 0, 59, 'ASIA', 'F'),
-  (10, 'SAUDI ARABIA', 'kas', 4 , 0, 63, 'ASIA', 'A'),
+  (10, 'SAUDI ARABIA', 'ksa', 4 , 0, 63, 'ASIA', 'A'),
   -- Europe
   (11, 'BELGIUM', 'bel', 12 , 0, 5, 'EUROPE', 'G'),
   (12, 'CROATIA', 'cro', 4 , 0, 17, 'EUROPE', 'D'),
