@@ -3,7 +3,7 @@
 /**
  * Main AngularJS Web Application
  */
-var app = angular.module('worldcup', ['ui.router', 'ui.bootstrap', 'ngResource',  'ngAnimate', 'ngSanitize']);
+var app = angular.module('worldcup', ['ui.router', 'ui.router.stateHelper', 'ui.bootstrap', 'ngResource', 'ngAnimate', 'ngSanitize']);
 
 
 /**
@@ -20,7 +20,7 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $locatio
 
     // Now set up the states
     $stateProvider.state('site', {
-        'abstract': true,
+        //abstract: true,
         views: {
             'navbar@': {
                 templateUrl: 'app/navbar/navbar.view.html',
@@ -61,6 +61,29 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $locatio
                 controller: 'teamsCtrl'
             }
         }
+    }).state('teams.groups', {
+        url: "/groups",
+        data: {},
+        templateUrl: 'app/teams/teams.groups.html',
+        controller: 'teamsCtrl'
+    }).state('teams.confederation', {
+        url: "/confederation",
+        data: {},
+        views: {
+            '': {
+                templateUrl: 'app/teams/teams.confederations.html',
+                controller: 'teamsCtrl'
+            }
+        }
+    }).state('teams.fifaranking', {
+        url: "/confederation",
+        data: {},
+        views: {
+            '': {
+                templateUrl: 'app/teams/teams.fifaranking.html',
+                controller: 'teamsCtrl'
+            }
+        }
     }).state('games', {
         parent: 'site',
         url: "/games",
@@ -89,4 +112,8 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $locatio
             }
         }
     });
+}).filter('capitalize', function() {
+    return function(input) {
+        return (!!input) ? input.charAt(0).toUpperCase() + input.substr(1).toLowerCase() : '';
+    }
 });
