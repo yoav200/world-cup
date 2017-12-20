@@ -17,7 +17,6 @@ import java.io.Serializable;
 @EqualsAndHashCode
 public class KnockoutTeam implements Serializable{
 
-    @OneToOne
     @Id
     private KnockoutMatch matchId;
 
