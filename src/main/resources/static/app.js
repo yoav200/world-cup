@@ -76,7 +76,7 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $locatio
             }
         }
     }).state('teams.fifaranking', {
-        url: "/confederation",
+        url: "/ranking",
         data: {},
         views: {
             '': {
@@ -115,5 +115,9 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $locatio
 }).filter('capitalize', function() {
     return function(input) {
         return (!!input) ? input.charAt(0).toUpperCase() + input.substr(1).toLowerCase() : '';
+    }
+}).filter('spaceToUnderscore', function() {
+    return function(input) {
+        return angular.lowercase(input.replace(/\s+/g, '_'));
     }
 });

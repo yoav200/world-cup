@@ -12,10 +12,19 @@ body {
     background-position: center 0;
 }
 
-
 .container {
     width: 1170px;
     background-color: #fff
+}
+
+.affix {
+    top: 50px;
+    width: 100%;
+    z-index: 9999 !important;
+}
+
+.affix + .container-fluid {
+    padding-top: 70px;
 }
 
 

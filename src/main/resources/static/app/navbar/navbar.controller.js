@@ -2,7 +2,6 @@
 
 angular.module('worldcup').controller('navbarController', function ($rootScope, $scope, $state, $http, $interval, $location) {
 
-
     $scope.user = {
       authenticate : false,
       displayName : undefined,
@@ -14,7 +13,6 @@ angular.module('worldcup').controller('navbarController', function ($rootScope, 
         method : "GET",
         url : "account/identity"
     }).then(function mySuccess(response) {
-        console.log(response);
         if(response && response.data) {
             $scope.user = {
                 authenticate : true,
