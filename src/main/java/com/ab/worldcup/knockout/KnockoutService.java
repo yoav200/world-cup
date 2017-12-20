@@ -49,7 +49,7 @@ public class KnockoutService {
             return Optional.empty();
         }
 
-        KnockoutMatch match = knockoutMatchRepository.findByKnockoutMatchCode(teamCode.getKnockoutMatchCode().get());
+        KnockoutMatch match = knockoutMatchRepository.findByMatchCode(teamCode.getKnockoutMatchCode().get());
         Long matchId = match.getMatchId();
         MatchResult matchResult = matchResultRepository.findOne(matchId);
         KnockoutTeam knockoutMatchTeams = knockoutTeamRepository.findOne(matchId);
