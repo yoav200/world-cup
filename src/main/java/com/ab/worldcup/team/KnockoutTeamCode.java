@@ -1,5 +1,12 @@
 package com.ab.worldcup.team;
 
+import com.ab.worldcup.match.KnockoutMatchCode;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Optional;
+
 public enum KnockoutTeamCode {
     WINNER_GROUP_A,
     WINNER_GROUP_B,
@@ -34,5 +41,71 @@ public enum KnockoutTeamCode {
     LOSER_SF1,
     LOSER_SF2,
     WINNER_THIRD_PLACE,
-    WINNER_FINAL
+    WINNER_FINAL;
+
+
+    private final static Logger logger = LoggerFactory.getLogger(KnockoutTeamCode.class);
+
+    public KnockoutTeamCodeType getType(){
+        switch (this){
+            case     WINNER_GROUP_A:
+            case     WINNER_GROUP_B:
+            case     WINNER_GROUP_C:
+            case     WINNER_GROUP_D:
+            case     WINNER_GROUP_E:
+            case     WINNER_GROUP_F:
+            case     WINNER_GROUP_G:
+            case     WINNER_GROUP_H:
+            case     RUNNER_UP_GROUP_A:
+            case     RUNNER_UP_GROUP_B:
+            case     RUNNER_UP_GROUP_C:
+            case     RUNNER_UP_GROUP_D:
+            case     RUNNER_UP_GROUP_E:
+            case     RUNNER_UP_GROUP_F:
+            case     RUNNER_UP_GROUP_G:
+            case     RUNNER_UP_GROUP_H:
+                return KnockoutTeamCodeType.GROUP_QUALIFIER;
+            default:
+                return KnockoutTeamCodeType.KNOCKOUT_MATCH_QULIFIER;
+        }
+    }
+
+    public Optional<KnockoutMatchCode> getKnockoutMatchCode() {
+        switch (this) {
+            case WINNER_ROS1:
+                return Optional.of(KnockoutMatchCode.ROS1);
+            case WINNER_ROS2:
+                return Optional.of(KnockoutMatchCode.ROS2);
+            case WINNER_ROS3:
+                return Optional.of(KnockoutMatchCode.ROS3);
+            case WINNER_ROS4:
+                return Optional.of(KnockoutMatchCode.ROS4);
+            case WINNER_ROS5:
+                return Optional.of(KnockoutMatchCode.ROS5);
+            case WINNER_ROS6:
+                return Optional.of(KnockoutMatchCode.ROS6);
+            case WINNER_ROS7:
+                return Optional.of(KnockoutMatchCode.ROS7);
+            case WINNER_ROS8:
+                return Optional.of(KnockoutMatchCode.ROS8);
+            case WINNER_QF1:
+                return Optional.of(KnockoutMatchCode.QF1);
+            case WINNER_QF2:
+                return Optional.of(KnockoutMatchCode.QF2);
+            case WINNER_QF3:
+                return Optional.of(KnockoutMatchCode.QF3);
+            case WINNER_QF4:
+                return Optional.of(KnockoutMatchCode.QF4);
+            case WINNER_SF1:
+                return Optional.of(KnockoutMatchCode.SF1);
+            case WINNER_SF2:
+                return Optional.of(KnockoutMatchCode.SF2);
+            case WINNER_THIRD_PLACE:
+                return Optional.of(KnockoutMatchCode.TP);
+            case WINNER_FINAL:
+                return Optional.of(KnockoutMatchCode.F);
+            default:
+                return Optional.empty();
+        }
+    }
 }

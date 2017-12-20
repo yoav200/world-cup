@@ -40,7 +40,7 @@ CREATE TABLE GroupMatch (
 
 CREATE TABLE KnockoutMatch (
   matchId         REFERENCES Match (matchId) PRIMARY KEY,
-  matchCode       VARCHAR NOT NULL,
+  matchCode       VARCHAR NOT NULL UNIQUE,
   stageId         VARCHAR NOT NULL,
   homeTeamCode    VARCHAR NOT NULL,
   awayTeamCode    VARCHAR NOT NULL

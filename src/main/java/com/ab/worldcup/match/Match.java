@@ -17,7 +17,7 @@ public abstract class Match implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonIgnore
-    private Long matchId;
+    protected Long matchId;
 
     protected Timestamp kickoff;
 
