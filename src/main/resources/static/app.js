@@ -93,6 +93,16 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $locatio
                 controller: 'gamesCtrl'
             }
         }
+    }).state('games.firststage', {
+        url: "/first-stage",
+        data: {},
+        templateUrl: 'app/games/games.firststage.html',
+        controller: 'gamesCtrl'
+    }).state('games.secondstage', {
+        url: "/second-stage",
+        data: {},
+        templateUrl: 'app/games/games.secondstage.html',
+        controller: 'gamesCtrl'
     }).state('bets-mine', {
         parent: 'site',
         url: "/bets/mine",

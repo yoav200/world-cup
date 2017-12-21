@@ -61,7 +61,7 @@ angular.module('worldcup').controller('teamsCtrl', function ($rootScope, $scope,
 
 
     var init = function() {
-        var viewName = ''
+        var viewName = '';
         switch ($state.current.name) {
             case 'teams.groups' : viewName= "Groups"; break;
             case 'teams.fifaranking' : viewName= "FIFA Ranking"; break;
