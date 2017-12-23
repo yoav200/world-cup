@@ -20,7 +20,7 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $locatio
 
     // Now set up the states
     $stateProvider.state('site', {
-        //abstract: true,
+        abstract: true,
         views: {
             'navbar@': {
                 templateUrl: 'app/navbar/navbar.view.html',
@@ -53,8 +53,7 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $locatio
         }
     }).state('teams', {
         parent: 'site',
-        url: "/teams",
-        data: {},
+        url: '/teams',
         views: {
             'content@': {
                 templateUrl: 'app/teams/teams.view.html',
@@ -62,8 +61,7 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $locatio
             }
         }
     }).state('teams.groups', {
-        url: "/groups",
-        data: {},
+        url: '/groups',
         templateUrl: 'app/teams/teams.groups.html',
         controller: 'teamsCtrl'
     }).state('teams.confederation', {
@@ -77,7 +75,6 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $locatio
         }
     }).state('teams.fifaranking', {
         url: "/ranking",
-        data: {},
         views: {
             '': {
                 templateUrl: 'app/teams/teams.fifaranking.html',
@@ -95,12 +92,16 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $locatio
         }
     }).state('games.firststage', {
         url: "/first-stage",
-        data: {},
         templateUrl: 'app/games/games.firststage.html',
         controller: 'gamesCtrl'
+        // , resolve: {
+        //     firstStageMatches:  function($http){
+        //         // $http returns a promise for the url data
+        //         return $http({method: 'GET', url: '/match/group'});
+        //     }
+        // }
     }).state('games.secondstage', {
         url: "/second-stage",
-        data: {},
         templateUrl: 'app/games/games.secondstage.html',
         controller: 'gamesCtrl'
     }).state('bets-mine', {
@@ -130,4 +131,8 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $locatio
     return function(input) {
         return angular.lowercase(input.replace(/\s+/g, '_'));
     }
+}).filter('underscoreToSpace', function () {
+    return function (input) {
+        return input.replace(/_/g, ' ');
+    };
 });

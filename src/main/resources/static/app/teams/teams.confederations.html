@@ -1,7 +1,9 @@
 
 <div class="panel panel-default" ng-repeat="(confederation,teams) in confederation">
     <!-- Default panel contents -->
-    <div class="panel-heading">{{confederation}}</div>
+    <div class="panel-heading">
+        <h1><img ng-src="/images/confederations/{{confederation | spaceToUnderscore}}.jpg"/>{{confederation | underscoreToSpace | capitalize}}</h1>
+    </div>
 
     <!-- Table -->
     <table class="table">

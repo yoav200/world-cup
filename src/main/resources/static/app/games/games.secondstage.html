@@ -1,1 +1,19 @@
-Second Stage
+
+<table class="table">
+    <tbody>
+    <tr ng-repeat="match in matches.secondStage">
+        <td>
+            <div>{{match.matchCode}}</div>
+            <div>{{match.stageId}}</div>
+            <div>{{match.kickoff | date : format : 'medium'}}</div>
+        </td>
+        <td>
+            {{match.homeTeamCode }}
+        </td>
+        <td>{{match.kickoff | date : format : 'hh:mm '}}</td>
+        <td>
+            {{match.awayTeamCode }}
+        </td>
+    </tr>
+    </tbody>
+</table>

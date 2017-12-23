@@ -27,6 +27,9 @@ body {
     padding-top: 70px;
 }
 
+.nav-tabs {
+    padding: 10px 0 10px 0;
+}
 
 /*!
  * IE10 viewport hack for Surface/desktop Windows 8 bug
