@@ -4,17 +4,21 @@
     <tbody>
     <tr ng-repeat="match in matches.firstStage">
         <td>
-            <div>Group {{match.groupId}}</div>
+            <div><b>Group {{match.groupId}}</b></div>
             <div>{{match.kickoff | date : format : 'medium'}}</div>
         </td>
         <td>
-            <img ng-src="/images/teams/{{match.homeTeam.confederation | spaceToUnderscore}}/{{match.homeTeam.code}}.png"/>
-            {{match.homeTeam.name | capitalize }}
+            <h2>
+                <img class="flag" ng-src="/images/teams/{{match.homeTeam.confederation | spaceToUnderscore}}/{{match.homeTeam.code}}.png"/>
+                {{match.homeTeam.name | capitalize }}
+            </h2>
         </td>
         <td>{{match.kickoff | date : format : 'hh:mm '}}</td>
         <td>
-            <img ng-src="/images/teams/{{match.awayTeam.confederation | spaceToUnderscore}}/{{match.awayTeam.code}}.png"/>
-            {{match.awayTeam.name | capitalize }}
+            <h2>
+                <img class="flag" ng-src="/images/teams/{{match.awayTeam.confederation | spaceToUnderscore}}/{{match.awayTeam.code}}.png"/>
+                {{match.awayTeam.name | capitalize }}
+            </h2>
         </td>
     </tr>
     </tbody>

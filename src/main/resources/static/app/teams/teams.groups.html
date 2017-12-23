@@ -1,14 +1,13 @@
 
 
-<div class="panel panel-default" ng-repeat="(group,teams) in groups">
-    <!-- Default panel contents -->
+<div class="panel panel-primary" ng-repeat="(group,teams) in groups">
+
     <div class="panel-heading">Group {{group}}</div>
 
-    <!-- Table -->
     <table class="table">
         <thead>
         <tr>
-            <th scope="col">Team</th>
+            <th scope="col"></th>
             <th scope="col">Played</th>
             <th scope="col">Won</th>
             <th scope="col">Draw</th>
@@ -21,7 +20,11 @@
         </thead>
         <tbody>
         <tr ng-repeat="team in teams">
-            <th scope="row"><img ng-src="/images/teams/{{team.confederation | spaceToUnderscore}}/{{team.code}}.png"/> {{team.name | capitalize }}</th>
+            <th scope="row">
+                <h3>
+                    <img class="flag" ng-src="/images/teams/{{team.confederation | spaceToUnderscore}}/{{team.code}}.png"/> {{team.name | capitalize }}
+                </h3>
+            </th>
             <td>{{team.played}}</td>
             <td>{{team.won}}</td>
             <td>{{team.draw}}</td>
