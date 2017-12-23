@@ -9,6 +9,13 @@ angular.module('worldcup').controller('teamsCtrl', function ($rootScope, $scope,
     $scope.confederation = [];
 
 
+    var parentState = 'teams',
+        defaultChildState = '.groups';
+    // If the parent state has been transitioned to, redirect to the default child.
+    if($state.current.name.substr(-parentState.length) === parentState) {
+        $state.go(defaultChildState);
+    }
+
     $http({
         method : "GET",
         url : "teams/"

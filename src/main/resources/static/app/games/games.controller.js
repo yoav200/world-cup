@@ -10,6 +10,13 @@ angular.module('worldcup').controller('gamesCtrl', function ($rootScope, $scope,
     };
 
 
+    var parentState = 'games',
+        defaultChildState = '.firststage';
+    // If the parent state has been transitioned to, redirect to the default child.
+    if($state.current.name.substr(-parentState.length) === parentState) {
+        $state.go(defaultChildState);
+    }
+
     Matches.getFirstStageMatches().then(function(response){
         $scope.matches.firstStage = response;
     });
