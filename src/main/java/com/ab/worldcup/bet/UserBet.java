@@ -1,5 +1,6 @@
 package com.ab.worldcup.bet;
 
+import com.ab.worldcup.results.ResultInterface;
 import com.ab.worldcup.results.MatchResultType;
 import com.ab.worldcup.team.Team;
 import lombok.EqualsAndHashCode;
@@ -19,7 +20,7 @@ import javax.persistence.ManyToOne;
 @Setter
 @ToString
 @EqualsAndHashCode
-public class UserBet {
+public class UserBet implements ResultInterface {
 
     @EmbeddedId
     private UserBetId userBetId;
@@ -42,6 +43,11 @@ public class UserBet {
     @ManyToOne
     @JoinColumn(name="qualifier",referencedColumnName="id")
     private Team qualifier;
+
+    @Override
+    public Long getMatchId() {
+        return getUserBetId().getBet().getMatchId();
+    }
 
 
 }

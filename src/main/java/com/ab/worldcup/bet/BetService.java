@@ -3,7 +3,6 @@ package com.ab.worldcup.bet;
 import com.ab.worldcup.match.Match;
 import com.ab.worldcup.match.Stage;
 import com.ab.worldcup.team.Team;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -11,11 +10,14 @@ import java.util.List;
 
 @Service
 public class BetService {
-    @Autowired
-    BetRepository betRepository;
 
-    @Autowired
+    BetRepository betRepository;
     UserBetRepository userBetRepository;
+
+    public BetService(UserBetRepository userBetRepository,BetRepository betRepository){
+        this.betRepository = betRepository;
+        this.userBetRepository = userBetRepository;
+    }
 
     public Bet getBetByMatch(Match match){
         Long matchId = match.getMatchId();

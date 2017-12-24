@@ -1,7 +1,9 @@
 package com.ab.worldcup.match;
 
 import com.ab.worldcup.Group.GroupService;
-import com.ab.worldcup.bet.*;
+import com.ab.worldcup.bet.Bet;
+import com.ab.worldcup.bet.BetService;
+import com.ab.worldcup.bet.UserBet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +42,8 @@ public class MatchService {
 
         if(Stage.GROUP.equals(currentStage)){
             GroupMatch groupMatch = groupMatchRepository.findOne(match.getMatchId());
-            groupFinished = groupService.isGroupFinished(groupMatch.getGroupId());
+
+            //groupFinished = groupService.isGroupFinished(groupMatch.getGroupId());
         }
 
         if(groupFinished) {

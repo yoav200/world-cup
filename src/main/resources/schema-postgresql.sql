@@ -62,6 +62,8 @@ CREATE TABLE KnockoutTeam (
 
 CREATE TABLE MatchResult(
   matchId         REFERENCES Match (matchId) PRIMARY KEY,
+  homeTeam        REFERENCES Team (id),
+  awayTeam        REFERENCES Team (id),
   homeTeamGoals   INT,
   awayTeamGoals   INT,
   winner          VARCHAR NOT NULL
