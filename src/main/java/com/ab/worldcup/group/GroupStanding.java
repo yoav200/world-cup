@@ -1,4 +1,4 @@
-package com.ab.worldcup.Group;
+package com.ab.worldcup.group;
 
 import com.ab.worldcup.match.GroupMatch;
 import com.ab.worldcup.results.ResultInterface;

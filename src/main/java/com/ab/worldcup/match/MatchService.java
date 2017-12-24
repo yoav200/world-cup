@@ -1,6 +1,6 @@
 package com.ab.worldcup.match;
 
-import com.ab.worldcup.Group.GroupService;
+import com.ab.worldcup.group.GroupService;
 import com.ab.worldcup.bet.Bet;
 import com.ab.worldcup.bet.BetService;
 import com.ab.worldcup.bet.UserBet;
