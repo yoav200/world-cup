@@ -3,19 +3,24 @@ package com.ab.worldcup.match;
 public enum Stage {
     GROUP,ROUND_OF_16,QUARTER_FINAL,SEMI_FINAL,THIRD_PLACE,FINAL,WINNER;
 
-    public Stage getNextStage(Stage current){
-        switch(current){
+    public Stage getNextStage(){
+        Stage next = this;
+        switch(this){
             case GROUP:
-                return ROUND_OF_16;
+                next = ROUND_OF_16;
+                break;
             case ROUND_OF_16:
-                return QUARTER_FINAL;
+                next = QUARTER_FINAL;
+                break;
             case QUARTER_FINAL:
-                return SEMI_FINAL;
+                next = SEMI_FINAL;
+                break;
             case SEMI_FINAL:
-                return FINAL;
+                next = FINAL;
+                break;
             case FINAL:
-                return WINNER;
+                next = WINNER;
         }
-        return current;
+        return next;
     }
 }

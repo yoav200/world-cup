@@ -1,10 +1,15 @@
 package com.ab.worldcup.bet;
 
 import com.ab.worldcup.match.Stage;
+import lombok.Getter;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.Id;
 
 @Entity
+@Getter
 public class Bet {
 
     @Id

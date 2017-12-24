@@ -3,7 +3,6 @@ package com.ab.worldcup.match;
 import com.ab.worldcup.team.KnockoutTeamCode;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.ToString;
 import org.hibernate.annotations.Immutable;
 
 import javax.persistence.Entity;
@@ -13,8 +12,7 @@ import java.io.Serializable;
 
 @Entity
 @Getter
-@ToString
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = false)
 @Immutable
 public class KnockoutMatch extends Match implements Serializable{
 

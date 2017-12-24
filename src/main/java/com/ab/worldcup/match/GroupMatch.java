@@ -12,8 +12,7 @@ import javax.persistence.*;
 
 @Entity
 @Getter
-@ToString
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = false)
 @Immutable
 public class GroupMatch extends Match{
 

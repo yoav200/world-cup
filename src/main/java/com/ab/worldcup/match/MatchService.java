@@ -1,13 +1,14 @@
 package com.ab.worldcup.match;
 
+import com.ab.worldcup.Group.GroupService;
+import com.ab.worldcup.bet.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 @Service
 public class MatchService {
@@ -18,17 +19,41 @@ public class MatchService {
     @Autowired
     KnockoutMatchRepository knockoutMatchRepository;
 
+    @Autowired
+    GroupService groupService;
+
+    @Autowired
+    BetService betService;
+
     private final Logger logger = LoggerFactory.getLogger(MatchService.class);
 
-    public List<Match> getAllMatches(){
-        List<Match> allMatches = groupMatchRepository.findAll().stream().collect(Collectors.toList());
-        allMatches.addAll(knockoutMatchRepository.findAll());
-        return allMatches;
-    }
+    public void handleMatchFinish(Match match){
+        Bet betForMatch = betService.getBetByMatch(match);
+        List<UserBet> userBetsByBet = betService.getUserBetsByBet(betForMatch);
+        for (UserBet userBet : userBetsByBet) {
+            // TODO: calculate points and update leaderboard
 
-    @PostConstruct
-    private void init(){
-        getAllMatches().stream().forEach(t-> logger.info(t.toString()) );
+        }
+
+        Stage currentStage = betForMatch.getStageId();
+        boolean groupFinished = true;
+
+        if(Stage.GROUP.equals(currentStage)){
+            GroupMatch groupMatch = groupMatchRepository.findOne(match.getMatchId());
+            groupFinished = groupService.isGroupFinished(groupMatch.getGroupId());
+        }
+
+        if(groupFinished) {
+            Stage nextStage = currentStage.getNextStage();
+            List<KnockoutMatch> knockoutMatchesInNextStage = knockoutMatchRepository.findAllByStageId(nextStage);
+            for (KnockoutMatch knockoutMatch : knockoutMatchesInNextStage) {
+
+                // TODO:
+                // 1. update KnockTeam
+                // 2. add Qualifier
+                // 3. find all correct qualifier user bets and update leaderboard
+            }
+        }
     }
 
 }
