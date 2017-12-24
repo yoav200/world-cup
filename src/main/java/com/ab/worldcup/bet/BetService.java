@@ -44,4 +44,7 @@ public class BetService {
         return correctUserBets;
     }
 
+    public List<UserBet> findByUserBetIdAccountId(Long accountId) {
+        return userBetRepository.findByUserBetIdAccountId(accountId);
+    }
 }

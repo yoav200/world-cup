@@ -51,25 +51,28 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $locatio
                 controller: 'loginController'
             }
         }
-    }).state('teams', {
+    });
+
+    // Team
+    $stateProvider.state('teams', {
         parent: 'site',
         url: '/teams',
         views: {
             'content@': {
-                templateUrl: 'app/teams/teams.view.html',
+                templateUrl: 'app/teams/view/teams.view.html',
                 controller: 'teamsCtrl'
             }
         }
     }).state('teams.groups', {
         url: '/groups',
-        templateUrl: 'app/teams/teams.groups.html',
+        templateUrl: 'app/teams/view/teams.groups.html',
         controller: 'teamsCtrl'
     }).state('teams.confederation', {
         url: "/confederation",
         data: {},
         views: {
             '': {
-                templateUrl: 'app/teams/teams.confederations.html',
+                templateUrl: 'app/teams/view/teams.confederations.html',
                 controller: 'teamsCtrl'
             }
         }
@@ -77,22 +80,25 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $locatio
         url: "/ranking",
         views: {
             '': {
-                templateUrl: 'app/teams/teams.fifaranking.html',
+                templateUrl: 'app/teams/view/teams.fifaranking.html',
                 controller: 'teamsCtrl'
             }
         }
-    }).state('games', {
+    });
+
+    // Matches
+    $stateProvider.state('games', {
         parent: 'site',
         url: "/games",
         views: {
             'content@': {
-                templateUrl: 'app/games/games.view.html',
+                templateUrl: 'app/games/view/games.view.html',
                 controller: 'gamesCtrl'
             }
         }
     }).state('games.firststage', {
         url: "/first-stage",
-        templateUrl: 'app/games/games.firststage.html',
+        templateUrl: 'app/games/view/games.firststage.html',
         controller: 'gamesCtrl'
         // , resolve: {
         //     firstStageMatches:  function($http){
@@ -102,9 +108,13 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $locatio
         // }
     }).state('games.secondstage', {
         url: "/second-stage",
-        templateUrl: 'app/games/games.secondstage.html',
+        templateUrl: 'app/games/view/games.secondstage.html',
         controller: 'gamesCtrl'
-    }).state('bets-mine', {
+    });
+
+
+    // Bets
+    $stateProvider.state('bets-mine', {
         parent: 'site',
         url: "/bets/mine",
         views: {
@@ -123,6 +133,7 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $locatio
             }
         }
     });
+
 }).filter('capitalize', function() {
     return function(input) {
         return (!!input) ? input.charAt(0).toUpperCase() + input.substr(1).toLowerCase() : '';
