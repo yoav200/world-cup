@@ -9,7 +9,6 @@ angular.module('worldcup').controller('gamesCtrl', function ($rootScope, $scope,
         secondStage : undefined
     };
 
-
     var parentState = 'games',
         defaultChildState = '.firststage';
     // If the parent state has been transitioned to, redirect to the default child.
@@ -32,7 +31,6 @@ angular.module('worldcup').controller('gamesCtrl', function ($rootScope, $scope,
             case 'games.firststage' : viewName= "First Stage"; break;
             case 'games.secondstage' : viewName= "Second Stage"; break;
         }
-
         $rootScope.view = { section : viewName};
     };
 

@@ -22,10 +22,11 @@
 
 <body data-ng-app="worldcup" class="ng-cloak">
     <div data-ui-view="navbar"></div>
-    <div class="container">
+    <div class="container main">
         <div class="container" ui-view="content"></div>
     </div>
 
+    <!-- framework -->
     <script src="js/jquery.min.js" type="text/javascript"></script>
     <script src="js/angular.min.js" type="text/javascript"></script>
     <script src="js/angular-animate.min.js" type="text/javascript"></script>
@@ -36,7 +37,6 @@
     <script src="js/bootstrap.min.js" type="text/javascript"></script>
     <script src="js/ui-bootstrap-tpls.min.js" type="text/javascript"></script>
 
-
     <!-- create the app module first -->
     <script src="app.js"></script>
     <!-- controllers -->
@@ -46,7 +46,8 @@
     <script src="app/games/games.controller.js"></script>
     <script src="app/bets/bets.controller.js"></script>
     <script src="app/login/login.controller.js"></script>
-
-    <script src="app/games/games.js"></script>
+    <!-- services -->
+    <script src="app/teams/team.service.js"></script>
+    <script src="app/games/games.service.js"></script>
 </body>
 </html>

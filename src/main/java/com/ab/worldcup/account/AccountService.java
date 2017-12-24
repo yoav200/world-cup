@@ -1,5 +1,6 @@
 package com.ab.worldcup.account;
 
+import com.ab.worldcup.signin.Role;
 import org.brickred.socialauth.Profile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -34,7 +35,7 @@ public class AccountService implements UserDetailsService {
                 true,
                 true,
                 true,
-                Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
+                Collections.singletonList(new SimpleGrantedAuthority(Role.USER.getAuthority())));
     }
 
     private Account signup(Profile userProfile) {
@@ -57,24 +58,24 @@ public class AccountService implements UserDetailsService {
 
     public void registerWithProfie(Profile profile) throws EmailAlreadyInUseException {
         Account account = accountRepository.findByEmail(profile.getEmail());
-
-        if(account != null && !account.getProviderId().equals(profile.getProviderId())) {
+        // already exists - check provider
+        if (account != null && !account.getProviderId().equals(profile.getProviderId())) {
             throw new EmailAlreadyInUseException(account.getEmail());
         }
-
-        if(account == null) {
+        // not exists - create account
+        if (account == null) {
             account = signup(profile);
         }
-
+        // set in context
         SecurityContextHolder.getContext().setAuthentication(
                 new UsernamePasswordAuthenticationToken(
                         account.getEmail(),
                         account.getPassword(),
-                        Collections.singletonList(new SimpleGrantedAuthority("USER"))));
+                        Collections.singletonList(new SimpleGrantedAuthority(Role.USER.getAuthority()))));
     }
 
     public Account findAccountByEmail(String email) {
-        return  accountRepository.findByEmail(email);
+        return accountRepository.findByEmail(email);
     }
 
 }

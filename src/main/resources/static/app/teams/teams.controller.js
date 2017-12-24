@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('worldcup').controller('teamsCtrl', function ($rootScope, $scope, $state, $stateParams, $http, $filter) {
+angular.module('worldcup').controller('teamsCtrl', function ($rootScope, $scope, $state, $stateParams, $http, $filter, Teams) {
 
     $rootScope.view = { section : ''};
 
@@ -16,17 +16,11 @@ angular.module('worldcup').controller('teamsCtrl', function ($rootScope, $scope,
         $state.go(defaultChildState);
     }
 
-    $http({
-        method : "GET",
-        url : "teams/"
-    }).then(function mySuccess(response) {
-        if(response && response.data) {
-            $scope.teams = response.data;
-            createGroups(response.data);
-            createConfederation(response.data);
-        }
-    }, function error(error) {
-        console.log(error);
+
+    Teams.getAllTeams().then(function(response) {
+        $scope.teams = response;
+        createGroups(response);
+        createConfederation(response);
     });
 
 

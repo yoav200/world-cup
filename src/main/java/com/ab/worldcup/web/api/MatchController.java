@@ -1,4 +1,4 @@
-package com.ab.worldcup.web.match;
+package com.ab.worldcup.web.api;
 
 import com.ab.worldcup.match.GroupMatch;
 import com.ab.worldcup.match.GroupMatchRepository;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/match")
+@RequestMapping("/api/match")
 public class MatchController {
 
     @Autowired

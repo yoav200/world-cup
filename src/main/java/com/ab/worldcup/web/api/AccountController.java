@@ -1,4 +1,4 @@
-package com.ab.worldcup.web.controllers;
+package com.ab.worldcup.web.api;
 
 import com.ab.worldcup.account.Account;
 import com.ab.worldcup.account.AccountService;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-@RequestMapping("/account")
+@RequestMapping("/api/account")
 public class AccountController {
 
     @Autowired

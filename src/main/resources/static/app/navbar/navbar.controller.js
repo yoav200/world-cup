@@ -11,7 +11,7 @@ angular.module('worldcup').controller('navbarController', function ($rootScope, 
 
     $http({
         method : "GET",
-        url : "account/identity"
+        url : "api/account/identity"
     }).then(function mySuccess(response) {
         if(response && response.data) {
             $scope.user = {
