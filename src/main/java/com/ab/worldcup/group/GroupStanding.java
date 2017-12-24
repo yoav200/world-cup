@@ -25,7 +25,7 @@ public class GroupStanding {
         }
     }
 
-    public Set<TeamInGroup> getStanding(){
-        return teamsInGroup.stream().sorted().collect(Collectors.toSet());
+    public List<TeamInGroup> getStanding(){
+        return teamsInGroup.stream().sorted().collect(Collectors.toList());
     }
 }

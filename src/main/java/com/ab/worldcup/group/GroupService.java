@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,7 +27,7 @@ public class GroupService {
         return matches.stream().map(t-> t.getMatchId()).collect(Collectors.toList()).containsAll(matchesInGroup);
     }
 
-    public Set<TeamInGroup> getGroupStanding(Group groupId, List<ResultInterface> results){
+    public List<TeamInGroup> getGroupStanding(Group groupId, List<ResultInterface> results){
         List<GroupMatch> groupMatches = groupMatchRepository.findByGroupId(groupId);
         List<Team> teams = teamRepository.findByGroupId(groupId);
         GroupStanding groupStanding = new GroupStanding(groupId,groupMatches,results,teams);
