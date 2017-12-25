@@ -32,14 +32,14 @@ CREATE TABLE Match (
 );
 
 CREATE TABLE GroupMatch (
-  matchId         REFERENCES Match (matchId) PRIMARY KEY,
-  homeTeam        REFERENCES Team (id),
-  awayTeam        REFERENCES Team (id),
+  matchId         INT   REFERENCES Match (matchId) PRIMARY KEY,
+  homeTeam        INT   REFERENCES Team (id),
+  awayTeam        INT   REFERENCES Team (id),
   groupId         VARCHAR NOT NULL
 );
 
 CREATE TABLE KnockoutMatch (
-  matchId         REFERENCES Match (matchId) PRIMARY KEY,
+  matchId         INT   REFERENCES Match (matchId) PRIMARY KEY,
   matchCode       VARCHAR NOT NULL UNIQUE,
   stageId         VARCHAR NOT NULL,
   homeTeamCode    VARCHAR NOT NULL,
@@ -50,30 +50,30 @@ CREATE TABLE Bet (
   id          SERIAL PRIMARY KEY,
   desription  VARCHAR NOT NULL,
   type        VARCHAR NOT NULL,
-  matchId     REFERENCES Match (matchId),
+  matchId     INT   REFERENCES Match (matchId),
   stageId     VARCHAR NOT NULL
 );
 
 CREATE TABLE KnockoutTeam (
-  matchId         REFERENCES KnockoutMatch (matchId) PRIMARY KEY,
-  homeTeam        REFERENCES Team (id),
-  awayTeam        REFERENCES Team (id)
+  matchId         INT REFERENCES KnockoutMatch (matchId) PRIMARY KEY,
+  homeTeam        INT REFERENCES Team (id),
+  awayTeam        INT REFERENCES Team (id)
 );
 
 CREATE TABLE MatchResult(
-  matchId         REFERENCES Match (matchId) PRIMARY KEY,
-  homeTeam        REFERENCES Team (id),
-  awayTeam        REFERENCES Team (id),
+  matchId         INT REFERENCES Match (matchId) PRIMARY KEY,
+  homeTeam        INT REFERENCES Team (id),
+  awayTeam        INT REFERENCES Team (id),
   homeTeamGoals   INT,
   awayTeamGoals   INT,
   winner          VARCHAR NOT NULL
 );
 
 CREATE TABLE UserBet(
-  accountId       REFERENCES Account (id),
-  betId           REFERENCES Bet (id),
-  homeTeam        REFERENCES Team (id),
-  awayTeam        REFERENCES Team (id),
+  accountId       INT REFERENCES Account (id),
+  betId           INT REFERENCES Bet (id),
+  homeTeam        INT REFERENCES Team (id),
+  awayTeam        INT REFERENCES Team (id),
   homeTeamGoals   INT,
   awayTeamGoals   INT,
   winner          VARCHAR NOT NULL,
@@ -84,7 +84,7 @@ CREATE TABLE UserBet(
 
 CREATE TABLE Qualifiers(
   knockoutTeamCode  VARCHAR PRIMARY KEY,
-  teamId            REFERENCES Team(id),
+  teamId            INT REFERENCES Team(id),
   stageId           VARCHAR NOT NULL
 );
 
