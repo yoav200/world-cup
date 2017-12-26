@@ -1,6 +1,6 @@
 
 
-INSERT INTO Match (matchId, kickoff) VALUES
+INSERT INTO match (matchId, kickoff) VALUES
   (1, '2018-06-14 15:00:00+00'),
   (2, '2018-06-15 12:00:00+00'),
   (3, '2018-06-15 15:00:00+00'),
@@ -66,7 +66,7 @@ INSERT INTO Match (matchId, kickoff) VALUES
   (63, '2018-07-14 14:00:00+00'),
   (64, '2018-07-15 15:00:00+00');
 
-INSERT INTO Team (id, name, code, appearances, titles, fifaRanking, confederation, groupId) VALUES
+INSERT INTO team (id, name, code, appearances, titles, fifaRanking, confederation, groupId) VALUES
   -- Africa
   (1, 'EGYPT', 'egy', 2 , 0, 31, 'AFRICA', 'A'),
   (2, 'MOROCCO', 'mar', 4 , 0, 40, 'AFRICA','B'),
@@ -106,7 +106,7 @@ INSERT INTO Team (id, name, code, appearances, titles, fifaRanking, confederatio
   (32, 'URUGUAY', 'uru', 12 , 2, 21, 'SOUTH_AMERICA', 'A');
 
 
-INSERT INTO GroupMatch (matchId, homeTeam, awayTeam, groupId) VALUES
+INSERT INTO group_match (matchId, homeTeam, awayTeam, groupId) VALUES
   (1, 20, 10, 'A'),
   (2, 1, 32, 'A'),
   (3, 2, 7, 'B'),
@@ -156,7 +156,7 @@ INSERT INTO GroupMatch (matchId, homeTeam, awayTeam, groupId) VALUES
   (47, 27, 5, 'G'),
   (48, 14, 11, 'G');
 
-INSERT INTO KnockoutMatch(matchId, matchCode, stageId, homeTeamCode, awayTeamCode) VALUES
+INSERT INTO knockout_match(matchId, matchCode, stageId, homeTeamCode, awayTeamCode) VALUES
   (49, 'ROS1', 'ROUND_OF_16', 'WINNER_GROUP_C', 'RUNNER_UP_GROUP_D'),
   (50, 'ROS2', 'ROUND_OF_16', 'WINNER_GROUP_A', 'RUNNER_UP_GROUP_B' ),
   (51, 'ROS3', 'ROUND_OF_16', 'WINNER_GROUP_B', 'RUNNER_UP_GROUP_A'),
@@ -174,7 +174,7 @@ INSERT INTO KnockoutMatch(matchId, matchCode, stageId, homeTeamCode, awayTeamCod
   (63, 'TP', 'THIRD_PLACE','LOSER_SF1','LOSER_SF2'),
   (64, 'F', 'FINAL', 'WINNER_SF1','WINNER_SF2');
 
-INSERT INTO Bet (id, desription, matchId, stageId, type) VALUES
+INSERT INTO bet (id, desription, matchId, stageId, type) VALUES
   (1, 'Match 1 Result',1,'GROUP', 'MATCH'),
   (2, 'Match 2 Result',2,'GROUP', 'MATCH'),
   (3, 'Match 3 Result',3,'GROUP', 'MATCH'),
@@ -240,7 +240,7 @@ INSERT INTO Bet (id, desription, matchId, stageId, type) VALUES
   (63, 'Third Place Match Result',63,'TP', 'MATCH'),
   (64, 'Final Match Result',64,'F', 'MATCH');
 
-INSERT INTO Bet (id, desription, stageId, type) VALUES
+INSERT INTO bet (id, desription, stageId, type) VALUES
   (65, 'Number 1 Qualifier to Round Of 16','ROS', 'QUALIFIER'),
   (66, 'Number 2 Qualifier to Round Of 16','ROS', 'QUALIFIER'),
   (67, 'Number 3 Qualifier to Round Of 16','ROS', 'QUALIFIER'),
