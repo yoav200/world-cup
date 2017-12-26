@@ -14,12 +14,14 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 @Entity
 @Getter
 @Setter
 @ToString
 @EqualsAndHashCode
+@Table(name = "UserBet")
 public class UserBet implements ResultInterface {
 
     @EmbeddedId

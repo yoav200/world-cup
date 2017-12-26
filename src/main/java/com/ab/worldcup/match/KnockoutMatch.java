@@ -8,12 +8,14 @@ import org.hibernate.annotations.Immutable;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.Table;
 import java.io.Serializable;
 
 @Entity
 @Getter
 @EqualsAndHashCode(callSuper = false)
 @Immutable
+@Table(name = "KnockoutMatch")
 public class KnockoutMatch extends Match implements Serializable{
 
     @Enumerated(EnumType.STRING)

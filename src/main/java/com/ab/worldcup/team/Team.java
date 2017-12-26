@@ -12,6 +12,7 @@ import javax.persistence.*;
 @ToString
 @NoArgsConstructor
 @EqualsAndHashCode
+@Table(name = "Team")
 public class Team {
 
     @Id

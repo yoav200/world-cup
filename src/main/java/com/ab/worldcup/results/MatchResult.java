@@ -12,12 +12,14 @@ import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 @Entity
 @Getter
 @Setter
 @ToString
 @EqualsAndHashCode
+@Table(name = "MatchResult")
 public class MatchResult implements ResultInterface {
 
     @Id

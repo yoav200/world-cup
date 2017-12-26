@@ -12,6 +12,7 @@ import java.sql.Timestamp;
 @ToString
 @EqualsAndHashCode
 @Inheritance(strategy = InheritanceType.JOINED)
+@Table(name = "Match")
 public abstract class Match implements Serializable{
 
     @Id
