@@ -13,6 +13,7 @@ import javax.persistence.*;
 @ToString
 @EqualsAndHashCode
 @Table(name = "qualifier")
+@Builder
 public class Qualifier {
 
     @Enumerated(EnumType.STRING)

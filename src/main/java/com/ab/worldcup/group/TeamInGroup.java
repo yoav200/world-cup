@@ -12,10 +12,10 @@ import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 @Getter
-public class TeamInGroup implements Comparable<TeamInGroup> {
+public class TeamInGroup <T extends ResultInterface> implements Comparable<TeamInGroup> {
 
     private Set<GroupMatch> matches;
-    private Set<ResultInterface> results;
+    private Set<T> results;
     private Team team;
 
     private int gamesPlayed;
@@ -26,13 +26,13 @@ public class TeamInGroup implements Comparable<TeamInGroup> {
     private int goalsReceived;
     private int points;
 
-    public TeamInGroup(Team team, List<GroupMatch> matches){
+    public  TeamInGroup(Team team, List<GroupMatch> matches){
         this.team = team;
         this.matches = matches.stream().collect(Collectors.toSet());
         this.results = new TreeSet<>();
     }
 
-    public TeamInGroup addMatchResults(List<ResultInterface> resultList){
+    public TeamInGroup addMatchResults(List<T> resultList){
         for (ResultInterface result : resultList) {
             // Checking that these games wasn't add already
             if(!results.stream().map(t -> t.getMatchId()).collect(Collectors.toList()).contains(result.getMatchId())) {

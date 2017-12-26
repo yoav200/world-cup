@@ -21,16 +21,21 @@ public class GroupService {
     @Autowired
     TeamRepository teamRepository;
 
-    public boolean isGroupFinished(Group groupId,List<ResultInterface> matches){
+    public <T extends ResultInterface> boolean isGroupFinished(Group groupId,List<T> matches){
         List<GroupMatch> groupMatches = groupMatchRepository.findByGroupId(groupId);
         List<Long> matchesInGroup = groupMatches.stream().map(t -> t.getMatchId()).collect(Collectors.toList());
         return matches.stream().map(t-> t.getMatchId()).collect(Collectors.toList()).containsAll(matchesInGroup);
     }
 
-    public List<TeamInGroup> getGroupStanding(Group groupId, List<ResultInterface> results){
+    public <T extends ResultInterface> List<TeamInGroup> getGroupStanding(Group groupId, List<T> results){
         List<GroupMatch> groupMatches = groupMatchRepository.findByGroupId(groupId);
         List<Team> teams = teamRepository.findByGroupId(groupId);
         GroupStanding groupStanding = new GroupStanding(groupId,groupMatches,results,teams);
         return groupStanding.getStanding();
+    }
+
+    public Group getGroupIdByMatchId(Long matchId){
+        GroupMatch groupMatch = groupMatchRepository.findOne(matchId);
+        return groupMatch.getGroupId();
     }
 }

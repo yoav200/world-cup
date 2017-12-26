@@ -15,7 +15,7 @@ public class GroupStanding {
     Group groupId;
     Set<TeamInGroup> teamsInGroup;
 
-    public GroupStanding(Group group, List<GroupMatch> matches, List<ResultInterface> results, List<Team> teams){
+    public  <T extends ResultInterface> GroupStanding(Group group, List<GroupMatch> matches, List<T> results, List<Team> teams){
         this.groupId = group;
         teamsInGroup = new TreeSet<>();
         for (Team team : teams) {

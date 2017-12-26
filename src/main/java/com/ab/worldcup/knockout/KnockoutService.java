@@ -20,7 +20,7 @@ import static com.ab.worldcup.results.MatchResultType.HOME_TEAM_WON;
 import static com.ab.worldcup.team.KnockoutTeamCode.LOSER_SF1;
 
 @Service
-public class KnockoutService {
+public class KnockoutService <T extends ResultInterface>{
 
     @Autowired
     KnockoutMatchRepository knockoutMatchRepository;
@@ -31,7 +31,28 @@ public class KnockoutService {
 
     private final static Logger logger = LoggerFactory.getLogger(KnockoutService.class);
 
-    public Optional<Team> getKnockoutTeamByTeamCode(KnockoutTeamCode teamCode,List<ResultInterface> results){
+    public Optional<KnockoutTeam> getKnockoutTeamForKnockoutMatch(KnockoutMatch match, List<T> results){
+        Optional<Team> homeTeam = getKnockoutTeamByTeamCode(match.getHomeTeamCode(), results);
+        Optional<Team> awayTeam = getKnockoutTeamByTeamCode(match.getAwayTeamCode(), results);
+
+        KnockoutTeam knockoutTeamRecord = knockoutTeamRepository.getOne(match.getMatchId());
+
+        if(knockoutTeamRecord == null && (homeTeam.isPresent() || awayTeam.isPresent())){
+            knockoutTeamRecord = new KnockoutTeam();
+            knockoutTeamRecord.setMatchId(match);
+        }
+
+        if(homeTeam.isPresent()){
+            knockoutTeamRecord.setHomeTeam(homeTeam.get());
+        }
+
+        if(awayTeam.isPresent()){
+            knockoutTeamRecord.setAwayTeam(awayTeam.get());
+        }
+
+        return Optional.ofNullable(knockoutTeamRecord);
+    }
+    public Optional<Team> getKnockoutTeamByTeamCode(KnockoutTeamCode teamCode,List<T> results){
         Optional<Team> team = Optional.empty();
         switch(teamCode.getType()){
             case GROUP_QUALIFIER:
@@ -43,7 +64,7 @@ public class KnockoutService {
         return team;
     }
 
-    private Optional<Team> getKnockoutQualifierByTeamCode(KnockoutTeamCode teamCode, List<ResultInterface> results) {
+    private Optional<Team> getKnockoutQualifierByTeamCode(KnockoutTeamCode teamCode, List<T> results) {
         if(!teamCode.getKnockoutMatchCode().isPresent()){
             logger.warn("Wrong Input");
             return Optional.empty();
@@ -51,7 +72,7 @@ public class KnockoutService {
 
         KnockoutMatch match = knockoutMatchRepository.findByMatchCode(teamCode.getKnockoutMatchCode().get());
         Long matchId = match.getMatchId();
-        Optional<ResultInterface> matchResult = results.stream().filter(t->t.getMatchId().equals(matchId)).findFirst();
+        Optional<T> matchResult = results.stream().filter(t->t.getMatchId().equals(matchId)).findFirst();
         KnockoutTeam knockoutMatchTeams = knockoutTeamRepository.findOne(matchId);
         if(!matchResult.isPresent()){
             logger.debug("trying to calculate knockout match team for match ID " + matchId + " but match hasn't finished yet");
@@ -68,7 +89,7 @@ public class KnockoutService {
 
     }
 
-    private Optional<Team> getGroupQualifierByTeamCode(KnockoutTeamCode teamCode, List<ResultInterface> results) {
+    private Optional<Team> getGroupQualifierByTeamCode(KnockoutTeamCode teamCode, List<T> results) {
         Optional<Group> group = teamCode.getRelevantGroup();
         if(!group.isPresent()){
             logger.warn("Wrong Input");
