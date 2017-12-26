@@ -1,4 +1,4 @@
-SET FOREIGN_KEY_CHECKS=0
+SET FOREIGN_KEY_CHECKS=0;
 
 DELETE FROM match;
 DELETE FROM team;
@@ -280,4 +280,4 @@ INSERT INTO bet (id, desription, stageId, type) VALUES
   (95, 'Third Place','TP', 'QUALIFIER'),
   (96, 'Winner','W', 'QUALIFIER');
 
-SET FOREIGN_KEY_CHECKS=1
+SET FOREIGN_KEY_CHECKS=1;
