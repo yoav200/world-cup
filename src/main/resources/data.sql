@@ -1,4 +1,8 @@
-
+DELETE FROM match;
+DELETE FROM team;
+DELETE FROM group_match;
+DELETE FROM knockout_match;
+DELETE FROM bet;
 
 INSERT INTO match (matchId, kickoff) VALUES
   (1, '2018-06-14 15:00:00+00'),
