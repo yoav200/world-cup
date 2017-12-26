@@ -6,6 +6,9 @@ import com.ab.worldcup.bet.Bet;
 import com.ab.worldcup.bet.BetService;
 import com.ab.worldcup.bet.BetType;
 import com.ab.worldcup.bet.UserBet;
+import com.ab.worldcup.knockout.KnockoutTeam;
+import com.ab.worldcup.knockout.KnockoutTeamRepository;
+import com.ab.worldcup.match.Stage;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CachePut;
@@ -23,6 +26,9 @@ public class ResultsService {
     QualifierRepository qualifierRepository;
 
     @Autowired
+    KnockoutTeamRepository knockoutTeamRepository;
+
+    @Autowired
     private AccountRepository accountRepository;
 
     @Autowired
@@ -34,7 +40,7 @@ public class ResultsService {
 
         for (Account account : accounts) {
             List<CalculatedUserBet> calculatedUserBets = calculateBetsForUser(account);
-            Integer totalPointsForAccount = calculatedUserBets.stream().mapToInt(i -> i.getPointsForBet()).sum();
+            Integer totalPointsForAccount = calculatedUserBets.stream().mapToInt(i -> i.getTotalPoints()).sum();
             leaderboardList.add(Pair.of(account,totalPointsForAccount));
         }
         leaderboardList.sort((o1, o2) -> o1.getRight() > o2.getRight() ? 1 : -1);
@@ -47,43 +53,78 @@ public class ResultsService {
         List<UserBet> betForAccount = betService.findByUserBetIdAccountId(account.getId());
 
         for (UserBet userBet : betForAccount) {
-            boolean correctWinner = false;
-            boolean exactScore = false;
-            boolean correctQualifier = false;
+            int correctWinnerPoints = 0;
+            int exactScorePoints = 0;
+            int correctQualifierPoints = 0;
 
             Bet bet = userBet.getUserBetId().getBet();
             if(BetType.MATCH.equals(bet.getType())){
                 MatchResult matchResult = matchResultRepository.findOne(bet.getMatchId());
-                correctWinner = isBetWinnerCorrect(userBet,matchResult);
-                exactScore = isBetExactScoreCorrect(userBet,matchResult);
+                correctWinnerPoints = getPointsForMatchResultCorrectness(userBet,matchResult);
+                exactScorePoints = getPointsForExactScoreCorrectness(userBet,matchResult);
             } // else, qualifier bet
             else{
-                // check if qualifier according to user bet exists
-                Qualifier qualifier = qualifierRepository.findByTeamAndStageId(userBet.getQualifier(), bet.getStageId());
-                if(qualifier != null){
-                    correctQualifier = true;
-                }
+               correctQualifierPoints = getPointsForQualifierCorrectness(userBet,bet.getStageId());
             }
             CalculatedUserBet calculatedUserBet = CalculatedUserBet.builder().
                     betType(bet.getType()).
-                    isMatchResultCorrect(correctWinner).
-                    isExactScore(exactScore).
-                    isCorrectQualifier(correctQualifier).
+                    matchResultPoints(correctWinnerPoints).
+                    exactScorePoints(exactScorePoints).
+                    correctQualifierPoints(correctQualifierPoints).
                     userBet(userBet).
                     build();
-
-            // TODO: calculate points
 
             calculatedUserBets.add(calculatedUserBet);
         }
         return calculatedUserBets;
     }
 
-    private boolean isBetExactScoreCorrect(ResultInterface userBet, ResultInterface matchResult) {
+    /**
+     *
+     * @param userBet
+     * @param matchResult
+     * @return number of points gained in can user bet is correct,otherwise 0
+     */
+    private int getPointsForMatchResultCorrectness(UserBet userBet, MatchResult matchResult) {
+        if(isSameWinner(userBet,matchResult)){
+            return PointsConfig.getCorrectWinnerPoints();
+        }
+        return 0;
+    }
+
+    private int getPointsForExactScoreCorrectness(UserBet userBet, MatchResult matchResult) {
+        if(isExactScore(userBet,matchResult)){
+            return PointsConfig.getExactScorePoints();
+        }
+        return 0;
+    }
+
+    private int getPointsForQualifierCorrectness(UserBet userBet, Stage stage) {
+        // check if qualifier according to user bet exists
+        Qualifier qualifier = qualifierRepository.findByTeamAndStageId(userBet.getQualifier(), stage);
+        if(qualifier != null){
+            return PointsConfig.getQualifierPoints(stage);
+        }
+        return 0;
+    }
+
+    private boolean isExactScore(ResultInterface userBet, ResultInterface matchResult) {
         return userBet.scoreEquals(matchResult);
     }
 
-    private boolean isBetWinnerCorrect(ResultInterface userBet, ResultInterface matchResult) {
+    private boolean isSameWinner(ResultInterface userBet, ResultInterface matchResult) {
         return userBet.winnerEquals(matchResult);
+    }
+
+    public void saveMatchResult(MatchResult result){
+        matchResultRepository.saveAndFlush(result);
+    }
+
+    public void saveKnockoutTeam(KnockoutTeam knockoutTeam){
+        knockoutTeamRepository.saveAndFlush(knockoutTeam);
+    }
+
+    public void saveQualifier(Qualifier qualifier){
+        qualifierRepository.saveAndFlush(qualifier);
     }
 }

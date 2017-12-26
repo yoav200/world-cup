@@ -8,6 +8,7 @@ import com.ab.worldcup.knockout.KnockoutTeam;
 import com.ab.worldcup.results.MatchResultRepository;
 import com.ab.worldcup.results.Qualifier;
 import com.ab.worldcup.results.ResultInterface;
+import com.ab.worldcup.results.ResultsService;
 import com.ab.worldcup.team.Group;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,14 +38,20 @@ public class MatchService {
     @Autowired
     BetService betService;
 
+    @Autowired
+    ResultsService resultService;
+
     private final Logger logger = LoggerFactory.getLogger(MatchService.class);
 
     @CacheEvict(cacheNames="CalculatedUserBets")
-    // TODO:
-    // 1. persist MatchResult
-    // 2. persist KnockoutTeam
-    // 3. persist Qualifier
-    public void onMatchFinished(Match match){
+    //
+    /**
+     * Call this method only after persisting the result of <code>match</code>
+     * this method will:
+     * 1. update the relevant KnockoutTeam record if needed
+     * 2. will add a record to qualifier table if needed
+     */
+    public void onMatchFinish(Match match){
         List<KnockoutTeam> knockoutTeamUpdatedByMatch = getKnockoutTeamUpdatedByMatch(match);
         for (KnockoutTeam teamUpdatedByMatch : knockoutTeamUpdatedByMatch) {
             if(teamUpdatedByMatch.getHomeTeam() != null){
@@ -53,7 +60,7 @@ public class MatchService {
                         stageId(getMatchStage(match).getNextStage()).
                         knockoutTeamCode(teamUpdatedByMatch.getMatchId().getHomeTeamCode()).build();
 
-                // TODO persist Qualifier
+                resultService.saveQualifier(qualifier);
             }
             if(teamUpdatedByMatch.getAwayTeam() != null){
                 Qualifier qualifier = Qualifier.builder().
@@ -61,10 +68,9 @@ public class MatchService {
                         stageId(getMatchStage(match).getNextStage()).
                         knockoutTeamCode(teamUpdatedByMatch.getMatchId().getAwayTeamCode()).build();
 
-                // TODO persist Qualifier
+                resultService.saveQualifier(qualifier);
             }
-
-            //TODO persist KnockoutTeam
+            resultService.saveKnockoutTeam(teamUpdatedByMatch);
         }
     }
 
@@ -85,9 +91,7 @@ public class MatchService {
             List<KnockoutMatch> knockoutMatchesInNextStage = knockoutMatchRepository.findAllByStageId(nextStage);
             for (KnockoutMatch knockoutMatch : knockoutMatchesInNextStage) {
                 Optional<KnockoutTeam> knockoutTeam = knockoutService.getKnockoutTeamForKnockoutMatch(knockoutMatch, matchResultList);
-                if(knockoutTeam.isPresent()){
-                    knockoutTeamList.add(knockoutTeam.get());
-                }
+                knockoutTeam.ifPresent(knockoutTeamList::add);
             }
         }
         return knockoutTeamList;

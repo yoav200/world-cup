@@ -14,11 +14,25 @@ public class CalculatedUserBet {
 
     BetType betType;
 
-    boolean isMatchResultCorrect;
+    int matchResultPoints;
 
-    boolean isExactScore;
+    int exactScorePoints;
 
-    boolean isCorrectQualifier;
+    int correctQualifierPoints;
 
-    int pointsForBet;
+    public boolean isMatchResultCorrect(){
+        return matchResultPoints > 0;
+    }
+
+    public boolean isCorrectQualifier(){
+        return correctQualifierPoints > 0;
+    }
+
+    public boolean isExactScoreCorrect(){
+        return exactScorePoints > 0;
+    }
+
+    public int  getTotalPoints(){
+        return matchResultPoints + exactScorePoints + correctQualifierPoints;
+    }
 }
