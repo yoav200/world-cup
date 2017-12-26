@@ -21,7 +21,7 @@ import javax.persistence.Table;
 @Setter
 @ToString
 @EqualsAndHashCode
-@Table(name = "UserBet")
+@Table(name = "user_bet")
 public class UserBet implements ResultInterface {
 
     @EmbeddedId

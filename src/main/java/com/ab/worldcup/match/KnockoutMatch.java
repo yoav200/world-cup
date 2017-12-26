@@ -15,7 +15,7 @@ import java.io.Serializable;
 @Getter
 @EqualsAndHashCode(callSuper = false)
 @Immutable
-@Table(name = "KnockoutMatch")
+@Table(name = "knockout_match")
 public class KnockoutMatch extends Match implements Serializable{
 
     @Enumerated(EnumType.STRING)

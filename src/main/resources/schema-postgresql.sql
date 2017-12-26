@@ -1,4 +1,4 @@
-CREATE TABLE Account (
+CREATE TABLE account (
   id              SERIAL PRIMARY KEY,
   email           VARCHAR UNIQUE,
   password        VARCHAR NOT NULL,
@@ -15,7 +15,7 @@ CREATE TABLE Account (
   language        VARCHAR
 );
 
-CREATE TABLE Team (
+CREATE TABLE team (
   id              SERIAL PRIMARY KEY,
   name            VARCHAR UNIQUE,
   code            VARCHAR NOT NULL,
@@ -26,65 +26,65 @@ CREATE TABLE Team (
   groupId         VARCHAR NOT NULL
 );
 
-CREATE TABLE Match (
+CREATE TABLE match (
   matchId         SERIAL PRIMARY KEY,
   kickoff         TIMESTAMPZ
 );
 
-CREATE TABLE GroupMatch (
-  matchId         INT   REFERENCES Match (matchId) PRIMARY KEY,
-  homeTeam        INT   REFERENCES Team (id),
-  awayTeam        INT   REFERENCES Team (id),
+CREATE TABLE group_match (
+  matchId         INT   REFERENCES match (matchId) PRIMARY KEY,
+  homeTeam        INT   REFERENCES team (id),
+  awayTeam        INT   REFERENCES team (id),
   groupId         VARCHAR NOT NULL
 );
 
-CREATE TABLE KnockoutMatch (
-  matchId         INT   REFERENCES Match (matchId) PRIMARY KEY,
+CREATE TABLE knockout_match (
+  matchId         INT   REFERENCES match (matchId) PRIMARY KEY,
   matchCode       VARCHAR NOT NULL UNIQUE,
   stageId         VARCHAR NOT NULL,
   homeTeamCode    VARCHAR NOT NULL,
   awayTeamCode    VARCHAR NOT NULL
 );
 
-CREATE TABLE Bet (
+CREATE TABLE bet (
   id          SERIAL PRIMARY KEY,
   desription  VARCHAR NOT NULL,
   type        VARCHAR NOT NULL,
-  matchId     INT   REFERENCES Match (matchId),
+  matchId     INT   REFERENCES match (matchId),
   stageId     VARCHAR NOT NULL
 );
 
-CREATE TABLE KnockoutTeam (
-  matchId         INT REFERENCES KnockoutMatch (matchId) PRIMARY KEY,
-  homeTeam        INT REFERENCES Team (id),
-  awayTeam        INT REFERENCES Team (id)
+CREATE TABLE knockout_team (
+  matchId         INT REFERENCES knockout_match (matchId) PRIMARY KEY,
+  homeTeam        INT REFERENCES team (id),
+  awayTeam        INT REFERENCES team (id)
 );
 
-CREATE TABLE MatchResult(
-  matchId         INT REFERENCES Match (matchId) PRIMARY KEY,
-  homeTeam        INT REFERENCES Team (id),
-  awayTeam        INT REFERENCES Team (id),
+CREATE TABLE match_result(
+  matchId         INT REFERENCES match (matchId) PRIMARY KEY,
+  homeTeam        INT REFERENCES team (id),
+  awayTeam        INT REFERENCES team (id),
   homeTeamGoals   INT,
   awayTeamGoals   INT,
   winner          VARCHAR NOT NULL
 );
 
-CREATE TABLE UserBet(
-  accountId       INT REFERENCES Account (id),
-  betId           INT REFERENCES Bet (id),
-  homeTeam        INT REFERENCES Team (id),
-  awayTeam        INT REFERENCES Team (id),
+CREATE TABLE user_bet(
+  accountId       INT REFERENCES account (id),
+  betId           INT REFERENCES bet (id),
+  homeTeam        INT REFERENCES team (id),
+  awayTeam        INT REFERENCES team (id),
   homeTeamGoals   INT,
   awayTeamGoals   INT,
   winner          VARCHAR NOT NULL,
-  qualifier       REFERENCES Team (id),
+  qualifier       INT REFERENCES team (id),
   PRIMARY KEY(accountId, betId),
   CONSTRAINT no_duplicate_bet UNIQUE (accountId, betId)
 );
 
-CREATE TABLE Qualifiers(
+CREATE TABLE qualifier(
   knockoutTeamCode  VARCHAR PRIMARY KEY,
-  teamId            INT REFERENCES Team(id),
+  teamId            INT REFERENCES team(id),
   stageId           VARCHAR NOT NULL
 );
 

@@ -17,7 +17,7 @@ import javax.persistence.Table;
 @Getter
 @EqualsAndHashCode(callSuper = false)
 @Immutable
-@Table(name = "GroupMatch")
+@Table(name = "group_match")
 public class GroupMatch extends Match{
 
     @ManyToOne

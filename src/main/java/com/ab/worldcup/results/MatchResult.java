@@ -19,7 +19,7 @@ import javax.persistence.Table;
 @Setter
 @ToString
 @EqualsAndHashCode
-@Table(name = "MatchResult")
+@Table(name = "match_result")
 public class MatchResult implements ResultInterface {
 
     @Id

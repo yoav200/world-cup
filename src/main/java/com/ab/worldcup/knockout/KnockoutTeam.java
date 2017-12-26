@@ -15,7 +15,7 @@ import java.io.Serializable;
 @Setter
 @ToString
 @EqualsAndHashCode
-@Table(name = "KnockoutTeam")
+@Table(name = "knockout_team")
 public class KnockoutTeam implements Serializable{
 
     @Id

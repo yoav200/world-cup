@@ -12,7 +12,7 @@ import javax.persistence.*;
 @Setter
 @ToString
 @EqualsAndHashCode
-@Table(name = "Qualifier")
+@Table(name = "qualifier")
 public class Qualifier {
 
     @Enumerated(EnumType.STRING)
