@@ -272,3 +272,18 @@ INSERT INTO bet (id, desription, stageId, type) VALUES
   (94, 'Number 2 Qualifier to Final','F', 'QUALIFIER'),
   (95, 'Third Place','TP', 'QUALIFIER'),
   (96, 'Winner','W', 'QUALIFIER');
+
+
+
+
+
+
+--  fake results data
+INSERT INTO match_result (matchId, homeTeam, awayTeam, homeTeamGoals, awayTeamGoals, winner) VALUES
+  (1, 20, 10, 2, 1, 'HOME_TEAM_WON'),
+  (2, 1, 32, 1, 1, 'DRAW'),
+  (3, 2, 7, 3, 0, 'HOME_TEAM_WON'),
+  (4, 19, 22, 0, 1, 'AWAY_TEAM_WON'),
+  (17, 20, 1, 0, 0, 'DRAW'),
+  (18, 19, 2, 3, 1, 'HOME_TEAM_WON'),
+  (19, 32, 10, 0, 1, 'AWAY_TEAM_WON');

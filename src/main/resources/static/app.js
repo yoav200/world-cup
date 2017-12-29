@@ -47,8 +47,8 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $locatio
         url: "/join",
         views: {
             'content@': {
-                templateUrl: 'app/login/login.view.html',
-                controller: 'loginController'
+                templateUrl: 'app/navbar/login.view.html'
+                //controller: 'loginController'
             }
         }
     });

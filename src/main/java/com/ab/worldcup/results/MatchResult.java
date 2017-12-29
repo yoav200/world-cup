@@ -1,18 +1,13 @@
 package com.ab.worldcup.results;
 
 import com.ab.worldcup.team.Team;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Getter
@@ -27,12 +22,14 @@ public class MatchResult implements ResultInterface {
 
     private int homeTeamGoals;
 
+    @JsonIgnore
     @ManyToOne
-    @JoinColumn(name="homeTeam",referencedColumnName="id")
+    @JoinColumn(name = "homeTeam", referencedColumnName = "id")
     private Team homeTeam;
 
+    @JsonIgnore
     @ManyToOne
-    @JoinColumn(name="awayTeam",referencedColumnName="id")
+    @JoinColumn(name = "awayTeam", referencedColumnName = "id")
     private Team awayTeam;
 
     private int awayTeamGoals;

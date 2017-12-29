@@ -17,33 +17,27 @@ angular.module('worldcup').controller('teamsCtrl', function ($rootScope, $scope,
     }
 
 
-    Teams.getAllTeams().then(function(response) {
-        $scope.teams = response;
-        createGroups(response);
-        createConfederation(response);
-    });
+    $scope.prepareTeamsInGroup  = function(teamsInGroup) {
+        for(var i=0;i < teamsInGroup.length;i++) {
+            var teamInGroup = teamsInGroup[i];
+            //for(var j=0;j<teamInGroup.length;j++) {
+                $scope.matches = {firstStage : teamInGroup.matches}
+            //}
+        }
+        return teamsInGroup;
+    };
 
-
-    var createGroups = function(teams) {
-        var list = [];
-        angular.forEach(teams, function(team) {
-            var valObj = {};
-            valObj.name = team.name;
-            valObj.groupId = team.groupId;
-            valObj.confederation = team.confederation;
-            valObj.code = team.code;
-            valObj.played=0;
-            valObj.won=0;
-            valObj.draw=0;
-            valObj.lost=0;
-            valObj.goalsFor=0;
-            valObj.goalsAgainst=0;
-            valObj.goalsDiff=(valObj.goalsFor - valObj.goalsAgainst);
-            valObj.points=0;
-            valObj.knockoutTeamCode=0;
-            list.push(valObj);
+    var groupsStanding = function() {
+        Teams.getGroupsStanding().then(function(response) {
+            $scope.groups = response;
         });
-        $scope.groups = createMapFromList(list, 'groupId');
+    };
+
+    var allTeams = function() {
+        Teams.getAllTeams().then(function(response) {
+            $scope.teams = response;
+            createConfederation(response);
+        });
     };
 
     var createConfederation = function(teams) {
@@ -64,11 +58,19 @@ angular.module('worldcup').controller('teamsCtrl', function ($rootScope, $scope,
     var init = function() {
         var viewName = '';
         switch ($state.current.name) {
-            case 'teams.groups' : viewName= "Groups"; break;
-            case 'teams.fifaranking' : viewName= "FIFA Ranking"; break;
-            case 'teams.confederation' : viewName= "Confederation"; break;
+            case 'teams.groups' :
+                viewName= "Groups";
+                groupsStanding();
+                break;
+            case 'teams.fifaranking' :
+                viewName= "FIFA Ranking";
+                allTeams();
+                break;
+            case 'teams.confederation' :
+                viewName= "Confederation";
+                allTeams();
+                break;
         }
-
         $rootScope.view = { section : viewName};
     };
 

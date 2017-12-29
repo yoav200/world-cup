@@ -35,3 +35,12 @@ worldcup:
     base-callback-url: "http://localhost:8080"
     success-page-url: "#/welcome"
     access-denied-page-url: "#/access-denied"
+  tiebreaking:
+    group-a:
+    group-b:
+    group-c:
+    group-d:
+    group-e:
+    group-f:
+    group-g:
+    group-h:

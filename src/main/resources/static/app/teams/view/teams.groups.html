@@ -1,10 +1,10 @@
 
 
-<div class="panel panel-primary" ng-repeat="(group,teams) in groups">
+<div class="panel panel-primary" ng-repeat="group in groups">
 
-    <div class="panel-heading">Group {{group}}</div>
+    <div class="panel-heading">Group {{group.groupId}}</div>
 
-    <table class="table">
+    <table class="table table-hover">
         <thead>
         <tr>
             <th scope="col"></th>
@@ -19,20 +19,33 @@
         </tr>
         </thead>
         <tbody>
-        <tr ng-repeat="team in teams">
-            <th scope="row">
+        <tr ng-repeat-start="teamInGroup in prepareTeamsInGroup(group.teamsInGroup)">
+            <th>
                 <h3>
-                    <img class="flag" ng-src="/images/teams/{{team.confederation | spaceToUnderscore}}/{{team.code}}.png"/> {{team.name | capitalize }}
+                    <img class="flag" ng-src="/images/teams/{{teamInGroup.team.confederation | spaceToUnderscore}}/{{teamInGroup.team.code}}.png"/>
+                    {{teamInGroup.team.name | capitalize }}
                 </h3>
             </th>
-            <td>{{team.played}}</td>
-            <td>{{team.won}}</td>
-            <td>{{team.draw}}</td>
-            <td>{{team.lost}}</td>
-            <td>{{team.goalsFor}}</td>
-            <td>{{team.goalsAgainst}}</td>
-            <td>{{team.goalsDiff}}</td>
-            <td>{{team.points}}</td>
+            <td>{{teamInGroup.gamesPlayed }}</td>
+            <td>{{teamInGroup.gamesWon }}</td>
+            <td>{{teamInGroup.gamesTied }}</td>
+            <td>{{teamInGroup.gamesLose }}</td>
+            <td>{{teamInGroup.goalsScored }}</td>
+            <td>{{teamInGroup.goalsReceived }}</td>
+            <td>{{(teamInGroup.goalsScored - teamInGroup.team.goalsReceived)}}</td>
+            <td>{{teamInGroup.points | number}}</td>
+            <td>
+                <button type="button" class="btn btn-default btn-sm" data-toggle="collapse" data-target="#team-{{teamInGroup.team.code}}-matches">
+                    <span class="glyphicon glyphicon-collapse-down" aria-hidden="true"></span> Matches
+                </button>
+            </td>
+        </tr>
+        <tr ng-repeat-end>
+            <td colspan="10">
+                <div id="team-{{teamInGroup.team.code}}-matches" class="collapse">
+                    <ng-include src="'app/games/view/games.firststage.html'" />
+                </div>
+            </td>
         </tr>
         </tbody>
     </table>

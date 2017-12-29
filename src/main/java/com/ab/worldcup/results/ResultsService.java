@@ -9,6 +9,7 @@ import com.ab.worldcup.bet.UserBet;
 import com.ab.worldcup.knockout.KnockoutTeam;
 import com.ab.worldcup.knockout.KnockoutTeamRepository;
 import com.ab.worldcup.match.Stage;
+import com.ab.worldcup.team.Group;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CachePut;
@@ -19,6 +20,7 @@ import java.util.List;
 
 @Service
 public class ResultsService {
+
     @Autowired
     MatchResultRepository matchResultRepository;
 
@@ -34,20 +36,20 @@ public class ResultsService {
     @Autowired
     BetService betService;
 
-    public List<Pair<Account,Integer>> getLeaderboard(){
-        List<Pair<Account,Integer>> leaderboardList = new ArrayList<>();
+    public List<Pair<Account, Integer>> getLeaderboard() {
+        List<Pair<Account, Integer>> leaderboardList = new ArrayList<>();
         List<Account> accounts = accountRepository.findAll();
 
         for (Account account : accounts) {
             List<CalculatedUserBet> calculatedUserBets = calculateBetsForUser(account);
-            Integer totalPointsForAccount = calculatedUserBets.stream().mapToInt(i -> i.getTotalPoints()).sum();
-            leaderboardList.add(Pair.of(account,totalPointsForAccount));
+            Integer totalPointsForAccount = calculatedUserBets.stream().mapToInt(CalculatedUserBet::getTotalPoints).sum();
+            leaderboardList.add(Pair.of(account, totalPointsForAccount));
         }
         leaderboardList.sort((o1, o2) -> o1.getRight() > o2.getRight() ? 1 : -1);
         return leaderboardList;
     }
 
-    @CachePut(cacheNames="CalculatedUserBets", key = "account.id")
+    @CachePut(cacheNames = "CalculatedUserBets", key = "account.id")
     public List<CalculatedUserBet> calculateBetsForUser(Account account) {
         List<CalculatedUserBet> calculatedUserBets = new ArrayList<>();
         List<UserBet> betForAccount = betService.findByUserBetIdAccountId(account.getId());
@@ -58,13 +60,13 @@ public class ResultsService {
             int correctQualifierPoints = 0;
 
             Bet bet = userBet.getUserBetId().getBet();
-            if(BetType.MATCH.equals(bet.getType())){
+            if (BetType.MATCH.equals(bet.getType())) {
                 MatchResult matchResult = matchResultRepository.findOne(bet.getMatchId());
-                correctWinnerPoints = getPointsForMatchResultCorrectness(userBet,matchResult);
-                exactScorePoints = getPointsForExactScoreCorrectness(userBet,matchResult);
+                correctWinnerPoints = getPointsForMatchResultCorrectness(userBet, matchResult);
+                exactScorePoints = getPointsForExactScoreCorrectness(userBet, matchResult);
             } // else, qualifier bet
-            else{
-               correctQualifierPoints = getPointsForQualifierCorrectness(userBet,bet.getStageId());
+            else {
+                correctQualifierPoints = getPointsForQualifierCorrectness(userBet, bet.getStageId());
             }
             CalculatedUserBet calculatedUserBet = CalculatedUserBet.builder().
                     betType(bet.getType()).
@@ -80,20 +82,17 @@ public class ResultsService {
     }
 
     /**
-     *
-     * @param userBet
-     * @param matchResult
      * @return number of points gained in can user bet is correct,otherwise 0
      */
     private int getPointsForMatchResultCorrectness(UserBet userBet, MatchResult matchResult) {
-        if(isSameWinner(userBet,matchResult)){
+        if (isSameWinner(userBet, matchResult)) {
             return PointsConfig.getCorrectWinnerPoints();
         }
         return 0;
     }
 
     private int getPointsForExactScoreCorrectness(UserBet userBet, MatchResult matchResult) {
-        if(isExactScore(userBet,matchResult)){
+        if (isExactScore(userBet, matchResult)) {
             return PointsConfig.getExactScorePoints();
         }
         return 0;
@@ -102,7 +101,7 @@ public class ResultsService {
     private int getPointsForQualifierCorrectness(UserBet userBet, Stage stage) {
         // check if qualifier according to user bet exists
         Qualifier qualifier = qualifierRepository.findByTeamAndStageId(userBet.getQualifier(), stage);
-        if(qualifier != null){
+        if (qualifier != null) {
             return PointsConfig.getQualifierPoints(stage);
         }
         return 0;
@@ -116,15 +115,19 @@ public class ResultsService {
         return userBet.winnerEquals(matchResult);
     }
 
-    public void saveMatchResult(MatchResult result){
+    public void saveMatchResult(MatchResult result) {
         matchResultRepository.saveAndFlush(result);
     }
 
-    public void saveKnockoutTeam(KnockoutTeam knockoutTeam){
+    public void saveKnockoutTeam(KnockoutTeam knockoutTeam) {
         knockoutTeamRepository.saveAndFlush(knockoutTeam);
     }
 
-    public void saveQualifier(Qualifier qualifier){
+    public void saveQualifier(Qualifier qualifier) {
         qualifierRepository.saveAndFlush(qualifier);
+    }
+
+    public List<MatchResult> getMatchResultForGroup(Group group) {
+        return matchResultRepository.findMatchResultByGroup(group.toString());
     }
 }

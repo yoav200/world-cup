@@ -2,37 +2,43 @@
 
 angular.module('worldcup').controller('navbarController', function ($rootScope, $scope, $state, $http, $interval, $location) {
 
-    $scope.user = {
-      authenticate : false,
-      displayName : undefined,
-      imageUrl : undefined,
-      provider : undefined
+    $rootScope.globals = {
+        currentUser: {
+            authenticate: false,
+            role: undefined,
+            displayName: undefined,
+            imageUrl: undefined,
+            provider: undefined
+        }
     };
 
-    $http({
-        method : "GET",
-        url : "api/account/identity"
-    }).then(function mySuccess(response) {
-        if(response && response.data) {
-            $scope.user = {
-                authenticate : true,
-                displayName : response.data.fullName,
-                imageUrl : response.data.profileImageUrl
-            };
-        }
-    }, function error(error) {
-        console.log(error);
-    });
 
-    $scope.logout = function() {
+    var getIdentity = function () {
+        return $http.get("api/account/identity").then(function (response) {
+            if (response && response.data) {
+
+                $rootScope.globals = {
+                    currentUser: {
+                        authenticate: true,
+                        role: undefined,
+                        displayName: response.data.fullName,
+                        imageUrl: response.data.profileImageUrl,
+                        provider: undefined
+                    }
+                };
+            }
+        });
+    };
+
+
+    $scope.logout = function () {
         window.location.href = '/signout';
     };
 
-    $scope.socialLogin = function(provider) {
+    $scope.socialLogin = function (provider) {
         console.log(provider);
-        $state.go('login', {'provider':provider});
-        //$location.url('/signup/' + provider);
-        //window.location.href = '/signin/' + provider + '?code=publish_actions,user_photos,public_profile,email';
-    }
+        $state.go('login', {'provider': provider});
+    };
 
+    getIdentity();
 });

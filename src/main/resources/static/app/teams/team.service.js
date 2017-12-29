@@ -8,9 +8,16 @@ angular.module('worldcup').factory('Teams', function($http) {
         });
     };
 
+    var getGroupsStanding = function() {
+        return $http.get("api/groups/").then(function(response) {
+            return  response.data;
+        });
+    };
+
 
     return {
-        getAllTeams: getAllTeams
+        getAllTeams : getAllTeams,
+        getGroupsStanding : getGroupsStanding
     };
 
 

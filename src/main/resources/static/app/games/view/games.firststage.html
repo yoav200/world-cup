@@ -3,18 +3,20 @@
 <table class="table">
     <tbody>
     <tr ng-repeat="match in matches.firstStage">
-        <td>
+        <td class="col-md-1">
             <div><b>Group {{match.groupId}}</b></div>
             <div>{{match.kickoff | date : format : 'medium'}}</div>
         </td>
-        <td>
+        <td class="col-md-2">
             <h2>
                 <img class="flag" ng-src="/images/teams/{{match.homeTeam.confederation | spaceToUnderscore}}/{{match.homeTeam.code}}.png"/>
                 {{match.homeTeam.name | capitalize }}
             </h2>
         </td>
-        <td>{{match.kickoff | date : format : 'hh:mm '}}</td>
-        <td>
+        <td class="col-md-2 text-center">
+            <h1>{{match.result.homeTeamGoals}} : {{match.result.awayTeamGoals}}</h1>
+        </td>
+        <td class="col-md-2">
             <h2>
                 <img class="flag" ng-src="/images/teams/{{match.awayTeam.confederation | spaceToUnderscore}}/{{match.awayTeam.code}}.png"/>
                 {{match.awayTeam.name | capitalize }}
