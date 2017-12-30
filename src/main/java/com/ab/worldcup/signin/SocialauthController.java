@@ -76,7 +76,7 @@ public class SocialauthController {
             try {
                 AuthProvider provider = m.connect(SocialAuthUtil.getRequestParametersMap(request));
                 this.logger.debug("Connected Provider : " + provider.getProviderId());
-                accountService.registerWithProfie(provider.getUserProfile());
+                accountService.registerWithProfile(provider.getUserProfile());
             } catch (Exception e) {
                 e.printStackTrace();
             }

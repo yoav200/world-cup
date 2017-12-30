@@ -30,20 +30,23 @@
                 <li><a href="#/">Contact</a></li>
             </ul>
 
-            <ul class="nav navbar-nav navbar-right" data-ng-hide="globals.currentUser.authenticate">
-                <li><a href="#/join">Join</a></li>
+            <ul class="nav navbar-nav navbar-right" data-ng-hide="Account.authenticate">
+                <li ui-sref-active="active"><a ui-sref="join">Join</a></li>
             </ul>
 
-            <ul class="nav navbar-nav navbar-right" data-ng-show="globals.currentUser.authenticate">
+            <ul class="nav navbar-nav navbar-right" data-ng-show="Account.authenticate">
                 <li class="dropdown">
                     <a href class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                        <img ng-src="{{globals.currentUser.imageUrl}}" style="max-height: 30px;"/> <span class="caret"></span>
+                        <img ng-src="{{Account.imageUrl}}" style="max-height: 30px;"/> <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu">
-                        <li class="dropdown-header">Signed in as {{user.displayName}}</li>
+                        <li class="dropdown-header">Signed in as {{Account.displayName}}</li>
                         <li><a href="#">Profile</a></li>
                         <li><a href="#">Settings</a></li>
                         <li role="separator" class="divider"></li>
+                        <li ui-sref-active="active" permission="['ROLE_ADMIN']">
+                           <a ui-sref="admin">Update Match <small>admin</small></a></li>
+                        </li>
                         <li><a href data-ng-click="logout()">Log out</a></li>
                     </ul>
                 </li>

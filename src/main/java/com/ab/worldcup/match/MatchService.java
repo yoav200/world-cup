@@ -5,13 +5,9 @@ import com.ab.worldcup.bet.BetService;
 import com.ab.worldcup.group.GroupService;
 import com.ab.worldcup.knockout.KnockoutService;
 import com.ab.worldcup.knockout.KnockoutTeam;
-import com.ab.worldcup.results.MatchResultRepository;
-import com.ab.worldcup.results.Qualifier;
-import com.ab.worldcup.results.ResultInterface;
-import com.ab.worldcup.results.ResultsService;
+import com.ab.worldcup.results.*;
 import com.ab.worldcup.team.Group;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
@@ -21,53 +17,56 @@ import java.util.List;
 import java.util.Optional;
 
 
+@Log
 @Service
 public class MatchService {
 
     @Autowired
-    KnockoutMatchRepository knockoutMatchRepository;
-    @Autowired
-    MatchResultRepository matchResultRepository;
+    private KnockoutMatchRepository knockoutMatchRepository;
 
     @Autowired
-    GroupService groupService;
+    private MatchResultRepository matchResultRepository;
 
     @Autowired
-    KnockoutService knockoutService;
+    private GroupMatchRepository groupMatchRepository;
+
 
     @Autowired
-    BetService betService;
+    private GroupService groupService;
 
     @Autowired
-    ResultsService resultService;
+    private KnockoutService knockoutService;
 
-    private final Logger logger = LoggerFactory.getLogger(MatchService.class);
+    @Autowired
+    private BetService betService;
 
-    @CacheEvict(cacheNames="CalculatedUserBets")
-    //
+    @Autowired
+    private ResultsService resultService;
+
     /**
      * Call this method only after persisting the result of <code>match</code>
      * this method will:
      * 1. update the relevant KnockoutTeam record if needed
      * 2. will add a record to qualifier table if needed
      */
-    public void onMatchFinish(Match match){
+    @CacheEvict(cacheNames = "CalculatedUserBets")
+    public void onMatchFinish(Match match) {
         List<KnockoutTeam> knockoutTeamUpdatedByMatch = getKnockoutTeamUpdatedByMatch(match);
         for (KnockoutTeam teamUpdatedByMatch : knockoutTeamUpdatedByMatch) {
-            if(teamUpdatedByMatch.getHomeTeam() != null){
-                Qualifier qualifier = Qualifier.builder().
-                        team(teamUpdatedByMatch.getHomeTeam()).
-                        stageId(getMatchStage(match).getNextStage()).
-                        knockoutTeamCode(teamUpdatedByMatch.getMatchId().getHomeTeamCode()).build();
-
+            if (teamUpdatedByMatch.getHomeTeam() != null) {
+                Qualifier qualifier = Qualifier.builder()
+                        .team(teamUpdatedByMatch.getHomeTeam())
+                        .stageId(getMatchStage(match).getNextStage())
+                        .knockoutTeamCode(teamUpdatedByMatch.getMatchId().getHomeTeamCode())
+                        .build();
                 resultService.saveQualifier(qualifier);
             }
-            if(teamUpdatedByMatch.getAwayTeam() != null){
-                Qualifier qualifier = Qualifier.builder().
-                        team(teamUpdatedByMatch.getAwayTeam()).
-                        stageId(getMatchStage(match).getNextStage()).
-                        knockoutTeamCode(teamUpdatedByMatch.getMatchId().getAwayTeamCode()).build();
-
+            if (teamUpdatedByMatch.getAwayTeam() != null) {
+                Qualifier qualifier = Qualifier.builder()
+                        .team(teamUpdatedByMatch.getAwayTeam())
+                        .stageId(getMatchStage(match).getNextStage())
+                        .knockoutTeamCode(teamUpdatedByMatch.getMatchId().getAwayTeamCode())
+                        .build();
                 resultService.saveQualifier(qualifier);
             }
             resultService.saveKnockoutTeam(teamUpdatedByMatch);
@@ -75,18 +74,18 @@ public class MatchService {
     }
 
 
-    private <T extends ResultInterface> List<KnockoutTeam> getKnockoutTeamUpdatedByMatch(Match match){
+    private <T extends ResultInterface> List<KnockoutTeam> getKnockoutTeamUpdatedByMatch(Match match) {
         List<KnockoutTeam> knockoutTeamList = new ArrayList<>();
         List<T> matchResultList = (List<T>) matchResultRepository.findAll();
         Stage currentStage = getMatchStage(match);
         boolean groupFinished = false;
 
-        if(Stage.GROUP.equals(currentStage)){
+        if (Stage.GROUP.equals(currentStage)) {
             Group group = groupService.getGroupIdByMatchId(match.getMatchId());
             groupFinished = groupService.isGroupFinished(group, matchResultList);
         }
 
-        if(groupFinished || !Stage.GROUP.equals(currentStage)) {
+        if (groupFinished || !Stage.GROUP.equals(currentStage)) {
             Stage nextStage = currentStage.getNextStage();
             List<KnockoutMatch> knockoutMatchesInNextStage = knockoutMatchRepository.findAllByStageId(nextStage);
             for (KnockoutMatch knockoutMatch : knockoutMatchesInNextStage) {
@@ -102,4 +101,21 @@ public class MatchService {
         return betForMatch.getStageId();
     }
 
+    // TODO: 30/12/2017 do we support update result for ongoing games?
+    public GroupMatch updateGroupMatchResult(Long matchId, MatchResult matchResult) {
+        MatchResult result = matchResultRepository.findOne(matchId);
+        if (result == null) {
+            result = new MatchResult();
+        }
+        if (result.equals(matchResult)) {
+            result.setHomeTeamGoals(matchResult.getHomeTeamGoals());
+            result.setAwayTeamGoals(matchResult.getAwayTeamGoals());
+            result.setWinner(matchResult.getWinner());
+        } else {
+            throw new IllegalArgumentException("Match result do not match");
+        }
+        matchResultRepository.save(matchResult);
+
+        return groupMatchRepository.findOne(matchId).setResult(result);
+    }
 }

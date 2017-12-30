@@ -2,6 +2,12 @@
 
 angular.module('worldcup').factory('Matches', function($http) {
 
+    var getAllMatches = function() {
+        return $http.get("api/match/").then(function(response) {
+            return  response.data;
+        });
+    };
+
     var getFirstStageMatches = function() {
         return $http.get("api/match/groups").then(function(response) {
             return  response.data;
@@ -14,9 +20,17 @@ angular.module('worldcup').factory('Matches', function($http) {
         });
     };
 
+    var updateStageMatch = function(result) {
+        return $http.post("api/match/knockout", result).then(function(response) {
+            return  response.data;
+        });
+    };
+
     return {
+        getAllMatches: getAllMatches,
         getFirstStageMatches: getFirstStageMatches,
-        getSecondStageMatches: getSecondStageMatches
+        getSecondStageMatches: getSecondStageMatches,
+        updateStageMatch: updateStageMatch
     };
 
 

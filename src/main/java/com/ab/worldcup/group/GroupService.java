@@ -26,7 +26,7 @@ public class GroupService {
     private GroupMatchRepository groupMatchRepository;
 
     @Autowired
-    MatchResultRepository matchResultRepository;
+    private MatchResultRepository matchResultRepository;
 
     @Autowired
     private TeamRepository teamRepository;

@@ -5,7 +5,6 @@ import com.ab.worldcup.team.Group;
 import com.ab.worldcup.team.Team;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.Setter;
 import org.hibernate.annotations.Immutable;
 
 import javax.persistence.*;
@@ -28,9 +27,14 @@ public class GroupMatch extends Match {
     @Enumerated(EnumType.STRING)
     private Group groupId;
 
-    @Setter
     @Transient
     private ResultInterface result;
+
+
+    public GroupMatch setResult(ResultInterface result) {
+        this.result = result;
+        return this;
+    }
 
     @Override
     public String toString() {

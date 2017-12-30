@@ -1,9 +1,13 @@
 package com.ab.worldcup.account;
 
 import com.ab.worldcup.signin.Role;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Sets;
 import org.brickred.socialauth.Profile;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
@@ -12,15 +16,25 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.Collections;
+import java.util.Set;
 
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 
 @Service
 public class AccountService implements UserDetailsService {
 
+    private final AccountRepository accountRepository;
+
+    private final ImmutableSet<String> adminEmails;
+
     @Autowired
-    private AccountRepository accountRepository;
+    public AccountService(@Value("${worldcup.admin-emails}") String administrators, AccountRepository accountRepository) {
+        this.accountRepository = accountRepository;
+        this.adminEmails = ImmutableSet.copyOf(administrators.split(","));
+    }
+
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -56,7 +70,7 @@ public class AccountService implements UserDetailsService {
         return accountRepository.save(account);
     }
 
-    public void registerWithProfie(Profile profile) throws EmailAlreadyInUseException {
+    public void registerWithProfile(Profile profile) throws EmailAlreadyInUseException {
         Account account = accountRepository.findByEmail(profile.getEmail());
         // already exists - check provider
         if (account != null && !account.getProviderId().equals(profile.getProviderId())) {
@@ -71,11 +85,19 @@ public class AccountService implements UserDetailsService {
                 new UsernamePasswordAuthenticationToken(
                         account.getEmail(),
                         account.getPassword(),
-                        Collections.singletonList(new SimpleGrantedAuthority(Role.USER.getAuthority()))));
+                        getAuthorities(account.getEmail())));
     }
 
     public Account findAccountByEmail(String email) {
         return accountRepository.findByEmail(email);
+    }
+
+    private Collection<GrantedAuthority> getAuthorities(String email) {
+        Set<GrantedAuthority> authorities = Sets.newHashSet(new SimpleGrantedAuthority(Role.USER.getAuthority()));
+        if (adminEmails.contains(email)) {
+            authorities.add(new SimpleGrantedAuthority(Role.ADMIN.getAuthority()));
+        }
+        return authorities;
     }
 
 }

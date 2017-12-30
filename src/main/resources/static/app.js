@@ -9,7 +9,7 @@ var app = angular.module('worldcup', ['ui.router', 'ui.router.stateHelper', 'ui.
 /**
  * Configure the Routes using ui router
  */
-app.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $locationProvider) {
+app.config(function ($stateProvider, $urlRouterProvider, $httpProvider) {
     // $locationProvider.html5Mode(true);
     // For any unmatched url, redirect to /
     $urlRouterProvider.otherwise("/");
@@ -26,11 +26,6 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $locatio
                 templateUrl: 'app/navbar/navbar.view.html',
                 controller: 'navbarController'
             }
-            // , resolve: {
-            //     profile: function (Users) {
-            //         return Users.fetchProfile();
-            //     }
-            // }
         }
     }).state('home', {
         parent: 'site',
@@ -48,11 +43,11 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $locatio
         views: {
             'content@': {
                 templateUrl: 'app/navbar/login.view.html'
-                //controller: 'loginController'
             }
         }
     });
 
+    
     // Team
     $stateProvider.state('teams', {
         parent: 'site',
@@ -69,23 +64,15 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $locatio
         controller: 'teamsCtrl'
     }).state('teams.confederation', {
         url: "/confederation",
-        data: {},
-        views: {
-            '': {
-                templateUrl: 'app/teams/view/teams.confederations.html',
-                controller: 'teamsCtrl'
-            }
-        }
+        templateUrl: 'app/teams/view/teams.confederations.html', 
+        controller: 'teamsCtrl'
     }).state('teams.fifaranking', {
         url: "/ranking",
-        views: {
-            '': {
-                templateUrl: 'app/teams/view/teams.fifaranking.html',
-                controller: 'teamsCtrl'
-            }
-        }
+        templateUrl: 'app/teams/view/teams.fifaranking.html',
+        controller: 'teamsCtrl'
     });
 
+    
     // Matches
     $stateProvider.state('games', {
         parent: 'site',
@@ -100,12 +87,6 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $locatio
         url: "/first-stage",
         templateUrl: 'app/games/view/games.firststage.html',
         controller: 'gamesCtrl'
-        // , resolve: {
-        //     firstStageMatches:  function($http){
-        //         // $http returns a promise for the url data
-        //         return $http({method: 'GET', url: '/match/group'});
-        //     }
-        // }
     }).state('games.secondstage', {
         url: "/second-stage",
         templateUrl: 'app/games/view/games.secondstage.html',
@@ -116,6 +97,7 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $locatio
     // Bets
     $stateProvider.state('bets-mine', {
         parent: 'site',
+        permissions: ['ROLE_USER'],
         url: "/bets/mine",
         views: {
             'content@': {
@@ -125,6 +107,7 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $locatio
         }
     }).state('bets-statistics', {
         parent: 'site',
+        permissions: ['ROLE_USER'],
         url: "/bets/statistics",
         views: {
             'content@': {
@@ -134,16 +117,39 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $locatio
         }
     });
 
-}).filter('capitalize', function() {
-    return function(input) {
+    // Admin
+    $stateProvider.state('admin', {
+        parent: 'site',
+        permissions: ['ROLE_ADMIN'],
+        url: "/admin",
+        views: {
+            'content@': {
+                templateUrl: 'app/admin/admin.view.html',
+                controller: 'adminCtrl'
+            }
+        }
+    })
+    
+}).filter('capitalize', function () {
+    return function (input) {
         return (!!input) ? input.charAt(0).toUpperCase() + input.substr(1).toLowerCase() : '';
     }
-}).filter('spaceToUnderscore', function() {
-    return function(input) {
+}).filter('spaceToUnderscore', function () {
+    return function (input) {
         return angular.lowercase(input.replace(/\s+/g, '_'));
     }
 }).filter('underscoreToSpace', function () {
     return function (input) {
         return input.replace(/_/g, ' ');
     };
+}).run(function ($rootScope, $state, Auth) {
+
+    Auth.init();
+
+    $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
+        if (!Auth.checkPermissionForView(toState)) {
+            event.preventDefault();
+            $state.go('join');
+        }
+    });
 });

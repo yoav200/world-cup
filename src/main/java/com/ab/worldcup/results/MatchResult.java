@@ -13,7 +13,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @ToString
-@EqualsAndHashCode
+@EqualsAndHashCode(of = {"matchId", "homeTeam", "awayTeam"})
 @Table(name = "match_result")
 public class MatchResult implements ResultInterface {
 
@@ -36,5 +36,6 @@ public class MatchResult implements ResultInterface {
 
     @Enumerated(EnumType.STRING)
     private MatchResultType winner;
+
 
 }

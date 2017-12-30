@@ -28,8 +28,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
             .csrf().disable()
             .headers().frameOptions().disable()
-            .and()
-                .anonymous() //allow anonymous access
+            //.and()
+            //    .anonymous() //allow anonymous access
             .and()
                 .authorizeRequests()
                 .antMatchers("/**", "/api/**").permitAll()
