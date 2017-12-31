@@ -11,8 +11,8 @@ import java.util.List;
 @Service
 public class BetService {
 
-    BetRepository betRepository;
-    UserBetRepository userBetRepository;
+    private BetRepository betRepository;
+    private UserBetRepository userBetRepository;
 
     public BetService(UserBetRepository userBetRepository,BetRepository betRepository){
         this.betRepository = betRepository;
