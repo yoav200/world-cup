@@ -3,7 +3,7 @@
 /**
  * Main AngularJS Web Application
  */
-var app = angular.module('worldcup', ['ui.router', 'ui.router.stateHelper', 'ui.bootstrap', 'ngResource', 'ngAnimate', 'ngSanitize']);
+var app = angular.module('worldcup', ['ui.router', 'ui.router.stateHelper', 'ui.bootstrap', 'ngResource', 'ngAnimate', 'ngSanitize', 'angular-loading-bar']);
 
 
 /**
@@ -130,7 +130,9 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider) {
         }
     })
     
-}).filter('capitalize', function () {
+})/*.config(['cfpLoadingBarProvider', function(cfpLoadingBarProvider) {
+    cfpLoadingBarProvider.parentSelector = '#loading-bar-container';
+}])*/.filter('capitalize', function () {
     return function (input) {
         return (!!input) ? input.charAt(0).toUpperCase() + input.substr(1).toLowerCase() : '';
     }

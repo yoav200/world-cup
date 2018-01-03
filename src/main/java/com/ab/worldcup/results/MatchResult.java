@@ -2,25 +2,17 @@ package com.ab.worldcup.results;
 
 import com.ab.worldcup.team.Team;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
 
 @Entity
-@Getter
-@Setter
 @ToString
 @EqualsAndHashCode(of = {"matchId", "homeTeam", "awayTeam"})
 @Table(name = "match_result")
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@Data
 public class MatchResult implements ResultInterface {
 
     @Id

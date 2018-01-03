@@ -58,7 +58,7 @@ public class MatchController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @ResponseBody
     @RequestMapping(value = "/groups/{matchId}", method = RequestMethod.POST)
-    public GroupMatch updateGroupMatches(@PathVariable Long matchId, MatchResult matchResult) {
+    public GroupMatch updateGroupMatches(@PathVariable Long matchId, @RequestBody MatchResult matchResult) {
         return matchService.updateGroupMatchResult(matchId, matchResult);
     }
 
@@ -71,7 +71,7 @@ public class MatchController {
 
     @Data
     @Builder
-    public static class MatchBasicData {
+    private static class MatchBasicData {
         private Long matchId;
         private Timestamp kickoff;
         private String label;

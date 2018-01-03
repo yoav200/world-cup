@@ -43,7 +43,7 @@
         <tr ng-repeat-end>
             <td colspan="10">
                 <div id="team-{{teamInGroup.team.code}}-matches" class="collapse">
-                    <ng-include src="'app/games/view/games.firststage.html'" />
+                    <matches data="teamInGroup.matches"></matches>
                 </div>
             </td>
         </tr>

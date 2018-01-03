@@ -9,10 +9,17 @@ angular.module('worldcup').controller('adminCtrl', function ($rootScope, $scope,
     $scope.matchResult = {
         matchId: undefined,
         homeTeamGoals: undefined,
-        homeTeam: {},
-        awayTeam: {},
+        //homeTeam: {},
+        //awayTeam: {},
         awayTeamGoals: undefined,
-        winner: undefined
+        winner: 'HOME_TEAM_WON',
+        isFinished: false
+    };
+
+    $scope.postResult = function() {
+        Matches.updateStageMatch($scope.matchResult).then(function (response) {
+            console.log(response);
+        });
     };
 
     $scope.onMatchSelected = function(event) {

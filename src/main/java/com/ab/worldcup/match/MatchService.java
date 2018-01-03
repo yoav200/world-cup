@@ -106,6 +106,7 @@ public class MatchService {
         MatchResult result = matchResultRepository.findOne(matchId);
         if (result == null) {
             result = new MatchResult();
+            result.setMatchId(matchId);
         }
         if (result.equals(matchResult)) {
             result.setHomeTeamGoals(matchResult.getHomeTeamGoals());

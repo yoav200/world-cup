@@ -21,7 +21,7 @@ angular.module('worldcup').factory('Matches', function($http) {
     };
 
     var updateStageMatch = function(result) {
-        return $http.post("api/match/knockout", result).then(function(response) {
+        return $http.post("api/match/groups/" + result.matchId, result).then(function(response) {
             return  response.data;
         });
     };

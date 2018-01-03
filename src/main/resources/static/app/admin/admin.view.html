@@ -1,7 +1,6 @@
 
-<section id="admin" permission="ROLE_ADMIN">
+<section id="admin" permission="['ROLE_ADMIN']">
     <h1>Update match result <small>Admin Only!</small></h1>
-
 
     <div class="panel panel-default">
         <div class="panel-body">
@@ -24,7 +23,7 @@
     <div class="panel panel-default">
         <div class="panel-heading">Result Form</div>
         <div class="panel-body">
-            <form class="form-horizontal" action="">
+            <form class="form-horizontal" ng-submit="postResult()">
                 <div class="form-group">
                     <label class="control-label col-sm-2" for="machtId">Match Id:</label>
                     <div class="col-sm-10">
@@ -42,20 +41,20 @@
                 <div class="form-group">
                     <label class="control-label col-sm-2" for="homeTeamGaols">Home team goals:</label>
                     <div class="col-sm-10">
-                        <input type="number" class="form-control" id="homeTeamGaols" placeholder="Enter score">
+                        <input type="number" class="form-control" id="homeTeamGaols" placeholder="Enter score" ng-model="matchResult.homeTeamGoals">
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="control-label col-sm-2" for="awayTeamGoals">Away team goals:</label>
                     <div class="col-sm-10">
-                        <input type="number" class="form-control" id="awayTeamGoals" placeholder="Enter score">
+                        <input type="number" class="form-control" id="awayTeamGoals" placeholder="Enter score" ng-model="matchResult.awayTeamGoals">
                     </div>
                 </div>
 
                 <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
                         <div class="checkbox">
-                            <label><input type="checkbox"> Match finished</label>
+                            <label><input type="checkbox" ng-model="matchResult.isFinished"> Match finished</label>
                         </div>
                     </div>
                 </div>

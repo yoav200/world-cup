@@ -59,11 +59,9 @@ angular.module('worldcup').factory('Auth', function ($rootScope, $state, $http) 
         }
 
         var found = false;
-
         angular.forEach(permissions, function (permission, index) {
             if (Account.roles.indexOf(permission) >= 0) {
                 found = true;
-                return;
             }
         });
 
@@ -72,7 +70,7 @@ angular.module('worldcup').factory('Auth', function ($rootScope, $state, $http) 
 
 
     auth.isLoggedIn = function () {
-        return (Account && Account.roles && Account.roles.length);
+        return (Account && Account.roles && Account.roles.length > 0);
     };
 
     auth.socialLogin = function (provider) {

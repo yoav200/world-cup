@@ -15,6 +15,7 @@ body {
 .main {
     background-color: #fff;
 }
+/*
 .affix {
     top: 50px;
     width: 100%;
@@ -24,7 +25,7 @@ body {
 .affix + .container-fluid {
     padding-top: 70px;
 }
-
+*/
 .nav-tabs {
     padding: 10px 0 10px 0;
 }

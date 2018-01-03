@@ -8,7 +8,7 @@ angular.module('worldcup').directive('permission', ['Auth', function (Auth) {
         },
 
         link: function (scope, elem, attrs) {
-            scope.$watch(Auth.isLoggedIn, function () {
+            scope.$watch(Auth.isLoggedIn(), function () {
                 if (Auth.userHasPermission(scope.permission)) {
                     elem.show();
                 } else {
