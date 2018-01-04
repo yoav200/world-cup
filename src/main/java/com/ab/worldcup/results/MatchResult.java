@@ -1,5 +1,6 @@
 package com.ab.worldcup.results;
 
+import com.ab.worldcup.match.MatchResultEntityListener;
 import com.ab.worldcup.team.Team;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
@@ -9,6 +10,7 @@ import lombok.ToString;
 import javax.persistence.*;
 
 @Entity
+@EntityListeners({MatchResultEntityListener.class})
 @ToString
 @EqualsAndHashCode(of = {"matchId", "homeTeam", "awayTeam"})
 @Table(name = "match_result")

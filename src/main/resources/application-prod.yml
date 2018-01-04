@@ -16,4 +16,4 @@ spring:
 
 worldcup:
   socialauth:
-    base-callback-url: "https://ab-world-cup.herokuapp.com/"
+    base-callback-url: "https://ab-world-cup.herokuapp.com"

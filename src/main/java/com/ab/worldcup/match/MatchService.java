@@ -119,4 +119,12 @@ public class MatchService {
 
         return groupMatchRepository.findOne(matchId).setResult(result);
     }
+
+    public Match getMatchById(Long matchId) {
+        Match one = groupMatchRepository.findOne(matchId);
+        if (one == null) {
+            one = knockoutMatchRepository.findOne(matchId);
+        }
+        return one;
+    }
 }

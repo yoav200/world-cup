@@ -39,15 +39,15 @@ public class TeamInGroup<T extends ResultInterface> implements Comparable<TeamIn
     }
 
     public TeamInGroup addMatchResults(List<T> resultList) {
-
         Map<Long, GroupMatch> groupMatchMap = matches.stream().collect(Collectors.toMap(GroupMatch::getMatchId, Function.identity()));
         List<Long> matchIds = results.stream().map(ResultInterface::getMatchId).collect(Collectors.toList());
 
         for (ResultInterface result : resultList) {
             // Checking that these games wasn't add already
-            if (!matchIds.contains(result.getMatchId())) {
-                boolean isTeamHomeTeam = result.getHomeTeam().equals(team);
-                boolean isTeamAwayTeam = result.getAwayTeam().equals(team);
+            if (!matchIds.contains(result.getMatchId()) && groupMatchMap.containsKey(result.getMatchId()) ) {
+                GroupMatch groupMatch = groupMatchMap.get(result.getMatchId());
+                boolean isTeamHomeTeam = groupMatch.getHomeTeam().equals(team);
+                boolean isTeamAwayTeam = groupMatch.getAwayTeam().equals(team);
 
                 if (isTeamHomeTeam || isTeamAwayTeam) {
                     gamesPlayed++;
