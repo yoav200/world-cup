@@ -51,8 +51,8 @@ public class TeamInGroup<T extends ResultInterface> implements Comparable<TeamIn
 
                 if (isTeamHomeTeam || isTeamAwayTeam) {
                     gamesPlayed++;
-                    goalsScored += isTeamAwayTeam ? result.getHomeTeamGoals() : result.getAwayTeamGoals();
-                    goalsReceived += isTeamAwayTeam ? result.getAwayTeamGoals() : result.getHomeTeamGoals();
+                    goalsScored += isTeamHomeTeam ? result.getHomeTeamGoals() : result.getAwayTeamGoals();
+                    goalsReceived += isTeamHomeTeam ? result.getAwayTeamGoals() : result.getHomeTeamGoals();
 
                     switch (result.getWinner()) {
                         case HOME_TEAM_WON:
