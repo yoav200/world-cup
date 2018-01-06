@@ -130,4 +130,8 @@ public class ResultsService {
     public List<MatchResult> getMatchResultForGroup(Group group) {
         return matchResultRepository.findMatchResultByGroup(group.toString());
     }
+
+    public List<MatchResult> getAllMatchResults() {
+        return matchResultRepository.findAll();
+    }
 }

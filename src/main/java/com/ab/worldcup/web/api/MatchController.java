@@ -1,18 +1,26 @@
 package com.ab.worldcup.web.api;
 
 import com.ab.worldcup.group.GroupService;
-import com.ab.worldcup.match.*;
+import com.ab.worldcup.knockout.KnockoutService;
+import com.ab.worldcup.match.GroupMatch;
+import com.ab.worldcup.match.KnockoutMatch;
+import com.ab.worldcup.match.MatchService;
+import com.ab.worldcup.match.Stage;
 import com.ab.worldcup.results.MatchResult;
+import com.ab.worldcup.results.ResultsService;
+import com.ab.worldcup.team.Team;
+import com.ab.worldcup.web.model.MatchData;
 import com.google.common.collect.Lists;
-import lombok.Builder;
-import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.Timestamp;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/match")
@@ -25,26 +33,44 @@ public class MatchController {
     private GroupService groupService;
 
     @Autowired
-    KnockoutMatchRepository knockoutMatchRepository;
+    private KnockoutService<MatchResult> knockoutService;
+
+    @Autowired
+    private ResultsService resultsService;
 
     @ResponseBody
     @RequestMapping(value = "/")
-    public List<MatchBasicData> getAll() {
-        List<MatchBasicData> list = Lists.newArrayList();
-        Set<GroupMatch> allGroupMatchs = groupService.getAllGroupMatchs();
-        List<KnockoutMatch> allKnockoutMatch = knockoutMatchRepository.findAll();
+    public List<MatchData> getAll() {
+        List<MatchData> list = Lists.newArrayList();
+        Set<GroupMatch> allGroupMatches = groupService.getAllGroupMatchs();
+        List<KnockoutMatch> allKnockoutMatch = knockoutService.getAllKnockoutMatches();
+        List<MatchResult> allMatchResults = resultsService.getAllMatchResults();
 
-        allGroupMatchs.forEach(match -> list.add(MatchBasicData.builder()
-                .matchId(match.getMatchId())
-                .kickoff(match.getKickoff())
-                .label(match.toString())
-                .stage(Stage.GROUP).build()));
+        Map<Long, MatchResult> resultMap = allMatchResults.stream().collect(Collectors.toMap(MatchResult::getMatchId, Function.identity()));
 
-        allKnockoutMatch.forEach(match -> list.add(MatchBasicData.builder()
-                .matchId(match.getMatchId())
-                .kickoff(match.getKickoff())
-                .label(match.toString())
-                .stage(match.getStageId()).build()));
+
+        allGroupMatches.forEach(match -> list.add(
+                MatchData.builder()
+                        .matchId(match.getMatchId())
+                        .kickoff(match.getKickoff())
+                        .awayTeam(match.getAwayTeam())
+                        .homeTeam(match.getHomeTeam())
+                        .stage(Stage.GROUP)
+                        .result(resultMap.get(match.getMatchId())).build()));
+
+
+        allKnockoutMatch.forEach(match -> {
+            Optional<Team> homeTeam = knockoutService.getKnockoutTeamByTeamCode(match.getHomeTeamCode(), allMatchResults);
+            Optional<Team> awatTeam = knockoutService.getKnockoutTeamByTeamCode(match.getAwayTeamCode(), allMatchResults);
+            list.add(
+                    MatchData.builder()
+                            .matchId(match.getMatchId())
+                            .kickoff(match.getKickoff())
+                            .homeTeam(homeTeam.orElse(null))
+                            .awayTeam(awatTeam.orElse(null))
+                            .stage(match.getStageId())
+                            .result(resultMap.get(match.getMatchId())).build());
+        });
 
         return list;
     }
@@ -59,22 +85,15 @@ public class MatchController {
     @ResponseBody
     @RequestMapping(value = "/groups/{matchId}", method = RequestMethod.POST)
     public GroupMatch updateGroupMatches(@PathVariable Long matchId, @RequestBody MatchResult matchResult) {
-        return matchService.updateGroupMatchResult(matchId, matchResult);
+        GroupMatch groupMatch = matchService.updateGroupMatchResult(matchId, matchResult);
+        matchService.onMatchFinish(groupMatch);
+        return groupMatch;
     }
 
 
     @ResponseBody
     @RequestMapping(value = "/knockout")
     public List<KnockoutMatch> getAllKnockoutMatch() {
-        return knockoutMatchRepository.findAll();
-    }
-
-    @Data
-    @Builder
-    private static class MatchBasicData {
-        private Long matchId;
-        private Timestamp kickoff;
-        private String label;
-        private Stage stage;
+        return knockoutService.getAllKnockoutMatches();
     }
 }

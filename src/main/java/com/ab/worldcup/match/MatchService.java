@@ -57,7 +57,7 @@ public class MatchService {
                 Qualifier qualifier = Qualifier.builder()
                         .team(teamUpdatedByMatch.getHomeTeam())
                         .stageId(getMatchStage(match).getNextStage())
-                        .knockoutTeamCode(teamUpdatedByMatch.getMatchId().getHomeTeamCode())
+                        .knockoutTeamCode(teamUpdatedByMatch.getKnockoutMatch().getHomeTeamCode())
                         .build();
                 resultService.saveQualifier(qualifier);
             }
@@ -65,7 +65,7 @@ public class MatchService {
                 Qualifier qualifier = Qualifier.builder()
                         .team(teamUpdatedByMatch.getAwayTeam())
                         .stageId(getMatchStage(match).getNextStage())
-                        .knockoutTeamCode(teamUpdatedByMatch.getMatchId().getAwayTeamCode())
+                        .knockoutTeamCode(teamUpdatedByMatch.getKnockoutMatch().getAwayTeamCode())
                         .build();
                 resultService.saveQualifier(qualifier);
             }

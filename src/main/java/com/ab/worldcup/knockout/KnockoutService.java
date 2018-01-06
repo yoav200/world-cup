@@ -45,7 +45,7 @@ public class KnockoutService<T extends ResultInterface> {
 
         if (knockoutTeamRecord == null && (homeTeam.isPresent() || awayTeam.isPresent())) {
             knockoutTeamRecord = new KnockoutTeam();
-            knockoutTeamRecord.setMatchId(match);
+            knockoutTeamRecord.setMatchId(match.getMatchId());
         }
 
         if (homeTeam.isPresent()) {
@@ -117,5 +117,9 @@ public class KnockoutService<T extends ResultInterface> {
 
     public Team getKnockMatchLoser(KnockoutTeam matchTeams, ResultInterface result) {
         return HOME_TEAM_WON.equals(result.getWinner()) ? matchTeams.getAwayTeam() : matchTeams.getHomeTeam();
+    }
+
+    public List<KnockoutMatch> getAllKnockoutMatches() {
+        return knockoutMatchRepository.findAll();
     }
 }

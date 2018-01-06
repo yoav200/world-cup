@@ -16,16 +16,20 @@ import java.io.Serializable;
 @ToString
 @EqualsAndHashCode
 @Table(name = "knockout_team")
-public class KnockoutTeam implements Serializable{
+public class KnockoutTeam implements Serializable {
 
     @Id
-    private KnockoutMatch matchId;
+    private Long matchId;
 
     @ManyToOne
-    @JoinColumn(name="homeTeam",referencedColumnName="id")
+    @JoinColumn(name = "homeTeam", referencedColumnName = "id")
     private Team homeTeam;
 
     @ManyToOne
-    @JoinColumn(name="awayTeam",referencedColumnName="id")
+    @JoinColumn(name = "awayTeam", referencedColumnName = "id")
     private Team awayTeam;
+
+    @OneToOne
+    @PrimaryKeyJoinColumn
+    private KnockoutMatch knockoutMatch;
 }
