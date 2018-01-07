@@ -65,8 +65,7 @@ CREATE TABLE match_result(
   homeTeam        INT REFERENCES team (id),
   awayTeam        INT REFERENCES team (id),
   homeTeamGoals   INT,
-  awayTeamGoals   INT,
-  winner          VARCHAR NOT NULL
+  awayTeamGoals   INT
 );
 
 CREATE TABLE user_bet(
@@ -75,8 +74,7 @@ CREATE TABLE user_bet(
   homeTeam        INT REFERENCES team (id),
   awayTeam        INT REFERENCES team (id),
   homeTeamGoals   INT,
-  awayTeamGoals   INT,
-  winner          VARCHAR NOT NULL,
+  awayTeamGoals   INT
   qualifier       INT REFERENCES team (id),
   PRIMARY KEY(accountId, betId),
   CONSTRAINT no_duplicate_bet UNIQUE (accountId, betId)

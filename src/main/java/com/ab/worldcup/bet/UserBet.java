@@ -1,7 +1,6 @@
 package com.ab.worldcup.bet;
 
 import com.ab.worldcup.results.ResultInterface;
-import com.ab.worldcup.results.MatchResultType;
 import com.ab.worldcup.team.Team;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -10,8 +9,6 @@ import lombok.ToString;
 
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -39,9 +36,6 @@ public class UserBet implements ResultInterface {
 
     private int awayTeamGoals;
 
-    @Enumerated(EnumType.STRING)
-    private MatchResultType winner;
-
     @ManyToOne
     @JoinColumn(name="qualifier",referencedColumnName="id")
     private Team qualifier;
@@ -50,6 +44,5 @@ public class UserBet implements ResultInterface {
     public Long getMatchId() {
         return getUserBetId().getBet().getMatchId();
     }
-
 
 }

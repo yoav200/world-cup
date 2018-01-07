@@ -111,13 +111,17 @@ public class MatchService {
         if (result.equals(matchResult)) {
             result.setHomeTeamGoals(matchResult.getHomeTeamGoals());
             result.setAwayTeamGoals(matchResult.getAwayTeamGoals());
-            result.setWinner(matchResult.getWinner());
+
+
+
         } else {
             throw new IllegalArgumentException("Match result do not match");
         }
         matchResultRepository.save(matchResult);
 
-        return groupMatchRepository.findOne(matchId).setResult(result);
+        GroupMatch groupMatch = groupMatchRepository.findOne(matchId);
+        groupMatch.setResult(result);
+        return groupMatch;
     }
 
     public Match getMatchById(Long matchId) {

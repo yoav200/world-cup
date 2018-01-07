@@ -8,7 +8,17 @@ public interface ResultInterface {
     Team getAwayTeam();
     int getHomeTeamGoals();
     int getAwayTeamGoals();
-    MatchResultType getWinner();
+
+    default MatchResultType getWinner() {
+        MatchResultType winner = MatchResultType.DRAW;
+        if (getHomeTeamGoals() > getAwayTeamGoals()){
+            winner = MatchResultType.HOME_TEAM_WON;
+        }else if(getHomeTeamGoals() < getAwayTeamGoals()){
+            winner = MatchResultType.AWAY_TEAM_WON;
+        }
+
+        return winner;
+    }
 
     default boolean winnerEquals(ResultInterface other){
         if(getMatchId().equals(other.getMatchId())){

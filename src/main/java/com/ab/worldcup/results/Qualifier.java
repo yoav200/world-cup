@@ -14,12 +14,13 @@ import javax.persistence.*;
 @EqualsAndHashCode
 @Table(name = "qualifier")
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Qualifier {
 
     @Enumerated(EnumType.STRING)
     @Id
     private KnockoutTeamCode knockoutTeamCode;
-
 
     @ManyToOne
     @JoinColumn(name="teamId",referencedColumnName="id")
@@ -27,6 +28,5 @@ public class Qualifier {
 
     @Enumerated(EnumType.STRING)
     private Stage stageId;
-
 
 }

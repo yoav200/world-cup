@@ -33,8 +33,4 @@ public class MatchResult implements ResultInterface {
 
     private int awayTeamGoals;
 
-    @Enumerated(EnumType.STRING)
-    private MatchResultType winner;
-
-
 }

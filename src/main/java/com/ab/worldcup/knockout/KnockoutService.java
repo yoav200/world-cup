@@ -41,11 +41,12 @@ public class KnockoutService<T extends ResultInterface> {
         Optional<Team> homeTeam = getKnockoutTeamByTeamCode(match.getHomeTeamCode(), results);
         Optional<Team> awayTeam = getKnockoutTeamByTeamCode(match.getAwayTeamCode(), results);
 
-        KnockoutTeam knockoutTeamRecord = knockoutTeamRepository.getOne(match.getMatchId());
+        KnockoutTeam knockoutTeamRecord = knockoutTeamRepository.findOne(match.getMatchId());
 
         if (knockoutTeamRecord == null && (homeTeam.isPresent() || awayTeam.isPresent())) {
             knockoutTeamRecord = new KnockoutTeam();
             knockoutTeamRecord.setMatchId(match.getMatchId());
+            knockoutTeamRecord.setKnockoutMatch(match);
         }
 
         if (homeTeam.isPresent()) {
