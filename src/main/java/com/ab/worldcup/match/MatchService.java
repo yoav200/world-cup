@@ -102,7 +102,7 @@ public class MatchService {
     }
 
     // TODO: 30/12/2017 do we support update result for ongoing games?
-    public GroupMatch updateGroupMatchResult(Long matchId, MatchResult matchResult) {
+    public Match updateGroupMatchResult(Long matchId, MatchResult matchResult) {
         MatchResult result = matchResultRepository.findOne(matchId);
         if (result == null) {
             result = new MatchResult();
@@ -119,7 +119,7 @@ public class MatchService {
         }
         matchResultRepository.save(matchResult);
 
-        GroupMatch groupMatch = groupMatchRepository.findOne(matchId);
+        Match groupMatch = getMatchById(matchId);
         groupMatch.setResult(result);
         return groupMatch;
     }

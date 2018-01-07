@@ -1,5 +1,6 @@
 package com.ab.worldcup.match;
 
+import com.ab.worldcup.results.ResultInterface;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
@@ -22,4 +23,11 @@ public abstract class Match implements Serializable{
 
     protected Timestamp kickoff;
 
+    @Transient
+    private ResultInterface result;
+
+    public Match setResult(ResultInterface result) {
+        this.result = result;
+        return this;
+    }
 }

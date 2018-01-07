@@ -1,13 +1,17 @@
 package com.ab.worldcup.match;
 
-import com.ab.worldcup.results.ResultInterface;
 import com.ab.worldcup.team.Group;
 import com.ab.worldcup.team.Team;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.hibernate.annotations.Immutable;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 @Entity
 @Getter
@@ -26,15 +30,6 @@ public class GroupMatch extends Match {
 
     @Enumerated(EnumType.STRING)
     private Group groupId;
-
-    @Transient
-    private ResultInterface result;
-
-
-    public GroupMatch setResult(ResultInterface result) {
-        this.result = result;
-        return this;
-    }
 
     @Override
     public String toString() {
