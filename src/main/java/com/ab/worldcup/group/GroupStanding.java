@@ -4,14 +4,11 @@ import com.ab.worldcup.match.GroupMatch;
 import com.ab.worldcup.results.ResultInterface;
 import com.ab.worldcup.team.Group;
 import com.ab.worldcup.team.Team;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 
 import java.util.List;
-import java.util.Set;
 import java.util.TreeSet;
-import java.util.stream.Collectors;
 
 @Getter
 public class GroupStanding {
@@ -20,7 +17,7 @@ public class GroupStanding {
     private Group groupId;
 
     @JsonProperty(value = "teamsInGroup")
-    private Set<TeamInGroup<? super ResultInterface>> teamsInGroup;
+    private TreeSet<TeamInGroup<? super ResultInterface>> teamsInGroup;
 
     <T extends ResultInterface> GroupStanding(Group group, List<GroupMatch> matches, List<T> results, List<Team> teams) {
         this.groupId = group;
@@ -31,8 +28,4 @@ public class GroupStanding {
         }
     }
 
-    @JsonIgnore
-    public List<TeamInGroup> getStanding() {
-        return teamsInGroup.stream().sorted().collect(Collectors.toList());
-    }
 }

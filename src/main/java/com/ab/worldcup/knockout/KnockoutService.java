@@ -1,6 +1,7 @@
 package com.ab.worldcup.knockout;
 
 import com.ab.worldcup.group.GroupService;
+import com.ab.worldcup.group.GroupStanding;
 import com.ab.worldcup.group.TeamInGroup;
 import com.ab.worldcup.match.KnockoutMatch;
 import com.ab.worldcup.match.KnockoutMatchRepository;
@@ -8,12 +9,14 @@ import com.ab.worldcup.results.ResultInterface;
 import com.ab.worldcup.team.Group;
 import com.ab.worldcup.team.KnockoutTeamCode;
 import com.ab.worldcup.team.Team;
+import com.google.common.collect.Iterables;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.TreeSet;
 import java.util.logging.Level;
 
 import static com.ab.worldcup.results.MatchResultType.HOME_TEAM_WON;
@@ -106,8 +109,9 @@ public class KnockoutService<T extends ResultInterface> {
         if (!groupService.isGroupFinished(group.get(), results)) {
             return Optional.empty();
         } else {
-            List<TeamInGroup> groupStanding = groupService.getGroupStanding(group.get(), results).getStanding();
-            TeamInGroup teamInGroup = groupStanding.get(teamCode.isGroupWinner() ? 1 : 2);
+            GroupStanding groupStanding = groupService.getGroupStanding(group.get(), results);
+            TreeSet<TeamInGroup<? super ResultInterface>> teamsInGroup = groupStanding.getTeamsInGroup();
+            TeamInGroup teamInGroup = Iterables.get(teamsInGroup, teamCode.isGroupWinner() ? 0 : 1);
             return Optional.of(teamInGroup.getTeam());
         }
     }
