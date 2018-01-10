@@ -28,7 +28,8 @@ CREATE TABLE team (
 
 CREATE TABLE match (
   matchId         SERIAL PRIMARY KEY,
-  kickoff         TIMESTAMPZ
+  kickoff         TIMESTAMPZ,
+  status          VARCHAR NOT NULL DEFAULT 'SCHEDULED'
 );
 
 CREATE TABLE group_match (
@@ -51,7 +52,8 @@ CREATE TABLE bet (
   desription  VARCHAR NOT NULL,
   type        VARCHAR NOT NULL,
   matchId     INT   REFERENCES match (matchId),
-  stageId     VARCHAR NOT NULL
+  stageId     VARCHAR NOT NULL,
+  lockTime   TIMESTAMPZ NOT NULL
 );
 
 CREATE TABLE knockout_team (
@@ -65,7 +67,8 @@ CREATE TABLE match_result(
   homeTeam        INT REFERENCES team (id),
   awayTeam        INT REFERENCES team (id),
   homeTeamGoals   INT,
-  awayTeamGoals   INT
+  awayTeamGoals   INT,
+  matchQualifier  VARCHAR
 );
 
 CREATE TABLE user_bet(

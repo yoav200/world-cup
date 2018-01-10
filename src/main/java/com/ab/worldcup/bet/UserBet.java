@@ -45,4 +45,8 @@ public class UserBet implements ResultInterface {
         return getUserBetId().getBet().getMatchId();
     }
 
+    @Override
+    public Team getKnockoutQualifier() {
+        return qualifier;
+    }
 }

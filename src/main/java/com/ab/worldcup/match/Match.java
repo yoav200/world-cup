@@ -14,7 +14,7 @@ import java.sql.Timestamp;
 @EqualsAndHashCode
 @Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "match")
-public abstract class Match implements Serializable{
+public abstract class Match implements Serializable,MatchTeamsInterface{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,6 +22,8 @@ public abstract class Match implements Serializable{
     protected Long matchId;
 
     protected Timestamp kickoff;
+
+    protected MatchStatus status;
 
     @Transient
     private ResultInterface result;

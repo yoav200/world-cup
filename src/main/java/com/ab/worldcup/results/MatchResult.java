@@ -1,12 +1,19 @@
 package com.ab.worldcup.results;
 
+import com.ab.worldcup.knockout.KnockoutMatchQualifier;
 import com.ab.worldcup.team.Team;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+import static com.ab.worldcup.knockout.KnockoutMatchQualifier.HOME_TEAM;
 
 @Entity
 //@EntityListeners({MatchResultEntityListener.class})
@@ -33,4 +40,22 @@ public class MatchResult implements ResultInterface {
 
     private int awayTeamGoals;
 
+    // for cases when knockout match ends up with a tie, and the qualifier is set after penalties.
+    // WILL BE NULL FOR GROUP MATCHES
+    private KnockoutMatchQualifier matchQualifier;
+
+//    @Override
+//    public Team getHomeTeam() {
+//        return match.getHomeTeam();
+//    }
+//
+//    @Override
+//    public Team getAwayTeam() {
+//        return match.getAwayTeam();
+//    }
+
+    @Override
+    public Team getKnockoutQualifier() {
+        return HOME_TEAM.equals(getMatchQualifier()) ? getHomeTeam() : getAwayTeam();
+    }
 }

@@ -9,6 +9,8 @@ public interface ResultInterface {
     int getHomeTeamGoals();
     int getAwayTeamGoals();
 
+    Team getKnockoutQualifier();
+
     default MatchResultType getWinner() {
         MatchResultType winner = MatchResultType.DRAW;
         if (getHomeTeamGoals() > getAwayTeamGoals()){

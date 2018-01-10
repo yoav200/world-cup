@@ -8,6 +8,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.sql.Timestamp;
 
 @Entity
 @Getter
@@ -26,5 +27,7 @@ public class Bet {
 
     @Enumerated(EnumType.STRING)
     private Stage stageId;
+
+    private Timestamp lockTime;
 
 }

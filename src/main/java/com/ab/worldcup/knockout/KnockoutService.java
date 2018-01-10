@@ -19,7 +19,6 @@ import java.util.Optional;
 import java.util.TreeSet;
 import java.util.logging.Level;
 
-import static com.ab.worldcup.results.MatchResultType.HOME_TEAM_WON;
 import static com.ab.worldcup.team.KnockoutTeamCode.LOSER_SF1;
 
 @Service
@@ -117,11 +116,11 @@ public class KnockoutService<T extends ResultInterface> {
     }
 
     public Team getKnockMatchWinner(KnockoutTeam matchTeams, ResultInterface result) {
-        return HOME_TEAM_WON.equals(result.getWinner()) ? matchTeams.getHomeTeam() : matchTeams.getAwayTeam();
+        return result.getKnockoutQualifier();
     }
 
     public Team getKnockMatchLoser(KnockoutTeam matchTeams, ResultInterface result) {
-        return HOME_TEAM_WON.equals(result.getWinner()) ? matchTeams.getAwayTeam() : matchTeams.getHomeTeam();
+        return matchTeams.getHomeTeam().equals(result.getKnockoutQualifier()) ? matchTeams.getHomeTeam() : matchTeams.getAwayTeam();
     }
 
     public List<KnockoutMatch> getAllKnockoutMatches() {
