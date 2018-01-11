@@ -3,11 +3,7 @@ package com.ab.worldcup.bet;
 import com.ab.worldcup.match.Stage;
 import lombok.Getter;
 
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.sql.Timestamp;
 
 @Entity
@@ -18,7 +14,7 @@ public class Bet {
     @Id
     private Long id;
 
-    private String desription;
+    private String description;
 
     @Enumerated(EnumType.STRING)
     private BetType type;

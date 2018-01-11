@@ -9,8 +9,7 @@ angular.module('worldcup').controller('teamsCtrl', function ($rootScope, $scope,
     $scope.confederation = [];
 
 
-    var parentState = 'teams',
-        defaultChildState = '.groups';
+    var parentState = 'teams', defaultChildState = '.groups';
     // If the parent state has been transitioned to, redirect to the default child.
     if($state.current.name.substr(-parentState.length) === parentState) {
         $state.go(defaultChildState);
@@ -19,10 +18,7 @@ angular.module('worldcup').controller('teamsCtrl', function ($rootScope, $scope,
 
     $scope.prepareTeamsInGroup  = function(teamsInGroup) {
         for(var i=0;i < teamsInGroup.length;i++) {
-            var teamInGroup = teamsInGroup[i];
-            //for(var j=0;j<teamInGroup.length;j++) {
-                $scope.matches = {firstStage : teamInGroup.matches}
-            //}
+            $scope.matches = {firstStage : teamsInGroup[i].matches}
         }
         return teamsInGroup;
     };

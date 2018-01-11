@@ -1,12 +1,95 @@
-<h1>Bets</h1>
+<section id="bets">
+    <div>
+        <h1>Bets
+            <small>All</small>
+        </h1>
 
-<p>
-    Bla Bla bla
-</p>
+    </div>
 
-<div class="panel panel-default">
+    <div class="panel" ui-view>
 
+        <div ng-repeat="bet in bets">
 
+            <div class="row table-bordered table-hover" data-toggle="collapse" data-target="#bet-{{bet.id}}-data">
+                <div class="col-md-4"><b>{{bet.id}}</b></div>
+                <div class="col-md-4">{{bet.description}}</div>
+                <div class="col-md-4">{{bet.lockTime | date : 'MMM d, h:mm:ss a'}}</div>
+            </div>
 
-</div>
+            <div id="bet-{{bet.id}}-data" class="collapse">
+                <div class="row table-bordered">
+                    <div class="col-md-2">{{bet.match.stage}}</div>
+                    <div class="col-md-2">{{bet.match.kickoff | date : 'MMM d, h:mm:ss a' }}</div>
+                    <div class="col-md-2">
+                        <img data-ng-src="/images/teams/{{bet.match.homeTeam.confederation | spaceToUnderscore}}/{{bet.match.homeTeam.code}}.png"/>
+                        {{bet.match.homeTeam.name | capitalize }}
+                    </div>
+                    <div class="col-md-2">vs</div>
+                    <div class="col-md-2">
+                        <img data-ng-src="/images/teams/{{bet.match.awayTeam.confederation | spaceToUnderscore}}/{{bet.match.awayTeam.code}}.png"/>
+                        {{bet.match.homeTeam.name | capitalize }}
+                    </div>
+                </div>
+                <div class="row table-bordered">
+                    <div class="col-md-6">
+                        <b>Result</b>
+                        <div class="form-group">
+                            <label for="resultHomeTeamGoals">Home team Goals</label>
+                            <input type="number" class="form-control" id="resultHomeTeamGoals" ng-model="bet.match.result.homeTeamGoals" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="resultAwayTeamGoals">Home team Goals</label>
+                            <input type="number" class="form-control" id="resultAwayTeamGoals" ng-model="bet.match.result.awayTeamGoals" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="resultQualifier">File input</label>
+                            <input type="text" class="form-control" id="resultQualifier" ng-model="bet.match.result.qualifier" readonly>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <b>Bet</b>
+                        <div class="form-group">
+                            <label for="betHomeTeamGoals">Home team Goals</label>
+                            <input type="number" class="form-control" id="betHomeTeamGoals">
+                        </div>
+                        <div class="form-group">
+                            <label for="betAwayTeamGoals">Home team Goals</label>
+                            <input type="number" class="form-control" id="betAwayTeamGoals">
+                        </div>
+                        <div class="form-group">
+                            <label for="betQualifier">File input</label>
+                            <input type="text" class="form-control" id="betQualifier" >
+                        </div>
+                    </div>
+                </div>
+            </div>
 
+        </div>
+
+        <!--
+        <table class="table table-condensed">
+            <tbody>
+            <tr ng-repeat="bet in bets"  data-toggle="collapse" data-target="#bet-{{bet.id}}-data">
+                <td>
+                    <div><b>{{bet.id}}</b></div>
+                </td>
+                <td>
+                    <div>{{bet.description}}</div>
+                </td>
+                <td>
+                    <div>{{bet.lockTime | date : 'MMM d, h:mm:ss a'}}</div>
+                </td>
+            </tr>
+            <tr ng-repeat-end>
+                <td colspan="3">
+                    <div id="bet-{{bet.id}}-data" class="collapse">
+                        bet type: {{bet.type}}
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+            -->
+    </div>
+
+</section>

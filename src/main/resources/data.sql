@@ -173,7 +173,7 @@ INSERT INTO knockout_match(matchId, matchCode, stageId, homeTeamCode, awayTeamCo
   (63, 'TP', 'THIRD_PLACE','LOSER_SF1','LOSER_SF2'),
   (64, 'F', 'FINAL', 'WINNER_SF1','WINNER_SF2');
 
-INSERT INTO bet (id, desription, matchId, stageId, type, lockTime) VALUES
+INSERT INTO bet (id, description, matchId, stageId, type, lockTime) VALUES
   (1, 'Match 1 Result',1,'GROUP', 'MATCH', '2018-06-14 15:00:00+00'),
   (2, 'Match 2 Result',2,'GROUP', 'MATCH', '2018-06-15 12:00:00+00'),
   (3, 'Match 3 Result',3,'GROUP', 'MATCH', '2018-06-15 15:00:00+00'),
@@ -240,7 +240,7 @@ INSERT INTO bet (id, desription, matchId, stageId, type, lockTime) VALUES
   (64, 'Final Match Result',64,'FINAL', 'MATCH', '2018-07-15 15:00:00+00');
 
 -- lock time for qualifier bets is the beginning of the tournament
-INSERT INTO bet (id, desription, stageId, type, lockTime) VALUES
+INSERT INTO bet (id, description, stageId, type, lockTime) VALUES
  (65, 'Number 1 Qualifier to Round Of 16','ROUND_OF_16', 'QUALIFIER', '2018-06-14 15:00:00+00'),
   (66, 'Number 2 Qualifier to Round Of 16','ROUND_OF_16', 'QUALIFIER', '2018-06-14 15:00:00+00'),
   (67, 'Number 3 Qualifier to Round Of 16','ROUND_OF_16', 'QUALIFIER', '2018-06-14 15:00:00+00'),

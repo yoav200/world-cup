@@ -18,7 +18,7 @@ import static com.ab.worldcup.knockout.KnockoutMatchQualifier.HOME_TEAM;
 @Entity
 //@EntityListeners({MatchResultEntityListener.class})
 @ToString
-@EqualsAndHashCode(of = {"matchId", "homeTeam", "awayTeam"})
+@EqualsAndHashCode(of = {"matchId"})
 @Table(name = "match_result")
 @Data
 public class MatchResult implements ResultInterface {

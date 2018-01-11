@@ -33,5 +33,4 @@ angular.module('worldcup').factory('Matches', function($http) {
         updateStageMatch: updateStageMatch
     };
 
-
 });

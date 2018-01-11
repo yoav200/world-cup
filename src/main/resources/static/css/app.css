@@ -6,26 +6,38 @@ html {
 body {
     min-height: 500px;
     padding-top: 70px;
-    background-image: url(/images/bg.jpg);
-    background-color: #fff;
-    background-repeat: repeat-x;
-    background-position: center 0;
+    background: #fff url(/images/bg.jpg) repeat-x center 0;
 }
 
 .main {
     background-color: #fff;
 }
-/*
-.affix {
-    top: 50px;
-    width: 100%;
-    z-index: 9999 !important;
+
+.table > tbody > tr > td {
+    vertical-align: middle;
 }
 
-.affix + .container-fluid {
-    padding-top: 70px;
+.navbar-fixed-top {
+    min-height: 60px;
 }
-*/
+
+.navbar-nav > li > a {
+    padding-top: 0px;
+    padding-bottom: 0px;
+    line-height: 60px;
+}
+
+.navbar-brand {
+    line-height: 33px;
+}
+
+@media (max-width: 767px) {
+    .navbar-nav > li > a {
+        line-height: 20px;
+        padding-top: 10px;
+        padding-bottom: 10px;}
+}
+
 .nav-tabs {
     padding: 10px 0 10px 0;
 }
@@ -35,3 +47,9 @@ body {
     height: 32px;
     border: 1px solid #c7c6c6;
 }
+
+
+
+
+
+

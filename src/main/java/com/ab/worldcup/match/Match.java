@@ -2,7 +2,9 @@ package com.ab.worldcup.match;
 
 import com.ab.worldcup.results.ResultInterface;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -14,7 +16,7 @@ import java.sql.Timestamp;
 @EqualsAndHashCode
 @Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "match")
-public abstract class Match implements Serializable,MatchTeamsInterface{
+public abstract class Match implements Serializable, MatchTeamsInterface {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

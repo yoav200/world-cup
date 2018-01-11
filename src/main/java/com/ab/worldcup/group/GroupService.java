@@ -11,6 +11,7 @@ import com.ab.worldcup.team.Team;
 import com.ab.worldcup.team.TeamRepository;
 import com.google.common.collect.ImmutableSet;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -48,11 +49,13 @@ public class GroupService {
         return groupMatch.getGroupId();
     }
 
-    public Set<GroupMatch> getAllGroupMatchs() {
+
+    @Cacheable("groupMatches")
+    public Set<GroupMatch> getAllGroupMatches() {
         List<MatchResult> results = matchResultRepository.findAll();
         List<GroupMatch> matches = groupMatchRepository.findAll();
         Map<Long, MatchResult> resultMap = results.stream().collect(Collectors.toMap(MatchResult::getMatchId, Function.identity()));
-
+        // add results
         matches.forEach(match -> resultMap.computeIfPresent(match.getMatchId(), (k, v) -> {
             match.setResult(v);
             return v;

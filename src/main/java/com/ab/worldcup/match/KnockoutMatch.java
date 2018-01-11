@@ -9,12 +9,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.hibernate.annotations.Immutable;
 
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.OneToOne;
-import javax.persistence.PrimaryKeyJoinColumn;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
@@ -22,7 +17,7 @@ import java.io.Serializable;
 @EqualsAndHashCode(callSuper = false)
 @Immutable
 @Table(name = "knockout_match")
-public class KnockoutMatch extends Match implements Serializable{
+public class KnockoutMatch extends Match implements Serializable {
 
     @Enumerated(EnumType.STRING)
     private KnockoutMatchCode matchCode;
@@ -42,15 +37,15 @@ public class KnockoutMatch extends Match implements Serializable{
 
     @Override
     public String toString() {
-        return this.kickoff + " Code " + matchCode + " : " + homeTeamCode +  " - " + awayTeamCode;
+        return this.kickoff + " Code " + matchCode + " : " + homeTeamCode + " - " + awayTeamCode;
     }
 
     @Override
     @Nullable
     public Team getHomeTeam() {
-        if(knockoutTeam == null){
+        if (knockoutTeam == null) {
             return TeamService.UndeterminedTeam;
-        }else{
+        } else {
             return knockoutTeam.getHomeTeam();
         }
     }
@@ -58,9 +53,9 @@ public class KnockoutMatch extends Match implements Serializable{
     @Override
     @Nullable
     public Team getAwayTeam() {
-        if(knockoutTeam == null){
+        if (knockoutTeam == null) {
             return TeamService.UndeterminedTeam;
-        }else{
+        } else {
             return knockoutTeam.getAwayTeam();
         }
     }

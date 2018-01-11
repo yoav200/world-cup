@@ -5,15 +5,15 @@ angular.module('worldcup').controller('adminCtrl', function ($rootScope, $scope,
     console.log("Only admin can view this page")
 
     $scope.matches = [];
-    $scope.selected = undefined;
+
+    $scope.match = undefined;
+
     $scope.matchResult = {
         matchId: undefined,
+        label: undefined,
         homeTeamGoals: undefined,
-        //homeTeam: {},
-        //awayTeam: {},
         awayTeamGoals: undefined,
-        winner: 'HOME_TEAM_WON',
-        isFinished: false
+        qualifier: undefined
     };
 
     $scope.postResult = function() {
@@ -22,8 +22,19 @@ angular.module('worldcup').controller('adminCtrl', function ($rootScope, $scope,
         });
     };
 
-    $scope.onMatchSelected = function(event) {
-        $scope.matchResult.matchId = $scope.selected.matchId;
+    $scope.onMatchSelected = function() {
+        angular.forEach($scope.matches, function (match, index) {
+            if ($scope.match.matchId == match.matchId) {
+                $scope.match = match;
+                $scope.matchResult = {
+                    matchId: $scope.match.matchId,
+                    homeTeamGoals: $scope.match.result?$scope.match.result.homeTeamGoals:undefined,
+                    awayTeamGoals: $scope.match.result?$scope.match.result.awayTeamGoals:undefined,
+                    qualifier: $scope.match.result?$scope.match.result.matchQualifier:undefined
+                };
+                return;
+            }
+        });
     };
 
     Matches.getAllMatches().then(function (response) {

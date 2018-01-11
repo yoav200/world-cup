@@ -49,7 +49,7 @@ CREATE TABLE knockout_match (
 
 CREATE TABLE bet (
   id          SERIAL PRIMARY KEY,
-  desription  VARCHAR NOT NULL,
+  description VARCHAR NOT NULL,
   type        VARCHAR NOT NULL,
   matchId     INT   REFERENCES match (matchId),
   stageId     VARCHAR NOT NULL,

@@ -7,14 +7,17 @@ import com.ab.worldcup.knockout.KnockoutService;
 import com.ab.worldcup.knockout.KnockoutTeam;
 import com.ab.worldcup.results.*;
 import com.ab.worldcup.team.Group;
+import com.ab.worldcup.team.Team;
+import com.ab.worldcup.web.model.MatchData;
+import com.google.common.collect.Lists;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 
 @Log
@@ -29,7 +32,6 @@ public class MatchService {
 
     @Autowired
     private GroupMatchRepository groupMatchRepository;
-
 
     @Autowired
     private GroupService groupService;
@@ -49,7 +51,7 @@ public class MatchService {
      * 1. update the relevant KnockoutTeam record if needed
      * 2. will add a record to qualifier table if needed
      */
-    @CacheEvict(cacheNames = "CalculatedUserBets")
+    @CacheEvict(cacheNames = {"CalculatedUserBets", "knockoutMatches", "groupMatches"})
     public void onMatchFinish(Match match) {
         List<KnockoutTeam> knockoutTeamUpdatedByMatch = getKnockoutTeamUpdatedByMatch(match);
         for (KnockoutTeam teamUpdatedByMatch : knockoutTeamUpdatedByMatch) {
@@ -131,4 +133,40 @@ public class MatchService {
         }
         return one;
     }
+
+
+    public List<MatchData> getMatchData() {
+        List<MatchData> list = Lists.newArrayList();
+        Set<GroupMatch> allGroupMatches = groupService.getAllGroupMatches();
+        Set<KnockoutMatch> allKnockoutMatch = knockoutService.getAllKnockoutMatches();
+        List<MatchResult> allMatchResults = resultService.getAllMatchResults();
+
+        Map<Long, MatchResult> resultMap = allMatchResults.stream().collect(Collectors.toMap(MatchResult::getMatchId, Function.identity()));
+
+        allGroupMatches.forEach(match -> list.add(
+                MatchData.builder()
+                        .matchId(match.getMatchId())
+                        .kickoff(match.getKickoff())
+                        .awayTeam(match.getAwayTeam())
+                        .homeTeam(match.getHomeTeam())
+                        .stage(Stage.GROUP.toString() + " " + match.getGroupId().toString())
+                        .result(resultMap.get(match.getMatchId())).build()));
+
+
+        allKnockoutMatch.forEach(match -> {
+            Optional<Team> homeTeam = knockoutService.getKnockoutTeamByTeamCode(match.getHomeTeamCode(), allMatchResults);
+            Optional<Team> awayTeam = knockoutService.getKnockoutTeamByTeamCode(match.getAwayTeamCode(), allMatchResults);
+            list.add(
+                    MatchData.builder()
+                            .matchId(match.getMatchId())
+                            .kickoff(match.getKickoff())
+                            .homeTeam(homeTeam.orElse(null))
+                            .awayTeam(awayTeam.orElse(null))
+                            .stage(match.getStageId().toString())
+                            .result(resultMap.get(match.getMatchId())).build());
+        });
+
+        return list;
+    }
+
 }

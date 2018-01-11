@@ -1,6 +1,7 @@
-
 <section id="admin" permission="['ROLE_ADMIN']">
-    <h1>Update match result <small>Admin Only!</small></h1>
+    <h1>Update match result
+        <small>Admin Only!</small>
+    </h1>
 
     <div class="panel panel-default">
         <div class="panel-body">
@@ -11,19 +12,19 @@
                         <select id="mactList"
                                 class="form-control"
                                 ng-options="match as match.label for match in matches track by match.matchId"
-                                ng-model="selected"
+                                ng-model="match"
                                 ng-change="onMatchSelected()"></select>
                     </div>
                 </div>
             </form>
         </div>
-        <!--<div>{{selected}}</div>-->
     </div>
 
-    <div class="panel panel-default">
+    <div class="panel panel-default" ng-if="match">
         <div class="panel-heading">Result Form</div>
         <div class="panel-body">
-            <form class="form-horizontal" ng-submit="postResult()">
+
+            <form class="form-horizontal" data-ng-submit="postResult()" >
                 <div class="form-group">
                     <label class="control-label col-sm-2" for="machtId">Match Id:</label>
                     <div class="col-sm-10">
@@ -31,45 +32,62 @@
                     </div>
                 </div>
 
+                <!--
                 <div class="form-group">
                     <label class="control-label col-sm-2" for="machtLabel">Match label:</label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" id="machtLabel" readonly ng-model="selected.label">
+                        <input type="text" class="form-control" id="machtLabel" readonly ng-model="match.label">
                     </div>
                 </div>
+                -->
 
                 <div class="form-group">
-                    <label class="control-label col-sm-2" for="homeTeamGaols">Home team goals:</label>
+                    <label class="control-label col-sm-2">Match:</label>
                     <div class="col-sm-10">
-                        <input type="number" class="form-control" id="homeTeamGaols" placeholder="Enter score" ng-model="matchResult.homeTeamGoals">
+                        <table class="table table-condensed">
+                        <tbody>
+                        <tr>
+                            <td class="col-md-4">
+                                <h2>
+                                    <img class="flag" data-ng-src="/images/teams/{{match.homeTeam.confederation | spaceToUnderscore}}/{{match.homeTeam.code}}.png"/>
+                                    {{match.homeTeam.name | capitalize }}
+                                </h2>
+                            </td>
+                            <td class="col-md-1 text-center">
+                                <input type="number"
+                                       class="form-control"
+                                       id="homeTeamGaols"
+                                       placeholder="Enter score"
+                                       ng-model="matchResult.homeTeamGoals"
+                                       size="3">
+                            </td>
+                            <td class="col-md-1 text-center">:</td>
+                            <td class="col-md-1 text-center">
+                                <input type="number"
+                                       class="form-control"
+                                       id="awayTeamGoals"
+                                       placeholder="Enter score"
+                                       ng-model="matchResult.awayTeamGoals"
+                                       size="3">
+                            </td>
+                            <td class="col-md-4">
+                                <h2>
+                                    <img class="flag" data-ng-src="/images/teams/{{match.awayTeam.confederation | spaceToUnderscore}}/{{match.awayTeam.code}}.png"/>
+                                    {{match.awayTeam.name | capitalize }}
+                                </h2>
+                            </td>
+                        </tr>
+                        </tbody>
+                        </table>
                     </div>
                 </div>
+
                 <div class="form-group">
-                    <label class="control-label col-sm-2" for="awayTeamGoals">Away team goals:</label>
+                    <label class="control-label col-sm-2" for="machtQualifier">Match qualifier:</label>
                     <div class="col-sm-10">
-                        <input type="number" class="form-control" id="awayTeamGoals" placeholder="Enter score" ng-model="matchResult.awayTeamGoals">
+                        <select id="machtQualifier" class="form-control" ng-model="match.qualifier" ng-options="x for x in ['HOME_TEAM','AWAY_TEAM']"></select>
                     </div>
                 </div>
-
-                <div class="form-group">
-                    <div class="col-sm-offset-2 col-sm-10">
-                        <div class="checkbox">
-                            <label><input type="checkbox" ng-model="matchResult.isFinished"> Match finished</label>
-                        </div>
-                    </div>
-                </div>
-
-                <!--<div class="form-group">-->
-                    <!--<label class="control-label col-sm-2" for="pwd">Outcome:</label>-->
-                    <!--<div class="col-sm-10">-->
-                        <!--<select id="pwd" class="form-control">-->
-                            <!--<option></option>-->
-                            <!--<option>HOME_TEAM_WON</option>-->
-                            <!--<option>DRAW</option>-->
-                            <!--<option>AWAY_TEAM_WON</option>-->
-                        <!--</select>-->
-                    <!--</div>-->
-                <!--</div>-->
 
                 <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">

@@ -7,11 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Getter
@@ -25,11 +21,11 @@ public class UserBet implements ResultInterface {
     private UserBetId userBetId;
 
     @ManyToOne
-    @JoinColumn(name="homeTeam",referencedColumnName="id")
+    @JoinColumn(name = "homeTeam", referencedColumnName = "id")
     private Team homeTeam;
 
     @ManyToOne
-    @JoinColumn(name="awayTeam",referencedColumnName="id")
+    @JoinColumn(name = "awayTeam", referencedColumnName = "id")
     private Team awayTeam;
 
     private int homeTeamGoals;
@@ -37,7 +33,7 @@ public class UserBet implements ResultInterface {
     private int awayTeamGoals;
 
     @ManyToOne
-    @JoinColumn(name="qualifier",referencedColumnName="id")
+    @JoinColumn(name = "qualifier", referencedColumnName = "id")
     private Team qualifier;
 
     @Override

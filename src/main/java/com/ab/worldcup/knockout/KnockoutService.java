@@ -5,19 +5,23 @@ import com.ab.worldcup.group.GroupStanding;
 import com.ab.worldcup.group.TeamInGroup;
 import com.ab.worldcup.match.KnockoutMatch;
 import com.ab.worldcup.match.KnockoutMatchRepository;
+import com.ab.worldcup.results.MatchResult;
+import com.ab.worldcup.results.MatchResultRepository;
 import com.ab.worldcup.results.ResultInterface;
 import com.ab.worldcup.team.Group;
 import com.ab.worldcup.team.KnockoutTeamCode;
 import com.ab.worldcup.team.Team;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.TreeSet;
+import java.util.*;
+import java.util.function.Function;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
 
 import static com.ab.worldcup.team.KnockoutTeamCode.LOSER_SF1;
 
@@ -25,19 +29,18 @@ import static com.ab.worldcup.team.KnockoutTeamCode.LOSER_SF1;
 @Log
 public class KnockoutService<T extends ResultInterface> {
 
-
+    @Autowired
     private KnockoutMatchRepository knockoutMatchRepository;
 
+    @Autowired
     private KnockoutTeamRepository knockoutTeamRepository;
 
+    @Autowired
     private GroupService groupService;
 
     @Autowired
-    public KnockoutService(KnockoutMatchRepository knockoutMatchRepository, KnockoutTeamRepository knockoutTeamRepository, GroupService groupService) {
-        this.knockoutMatchRepository = knockoutMatchRepository;
-        this.knockoutTeamRepository = knockoutTeamRepository;
-        this.groupService = groupService;
-    }
+    private MatchResultRepository matchResultRepository;
+
 
     public Optional<KnockoutTeam> getKnockoutTeamForKnockoutMatch(KnockoutMatch match, List<T> results) {
         Optional<Team> homeTeam = getKnockoutTeamByTeamCode(match.getHomeTeamCode(), results);
@@ -76,7 +79,7 @@ public class KnockoutService<T extends ResultInterface> {
 
     private Optional<Team> getKnockoutQualifierByTeamCode(KnockoutTeamCode teamCode, List<T> results) {
         if (!teamCode.getKnockoutMatchCode().isPresent()) {
-            log.log(Level.WARNING,"Wrong Input");
+            log.log(Level.WARNING, "Wrong Input");
             return Optional.empty();
         }
 
@@ -85,7 +88,7 @@ public class KnockoutService<T extends ResultInterface> {
         Optional<T> matchResult = results.stream().filter(t -> t.getMatchId().equals(matchId)).findFirst();
         KnockoutTeam knockoutMatchTeams = knockoutTeamRepository.findOne(matchId);
         if (!matchResult.isPresent()) {
-            log.log(Level.FINE,"trying to calculate knockout match team for match ID " + matchId + " but match hasn't finished yet");
+            log.log(Level.FINE, "trying to calculate knockout match team for match ID " + matchId + " but match hasn't finished yet");
             return Optional.empty();
         } else {
             if (LOSER_SF1.equals(teamCode) || LOSER_SF1.equals(teamCode)) {
@@ -102,7 +105,7 @@ public class KnockoutService<T extends ResultInterface> {
     private Optional<Team> getGroupQualifierByTeamCode(KnockoutTeamCode teamCode, List<T> results) {
         Optional<Group> group = teamCode.getRelevantGroup();
         if (!group.isPresent()) {
-            log.log(Level.WARNING,"Wrong Input");
+            log.log(Level.WARNING, "Wrong Input");
             return Optional.empty();
         }
         if (!groupService.isGroupFinished(group.get(), results)) {
@@ -123,7 +126,16 @@ public class KnockoutService<T extends ResultInterface> {
         return matchTeams.getHomeTeam().equals(result.getKnockoutQualifier()) ? matchTeams.getHomeTeam() : matchTeams.getAwayTeam();
     }
 
-    public List<KnockoutMatch> getAllKnockoutMatches() {
-        return knockoutMatchRepository.findAll();
+    @Cacheable("knockoutMatches")
+    public Set<KnockoutMatch> getAllKnockoutMatches() {
+        List<MatchResult> results = matchResultRepository.findAll();
+        List<KnockoutMatch> matches = knockoutMatchRepository.findAll();
+        Map<Long, MatchResult> resultMap = results.stream().collect(Collectors.toMap(MatchResult::getMatchId, Function.identity()));
+        // add results
+        matches.forEach(match -> resultMap.computeIfPresent(match.getMatchId(), (k, v) -> {
+            match.setResult(v);
+            return v;
+        }));
+        return ImmutableSet.copyOf(matches);
     }
 }

@@ -1,6 +1,5 @@
 package com.ab.worldcup.web.model;
 
-import com.ab.worldcup.match.Stage;
 import com.ab.worldcup.results.MatchResult;
 import com.ab.worldcup.team.Team;
 import lombok.Builder;
@@ -20,7 +19,7 @@ public class MatchData {
 
     private Team awayTeam;
 
-    private Stage stage;
+    private String stage;
 
     private MatchResult result;
 

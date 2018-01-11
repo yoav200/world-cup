@@ -1,18 +1,31 @@
 
-<table class="table">
+<table class="table table-condensed">
     <tbody>
     <tr ng-repeat="match in matches.secondStage">
-        <td>
-            <div>{{match.matchCode}}</div>
-            <div>{{match.stageId}}</div>
-            <div>{{match.kickoff | date : format : 'medium'}}</div>
+        <td class="col-md-1">
+            <div><b>{{match.stage}}</b></div>
+            <div>{{match.kickoff | date : 'MMM d, h:mm:ss a'}}</div>
         </td>
-        <td>
-            {{match.homeTeamCode }}
+        <td class="col-md-2">
+            <div ng-switch="match.homeTeam || '_undefined_'">
+                <h2 ng-switch-when="_undefined_">TBD</h2>
+                <h2 ng-switch-default>
+                    <img class="flag" ng-src="/images/teams/{{match.homeTeam.confederation | spaceToUnderscore}}/{{match.homeTeam.code}}.png"/>
+                    {{match.homeTeam.name | capitalize }}
+                </h2>
+            </div>
         </td>
-        <td>{{match.kickoff | date : format : 'hh:mm '}}</td>
-        <td>
-            {{match.awayTeamCode }}
+        <td class="col-md-2 text-center">
+            <h1>{{match.result.homeTeamGoals}} : {{match.result.awayTeamGoals}}</h1>
+        </td>
+        <td class="col-md-2">
+            <div ng-switch="match.awayTeam || '_undefined_'">
+                <h2 ng-switch-when="_undefined_">TBD</h2>
+                <h2 ng-switch-default>
+                    <img class="flag" ng-src="/images/teams/{{match.awayTeam.confederation | spaceToUnderscore}}/{{match.awayTeam.code}}.png"/>
+                    {{match.awayTeam.name | capitalize }}
+                </h2>
+            </div>
         </td>
     </tr>
     </tbody>

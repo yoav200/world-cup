@@ -15,10 +15,10 @@ import java.io.Serializable;
 public class UserBetId implements Serializable {
 
     @ManyToOne
-    @JoinColumn(name="accountId",referencedColumnName="id")
+    @JoinColumn(name = "accountId", referencedColumnName = "id")
     private Account account;
 
     @ManyToOne
-    @JoinColumn(name="betId",referencedColumnName="id")
+    @JoinColumn(name = "betId", referencedColumnName = "id")
     private Bet bet;
 }
