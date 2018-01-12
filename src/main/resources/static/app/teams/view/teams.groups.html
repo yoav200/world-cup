@@ -21,10 +21,7 @@
         <tbody>
         <tr ng-repeat-start="teamInGroup in prepareTeamsInGroup(group.teamsInGroup)">
             <th>
-                <h3>
-                    <img class="flag" ng-src="/images/teams/{{teamInGroup.team.confederation | spaceToUnderscore}}/{{teamInGroup.team.code}}.png"/>
-                    {{teamInGroup.team.name | capitalize }}
-                </h3>
+                <h3><team data="teamInGroup.team"/></h3>
             </th>
             <td>{{teamInGroup.gamesPlayed }}</td>
             <td>{{teamInGroup.gamesWon }}</td>

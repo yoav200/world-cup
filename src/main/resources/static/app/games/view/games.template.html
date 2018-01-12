@@ -3,22 +3,16 @@
     <tr ng-repeat="match in matches">
         <td class="col-md-1">
             <div><b>{{match.stage}}</b></div>
-            <div>{{match.kickoff | date : 'MMM d, h:mm:ss a'}}</div>
+            <div>{{match.kickoff | date : 'MMM d, h:mm a'}}</div>
         </td>
         <td class="col-md-2">
-            <h2>
-                <img class="flag" ng-src="/images/teams/{{match.homeTeam.confederation | spaceToUnderscore}}/{{match.homeTeam.code}}.png"/>
-                {{match.homeTeam.name | capitalize }}
-            </h2>
+            <h2><team data="match.homeTeam"/></h2>
         </td>
         <td class="col-md-2 text-center">
             <h1>{{match.result.homeTeamGoals}} : {{match.result.awayTeamGoals}}</h1>
         </td>
         <td class="col-md-2">
-            <h2>
-                <img class="flag" ng-src="/images/teams/{{match.awayTeam.confederation | spaceToUnderscore}}/{{match.awayTeam.code}}.png"/>
-                {{match.awayTeam.name | capitalize }}
-            </h2>
+            <h2><team data="match.awayTeam"/></h2>
         </td>
     </tr>
     </tbody>

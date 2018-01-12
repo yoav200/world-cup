@@ -4,6 +4,7 @@ angular.module('worldcup').controller('betsCtrl', function ($rootScope, $scope, 
 
 
     $scope.bets = [];
+
     Bets.getAllBets().then(function (response) {
         $scope.bets = response;
     });
