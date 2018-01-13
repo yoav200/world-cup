@@ -17,7 +17,9 @@ body {
 .brackets_container {
     padding: 10px;
     font-family: tahoma;
-    min-width: 550px
+    min-width: 550px;
+    background-color: darkslategray;
+    color: #fff;
 }
 
 .brackets_container a {
@@ -38,7 +40,7 @@ body {
     padding: 10px 0;
     width: 10%;
     font-weight: normal;
-    color: #777
+    //color: #777
 }
 
 .round_column {
@@ -156,7 +158,7 @@ body {
     background: #fff;
     font-size: 13px;
     z-index: 1;
-    height: 30px;
+    height: 37px;
     line-height: 29px;
     padding: 0 2px;
     cursor: default
@@ -224,7 +226,7 @@ body {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    color: #777;
+    //color: #777;
     display: block;
     visibility: hidden;
     width: 93%;
@@ -295,7 +297,7 @@ body {
 
 .winner_team > span {
     font-size: 11px;
-    color: #777;
+    //color: #777;
     display: block
 }
 

@@ -5,7 +5,7 @@ angular.module('worldcup').directive('matches', function () {
         scope: {
             matches: '=data'
         },
-        templateUrl: 'app/games/view/games.template.html',
+        templateUrl: 'app/directives/view/match.template.html',
         link: function (scope, element, attributes) {
 
         }

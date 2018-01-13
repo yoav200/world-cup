@@ -1,0 +1,9 @@
+<div class="match_unit">
+    <div class="m_segment m_top winner" data-team-id="{{match.homeTeam.code}}">
+        <span><a href="#"><team data="match.homeTeam"/></a><strong>{{match.result.homeTeamGoals}}</strong></span>
+    </div>
+    <div class="m_segment m_botm loser" data-team-id="{{match.homeTeam.code}}">
+        <span><a href="#"><team data="match.awayTeam"/></a><strong>{{match.result.awayTeamGoals}}</strong></span>
+    </div>
+    <div class="m_dtls"><span>{{match.kickoff | date : 'MMM d, yyyy - h:mm a'}}</span></div>
+</div>
