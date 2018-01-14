@@ -35,7 +35,8 @@ body {
     .navbar-nav > li > a {
         line-height: 20px;
         padding-top: 10px;
-        padding-bottom: 10px;}
+        padding-bottom: 10px;
+    }
 }
 
 .nav-tabs {
@@ -48,8 +49,27 @@ body {
     border: 1px solid #c7c6c6;
 }
 
-
-
-
+.back-to-top {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1;
+    width: 50px;
+    height: 40px;
+    background: #ddd;
+    border-radius: 10px;
+    opacity: 0.5;
+    display: none;
+}
+.back-to-top :hover {
+    opacity: 1;
+    cursor: pointer;
+}
+.back-to-top i {
+    font-size: 20px;
+    padding: 9px;
+    line-height: 39px;
+    color: #fff;
+}
 
 
