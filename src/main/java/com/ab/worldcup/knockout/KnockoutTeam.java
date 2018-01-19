@@ -30,6 +30,6 @@ public class KnockoutTeam implements Serializable {
     private Team awayTeam;
 
     @OneToOne
-    @PrimaryKeyJoinColumn
+    @JoinColumn(name="matchId")
     private KnockoutMatch knockoutMatch;
 }

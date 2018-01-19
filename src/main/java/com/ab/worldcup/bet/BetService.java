@@ -2,6 +2,7 @@ package com.ab.worldcup.bet;
 
 import com.ab.worldcup.match.Match;
 import com.ab.worldcup.match.Stage;
+import com.ab.worldcup.results.MatchResult;
 import com.ab.worldcup.team.Team;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
@@ -9,6 +10,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 public class BetService {
@@ -61,5 +65,15 @@ public class BetService {
 
     public UserBet setUserBet(UserBet userBet) {
         return null;
+    }
+
+
+    public List<Match> addBetsToMatchs(List<Match> matches) {
+        List<UserBet> userBets = userBetRepository.findAll();
+        Map<Long, UserBet> betsMap = userBets.stream()
+                .filter(b->b.getUserBetId().getBet().getMatchId()!=null)
+                .collect(Collectors.toMap(b -> b.getUserBetId().getBet().getMatchId(), Function.identity()));
+        matches.forEach(match-> match.setResult(betsMap.get(match.getMatchId())));
+        return matches;
     }
 }

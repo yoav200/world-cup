@@ -3,7 +3,7 @@ package com.ab.worldcup.match;
 import com.ab.worldcup.knockout.KnockoutTeam;
 import com.ab.worldcup.team.KnockoutTeamCode;
 import com.ab.worldcup.team.Team;
-import com.ab.worldcup.team.TeamService;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sun.istack.internal.Nullable;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -11,6 +11,7 @@ import org.hibernate.annotations.Immutable;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Optional;
 
 @Entity
 @Getter
@@ -31,32 +32,31 @@ public class KnockoutMatch extends Match implements Serializable {
     @Enumerated(EnumType.STRING)
     private KnockoutTeamCode awayTeamCode;
 
-    @OneToOne
-    @PrimaryKeyJoinColumn
+    @JsonIgnore
+    @OneToOne(mappedBy = "knockoutMatch")
     private KnockoutTeam knockoutTeam;
 
     @Override
     public String toString() {
-        return this.kickoff + " Code " + matchCode + " : " + homeTeamCode + " - " + awayTeamCode;
+        return this.kickoff + ",  " + matchCode + ", "
+                + ((getHomeTeam() == null) ? homeTeamCode : getHomeTeam().getName())
+                + " : "
+                + ((getAwayTeam() == null) ? awayTeamCode : getAwayTeam().getName());
     }
 
     @Override
     @Nullable
     public Team getHomeTeam() {
-        if (knockoutTeam == null) {
-            return TeamService.UndeterminedTeam;
-        } else {
-            return knockoutTeam.getHomeTeam();
-        }
+        return Optional.ofNullable(knockoutTeam).map(KnockoutTeam::getHomeTeam).orElse(null);
     }
 
     @Override
     @Nullable
     public Team getAwayTeam() {
-        if (knockoutTeam == null) {
-            return TeamService.UndeterminedTeam;
-        } else {
-            return knockoutTeam.getAwayTeam();
-        }
+        return Optional.ofNullable(knockoutTeam).map(KnockoutTeam::getAwayTeam).orElse(null);
+    }
+
+    public boolean isReady() {
+        return (getHomeTeam() != null) && (getAwayTeam() != null);
     }
 }

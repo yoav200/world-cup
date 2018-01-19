@@ -5,12 +5,13 @@ html {
 
 body {
     min-height: 500px;
-    padding-top: 70px;
+    padding-top: 80px;
     background: #fff url(/images/bg.jpg) repeat-x center 0;
 }
 
 .main {
     background-color: #fff;
+    padding: 20px 20px 0 0;
 }
 
 .table > tbody > tr > td {
@@ -61,10 +62,12 @@ body {
     opacity: 0.5;
     display: none;
 }
+
 .back-to-top :hover {
     opacity: 1;
     cursor: pointer;
 }
+
 .back-to-top i {
     font-size: 20px;
     padding: 9px;

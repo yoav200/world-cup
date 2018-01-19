@@ -7,11 +7,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import static com.ab.worldcup.knockout.KnockoutMatchQualifier.HOME_TEAM;
 
@@ -44,17 +40,8 @@ public class MatchResult implements ResultInterface {
     // WILL BE NULL FOR GROUP MATCHES
     private KnockoutMatchQualifier matchQualifier;
 
-//    @Override
-//    public Team getHomeTeam() {
-//        return match.getHomeTeam();
-//    }
-//
-//    @Override
-//    public Team getAwayTeam() {
-//        return match.getAwayTeam();
-//    }
-
     @Override
+    @JsonIgnore
     public Team getKnockoutQualifier() {
         return HOME_TEAM.equals(getMatchQualifier()) ? getHomeTeam() : getAwayTeam();
     }

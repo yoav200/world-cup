@@ -3,21 +3,16 @@ package com.ab.worldcup.group;
 import com.ab.worldcup.match.GroupMatch;
 import com.ab.worldcup.match.GroupMatchRepository;
 import com.ab.worldcup.match.Match;
-import com.ab.worldcup.results.MatchResult;
 import com.ab.worldcup.results.MatchResultRepository;
 import com.ab.worldcup.results.ResultInterface;
 import com.ab.worldcup.team.Group;
 import com.ab.worldcup.team.Team;
 import com.ab.worldcup.team.TeamRepository;
-import com.google.common.collect.ImmutableSet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,9 +20,6 @@ public class GroupService {
 
     @Autowired
     private GroupMatchRepository groupMatchRepository;
-
-    @Autowired
-    private MatchResultRepository matchResultRepository;
 
     @Autowired
     private TeamRepository teamRepository;
@@ -51,15 +43,7 @@ public class GroupService {
 
 
     @Cacheable("groupMatches")
-    public Set<GroupMatch> getAllGroupMatches() {
-        List<MatchResult> results = matchResultRepository.findAll();
-        List<GroupMatch> matches = groupMatchRepository.findAll();
-        Map<Long, MatchResult> resultMap = results.stream().collect(Collectors.toMap(MatchResult::getMatchId, Function.identity()));
-        // add results
-        matches.forEach(match -> resultMap.computeIfPresent(match.getMatchId(), (k, v) -> {
-            match.setResult(v);
-            return v;
-        }));
-        return ImmutableSet.copyOf(matches);
+    public List<GroupMatch> getAllGroupMatches() {
+        return groupMatchRepository.findAll();
     }
 }

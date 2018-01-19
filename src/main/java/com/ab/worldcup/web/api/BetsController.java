@@ -2,12 +2,10 @@ package com.ab.worldcup.web.api;
 
 import com.ab.worldcup.account.Account;
 import com.ab.worldcup.account.AccountService;
-import com.ab.worldcup.bet.Bet;
 import com.ab.worldcup.bet.BetService;
 import com.ab.worldcup.bet.UserBet;
 import com.ab.worldcup.match.MatchService;
 import com.ab.worldcup.web.model.BetData;
-import com.ab.worldcup.web.model.MatchData;
 import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -15,9 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/bets")
@@ -36,21 +31,6 @@ public class BetsController {
     @RequestMapping("/")
     public List<BetData> getAllBets() {
         List<BetData> list = Lists.newArrayList();
-
-        List<MatchData> matchesData = matchService.getMatchData();
-        List<Bet> bets = betService.getAllBets();
-        Map<Long, MatchData> collect = matchesData.stream().collect(Collectors.toMap(MatchData::getMatchId, Function.identity()));
-
-        bets.forEach(bet -> list.add(
-                BetData.builder()
-                        .id(bet.getId())
-                        .type(bet.getType())
-                        .description(bet.getDescription())
-                        .stageId(bet.getStageId())
-                        .lockTime(bet.getLockTime())
-                        .match(collect.get(bet.getMatchId()))
-                        .build()));
-
         return list;
     }
 

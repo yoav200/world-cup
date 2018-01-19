@@ -7,15 +7,16 @@ import com.ab.worldcup.knockout.KnockoutService;
 import com.ab.worldcup.knockout.KnockoutTeam;
 import com.ab.worldcup.results.*;
 import com.ab.worldcup.team.Group;
-import com.ab.worldcup.team.Team;
-import com.ab.worldcup.web.model.MatchData;
-import com.google.common.collect.Lists;
+import com.ab.worldcup.web.model.MatchesData;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -51,7 +52,7 @@ public class MatchService {
      * 1. update the relevant KnockoutTeam record if needed
      * 2. will add a record to qualifier table if needed
      */
-    @CacheEvict(cacheNames = {"CalculatedUserBets", "knockoutMatches", "groupMatches"})
+    @CacheEvict(cacheNames = {"CalculatedUserBets", "knockoutMatches", "matchResults"})
     public void onMatchFinish(Match match) {
         List<KnockoutTeam> knockoutTeamUpdatedByMatch = getKnockoutTeamUpdatedByMatch(match);
         for (KnockoutTeam teamUpdatedByMatch : knockoutTeamUpdatedByMatch) {
@@ -103,7 +104,6 @@ public class MatchService {
         return betForMatch.getStageId();
     }
 
-    // TODO: 30/12/2017 do we support update result for ongoing games?
     public Match updateGroupMatchResult(Long matchId, MatchResult matchResult) {
         MatchResult result = matchResultRepository.findOne(matchId);
         if (result == null) {
@@ -113,9 +113,6 @@ public class MatchService {
         if (result.equals(matchResult)) {
             result.setHomeTeamGoals(matchResult.getHomeTeamGoals());
             result.setAwayTeamGoals(matchResult.getAwayTeamGoals());
-
-
-
         } else {
             throw new IllegalArgumentException("Match result do not match");
         }
@@ -134,39 +131,23 @@ public class MatchService {
         return one;
     }
 
+    public MatchesData getMatchesData() {
+        List<GroupMatch> allGroupMatches = addResultsToMatches(groupService.getAllGroupMatches());
+        List<KnockoutMatch> allKnockoutMatch = addResultsToMatches(knockoutService.getAllKnockoutMatches());
+        List<Qualifier> allQualifiers = resultService.getAllQualifiers();
+        Map<Stage, List<Qualifier>> map = allQualifiers.stream().collect(Collectors.groupingBy(Qualifier::getStageId));
 
-    public List<MatchData> getMatchData() {
-        List<MatchData> list = Lists.newArrayList();
-        Set<GroupMatch> allGroupMatches = groupService.getAllGroupMatches();
-        Set<KnockoutMatch> allKnockoutMatch = knockoutService.getAllKnockoutMatches();
+        return MatchesData.builder().firstStage(allGroupMatches).secondStage(allKnockoutMatch).qualifiers(map).build();
+    }
+
+
+    public <T extends Match> List<T> addResultsToMatches(List<T> matches) {
         List<MatchResult> allMatchResults = resultService.getAllMatchResults();
-
         Map<Long, MatchResult> resultMap = allMatchResults.stream().collect(Collectors.toMap(MatchResult::getMatchId, Function.identity()));
 
-        allGroupMatches.forEach(match -> list.add(
-                MatchData.builder()
-                        .matchId(match.getMatchId())
-                        .kickoff(match.getKickoff())
-                        .awayTeam(match.getAwayTeam())
-                        .homeTeam(match.getHomeTeam())
-                        .stage(Stage.GROUP.toString() + " " + match.getGroupId().toString())
-                        .result(resultMap.get(match.getMatchId())).build()));
-
-
-        allKnockoutMatch.forEach(match -> {
-            Optional<Team> homeTeam = knockoutService.getKnockoutTeamByTeamCode(match.getHomeTeamCode(), allMatchResults);
-            Optional<Team> awayTeam = knockoutService.getKnockoutTeamByTeamCode(match.getAwayTeamCode(), allMatchResults);
-            list.add(
-                    MatchData.builder()
-                            .matchId(match.getMatchId())
-                            .kickoff(match.getKickoff())
-                            .homeTeam(homeTeam.orElse(null))
-                            .awayTeam(awayTeam.orElse(null))
-                            .stage(match.getStageId().toString())
-                            .result(resultMap.get(match.getMatchId())).build());
-        });
-
-        return list;
+        matches.forEach(match ->
+                match.setResult(resultMap.get(match.getMatchId())));
+        return matches;
     }
 
 }

@@ -7,13 +7,12 @@ import com.ab.worldcup.match.KnockoutMatch;
 import com.ab.worldcup.match.Match;
 import com.ab.worldcup.match.MatchService;
 import com.ab.worldcup.results.MatchResult;
-import com.ab.worldcup.web.model.MatchData;
+import com.ab.worldcup.web.model.MatchesData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/api/match")
@@ -30,22 +29,22 @@ public class MatchController {
 
 
     @ResponseBody
-    @RequestMapping(value = "/")
-    public List<MatchData> getAll() {
-        return matchService.getMatchData();
+    @RequestMapping(value = "/data")
+    public MatchesData getMatchesData() {
+        return matchService.getMatchesData();
     }
 
     @ResponseBody
     @RequestMapping(value = "/knockout")
-    public Set<KnockoutMatch> getAllKnockoutMatch() {
-        return knockoutService.getAllKnockoutMatches();
+    public List<KnockoutMatch> getAllKnockoutMatch() {
+        return matchService.addResultsToMatches(knockoutService.getAllKnockoutMatches());
     }
 
 
     @ResponseBody
     @RequestMapping(value = "/groups")
-    public Set<GroupMatch> getAllGroupMatches() {
-        return groupService.getAllGroupMatches();
+    public List<GroupMatch> getAllGroupMatches() {
+        return matchService.addResultsToMatches(groupService.getAllGroupMatches());
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")

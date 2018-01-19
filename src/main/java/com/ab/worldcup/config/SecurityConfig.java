@@ -28,16 +28,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
             .csrf().disable()
             .headers().frameOptions().disable()
-            //.and()
-            //    .anonymous() //allow anonymous access
             .and()
+            //    .anonymous() //allow anonymous access
+            //.and()
                 .authorizeRequests()
                 .antMatchers("/**", "/api/**").permitAll()
                 .antMatchers("/api/bet/**").hasRole(Role.USER.toString())
                 .antMatchers("/api/admin/**").hasRole(Role.ADMIN.toString())
             .and()
                 .logout()
-                .logoutUrl("/signout")
+                .logoutUrl("/logout")
                 .deleteCookies("JSESSIONID")
                 .logoutSuccessUrl("/#/")
             .and()

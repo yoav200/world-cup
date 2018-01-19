@@ -5,23 +5,21 @@ import com.ab.worldcup.group.GroupStanding;
 import com.ab.worldcup.group.TeamInGroup;
 import com.ab.worldcup.match.KnockoutMatch;
 import com.ab.worldcup.match.KnockoutMatchRepository;
-import com.ab.worldcup.results.MatchResult;
 import com.ab.worldcup.results.MatchResultRepository;
 import com.ab.worldcup.results.ResultInterface;
 import com.ab.worldcup.team.Group;
 import com.ab.worldcup.team.KnockoutTeamCode;
 import com.ab.worldcup.team.Team;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
-import java.util.function.Function;
+import java.util.List;
+import java.util.Optional;
+import java.util.TreeSet;
 import java.util.logging.Level;
-import java.util.stream.Collectors;
 
 import static com.ab.worldcup.team.KnockoutTeamCode.LOSER_SF1;
 
@@ -127,15 +125,7 @@ public class KnockoutService<T extends ResultInterface> {
     }
 
     @Cacheable("knockoutMatches")
-    public Set<KnockoutMatch> getAllKnockoutMatches() {
-        List<MatchResult> results = matchResultRepository.findAll();
-        List<KnockoutMatch> matches = knockoutMatchRepository.findAll();
-        Map<Long, MatchResult> resultMap = results.stream().collect(Collectors.toMap(MatchResult::getMatchId, Function.identity()));
-        // add results
-        matches.forEach(match -> resultMap.computeIfPresent(match.getMatchId(), (k, v) -> {
-            match.setResult(v);
-            return v;
-        }));
-        return ImmutableSet.copyOf(matches);
+    public List<KnockoutMatch> getAllKnockoutMatches() {
+        return knockoutMatchRepository.findAll();
     }
 }

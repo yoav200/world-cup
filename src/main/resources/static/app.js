@@ -27,14 +27,13 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider) {
                 controller: 'navbarController'
             }
         }
-    }).state('home', {
+    }).state('rules', {
         parent: 'site',
         url: "/",
         data: {},
         views: {
             'content@': {
-                templateUrl: 'app/home/home.view.html',
-                controller: 'homeCtrl'
+                templateUrl: 'app/rules/rules.view.html'
             }
         }
     }).state('join', {
@@ -58,10 +57,6 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider) {
                 controller: 'teamsCtrl'
             }
         }
-    }).state('teams.groups', {
-        url: '/groups',
-        templateUrl: 'app/teams/view/teams.groups.html',
-        controller: 'teamsCtrl'
     }).state('teams.confederation', {
         url: "/confederation",
         templateUrl: 'app/teams/view/teams.confederations.html', 
@@ -93,6 +88,17 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider) {
         controller: 'gamesCtrl'
     });
 
+    // Groups
+    $stateProvider.state('groups', {
+        parent: 'site',
+        url: '/groups',
+        views: {
+            'content@': {
+                templateUrl: 'app/groups/groups.view.html',
+                controller: 'groupsCtrl'
+            }
+        }
+    });
 
     // Bets
     $stateProvider.state('bets-mine', {
@@ -130,9 +136,7 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider) {
         }
     })
     
-})/*.config(['cfpLoadingBarProvider', function(cfpLoadingBarProvider) {
-    cfpLoadingBarProvider.parentSelector = '#loading-bar-container';
-}])*/.filter('capitalize', function () {
+}).filter('capitalize', function () {
     return function (input) {
         return (!!input) ? input.charAt(0).toUpperCase() + input.substr(1).toLowerCase() : '';
     }

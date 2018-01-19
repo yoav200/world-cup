@@ -13,6 +13,7 @@ import com.ab.worldcup.team.Group;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -131,6 +132,11 @@ public class ResultsService {
         return matchResultRepository.findMatchResultByGroup(group.toString());
     }
 
+    public List<Qualifier> getAllQualifiers() {
+        return qualifierRepository.findAll();
+    }
+
+    @Cacheable("matchResults")
     public List<MatchResult> getAllMatchResults() {
         return matchResultRepository.findAll();
     }

@@ -2,9 +2,11 @@
 
 angular.module('worldcup').controller('adminCtrl', function ($rootScope, $scope, $state, $stateParams, Matches) {
 
-    console.log("Only admin can view this page")
+    console.log("Only admin can view this page");
 
-    $scope.matches = [];
+    $scope.firstStage = [];
+    $scope.secondStage = [];
+    $scope.qualifiers = {};
 
     $scope.match = undefined;
 
@@ -12,38 +14,35 @@ angular.module('worldcup').controller('adminCtrl', function ($rootScope, $scope,
         matchId: undefined,
         label: undefined,
         homeTeamGoals: undefined,
-        awayTeamGoals: undefined,
-        qualifier: undefined
+        awayTeamGoals: undefined
     };
 
-    $scope.postResult = function() {
+    $scope.postResult = function () {
         Matches.updateStageMatch($scope.matchResult).then(function (response) {
             console.log(response);
         });
     };
 
-    $scope.onMatchSelected = function() {
-        angular.forEach($scope.matches, function (match, index) {
-            if ($scope.match.matchId == match.matchId) {
+    $scope.onMatchSelected = function (stage) {
+        var list = stage === 'first' ? $scope.firstStage : $scope.secondStage;
+
+        angular.forEach(list, function (match, index) {
+            if ($scope.match.matchId === match.matchId) {
                 $scope.match = match;
                 $scope.matchResult = {
                     matchId: $scope.match.matchId,
-                    homeTeamGoals: $scope.match.result?$scope.match.result.homeTeamGoals:undefined,
-                    awayTeamGoals: $scope.match.result?$scope.match.result.awayTeamGoals:undefined,
-                    qualifier: $scope.match.result?$scope.match.result.matchQualifier:undefined
+                    homeTeamGoals: $scope.match.result ? $scope.match.result.homeTeamGoals : undefined,
+                    awayTeamGoals: $scope.match.result ? $scope.match.result.awayTeamGoals : undefined
                 };
-                return;
             }
         });
     };
 
-    Matches.getAllMatches().then(function (response) {
-        $scope.matches = response;
+    Matches.getMatchesData().then(function (response) {
+        console.log(response);
+        $scope.firstStage = response.firstStage;
+        $scope.secondStage = response.secondStage;
+        $scope.qualifiers = response.qualifiers;
     });
 
-    var updateMatch = function() {
-        Matches.updateStageMatch($scope.matchResult).then(function (response) {
-            console.log(response);
-        });
-    }
 });

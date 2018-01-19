@@ -2,8 +2,9 @@
 
 angular.module('worldcup').factory('Matches', function($http) {
 
-    var getAllMatches = function() {
-        return $http.get("api/match/").then(function(response) {
+
+    var getMatchesData = function() {
+        return $http.get("api/match/data/").then(function(response) {
             return  response.data;
         });
     };
@@ -27,7 +28,7 @@ angular.module('worldcup').factory('Matches', function($http) {
     };
 
     return {
-        getAllMatches: getAllMatches,
+        getMatchesData: getMatchesData,
         getFirstStageMatches: getFirstStageMatches,
         getSecondStageMatches: getSecondStageMatches,
         updateStageMatch: updateStageMatch

@@ -1,7 +1,6 @@
 package com.ab.worldcup.match;
 
 import com.ab.worldcup.results.ResultInterface;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -20,7 +19,6 @@ public abstract class Match implements Serializable, MatchTeamsInterface {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonIgnore
     protected Long matchId;
 
     protected Timestamp kickoff;
@@ -33,5 +31,9 @@ public abstract class Match implements Serializable, MatchTeamsInterface {
     public Match setResult(ResultInterface result) {
         this.result = result;
         return this;
+    }
+
+    public String getLabel() {
+        return this.toString();
     }
 }

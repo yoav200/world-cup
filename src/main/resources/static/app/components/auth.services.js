@@ -83,7 +83,7 @@ angular.module('worldcup').factory('Auth', function ($rootScope, $state, $http) 
     };
 
     auth.logout = function () {
-        window.location.href = '/signout';
+        window.location.href = '/logout';
     };
 
     return auth;

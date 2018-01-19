@@ -1,6 +1,7 @@
 package com.ab.worldcup.web.model;
 
 import com.ab.worldcup.bet.BetType;
+import com.ab.worldcup.match.Match;
 import com.ab.worldcup.match.Stage;
 import lombok.Builder;
 import lombok.Data;
@@ -21,5 +22,5 @@ public class BetData {
 
     private Timestamp lockTime;
 
-    private MatchData match;
+    private Match match;
 }
