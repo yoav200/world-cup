@@ -28,6 +28,8 @@ public abstract class Match implements Serializable, MatchTeamsInterface {
     @Transient
     private ResultInterface result;
 
+    public abstract Stage getStageId();
+
     public Match setResult(ResultInterface result) {
         this.result = result;
         return this;

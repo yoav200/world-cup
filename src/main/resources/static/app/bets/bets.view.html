@@ -1,68 +1,105 @@
-<section id="bets">
-    <div>
-        <h1>Bets
-            <small>All</small>
-        </h1>
+<section id="bets-mine" permission="['ROLE_USER']">
+    <h1>Set bets for games
+        <small>Only you can see your bets</small>
+    </h1>
 
+    <div class="panel panel-primary">
+        <div class="panel-heading">Select game panel</div>
+        <div class="panel-body">
+            <form class="form-horizontal" action="">
+                <div class="form-group">
+                    <label class="control-label col-sm-2" for="firstStageMatchesList">First Stage Matches:</label>
+                    <div class="col-sm-10">
+                        <select id="firstStageMatchesList"
+                                class="form-control"
+                                ng-options="match as match.label for match in matchesData.firstStage track by match.matchId"
+                                ng-model="selected.match"
+                                ng-change="onMatchSelected('first')"></select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-sm-2">Qualifiers:</label>
+                    <div class="col-sm-10">
+                        <div ng-repeat="(key, value) in matchesData.qualifiers">
+                            <strong>{{key}}</strong>
+                            <div ng-repeat="qualifier in value"><team data="qualifier.team"></team> ({{qualifier.knockoutTeamCode}})</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-sm-2" for="secondStageMatchesList">Second Stage Matches:</label>
+                    <div class="col-sm-10">
+                        <select id="secondStageMatchesList"
+                                class="form-control"
+                                ng-options="match as match.label for match in matchesData.secondStage | filter:{ready:true} track by match.matchId"
+                                ng-model="selected.match"
+                                ng-change="onMatchSelected('second')"></select>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
 
-    <div class="panel" ui-view>
 
-        <div ng-repeat="bet in bets">
+    <div class="panel panel-primary" ng-if="selected.match">
+        <div class="panel-heading">Result Form</div>
+        <div class="panel-body">
 
-            <div class="row table-bordered table-hover" data-toggle="collapse" data-target="#bet-{{bet.id}}-data">
-                <div class="col-md-2">{{bet.match.stage}}</div>
-                <div class="col-md-2">{{bet.match.kickoff | date : 'MMM d, yyyy - h:mm a' }}</div>
-                <div class="col-md-2"><team data="bet.match.homeTeam"/></div>
-                <div class="col-md-2">vs</div>
-                <div class="col-md-2"><team data="bet.match.awayTeam"/></div>
-            </div>
+            <form class="form-horizontal" data-ng-submit="postUserBet()" >
+                <div class="form-group" ng-hide="true">
+                    <label class="control-label col-sm-2" for="machtId">Match Id:</label>
+                    <div class="col-sm-10">
+                        <p class="form-control-static" id="machtId" ng-model="userBet.matchId"></p>
+                    </div>
+                </div>
 
-            <div id="bet-{{bet.id}}-data" class="collapse">
-                <table class="table table-bordered table-striped table-hover">
-                    <thead>
-                    <tr>
-                        <th>Result</th>
-                        <th>Bet</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>
-                            <div class="form-group">
-                                <label for="resultHomeTeamGoals">Home team Goals</label>
-                                <input type="number" class="form-control" id="resultHomeTeamGoals"
-                                       ng-model="bet.match.result.homeTeamGoals" readonly>
-                            </div>
-                            <div class="form-group">
-                                <label for="resultAwayTeamGoals">Home team Goals</label>
-                                <input type="number" class="form-control" id="resultAwayTeamGoals"
-                                       ng-model="bet.match.result.awayTeamGoals" readonly>
-                            </div>
-                            <div class="form-group">
-                                <label for="resultQualifier">Qualifier</label>
-                                <input type="text" class="form-control" id="resultQualifier"
-                                       ng-model="bet.match.result.qualifier" readonly>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="form-group">
-                                <label for="betHomeTeamGoals">Home team Goals</label>
-                                <input type="number" class="form-control" id="betHomeTeamGoals">
-                            </div>
-                            <div class="form-group">
-                                <label for="betAwayTeamGoals">Home team Goals</label>
-                                <input type="number" class="form-control" id="betAwayTeamGoals">
-                            </div>
-                            <div class="form-group">
-                                <label for="betQualifier">Qualifier</label>
-                                <input type="text" class="form-control" id="betQualifier">
-                            </div>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-2">Match:</label>
+                    <div class="col-sm-10">
+                        <table class="table table-condensed">
+                            <tbody>
+                            <tr>
+                                <td class="col-md-4"><team data="selected.match.homeTeam"></team></td>
+                                <td class="col-md-4"><team data="selected.match.awayTeam"></team></td>
+                                <td class="col-md-1 text-center">
+                                    <input type="number"
+                                           class="form-control"
+                                           id="homeTeamGaols"
+                                           placeholder="Enter score"
+                                           ng-model="userBet.homeTeamGoals"
+                                           size="3">
+                                </td>
+                                <td class="col-md-1 text-center">:</td>
+                                <td class="col-md-1 text-center">
+                                    <input type="number"
+                                           class="form-control"
+                                           id="awayTeamGoals"
+                                           placeholder="Enter score"
+                                           ng-model="userBet.awayTeamGoals"
+                                           size="3">
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-sm-2" for="machtQualifier">Match qualifier:</label>
+                    <div class="col-sm-10">
+                        <select id="machtQualifier" class="form-control" ng-model="userBet.qualifier" ng-options="x for x in ['HOME_TEAM','AWAY_TEAM']"></select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </div>
+            </form>
+
         </div>
     </div>
 

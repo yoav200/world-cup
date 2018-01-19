@@ -6,12 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.hibernate.annotations.Immutable;
 
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Getter
@@ -32,10 +27,17 @@ public class GroupMatch extends Match {
     private Group groupId;
 
     @Override
+    public Stage getStageId() {
+        return Stage.GROUP;
+    }
+
+    @Override
     public String toString() {
         return this.kickoff + ", Group " + groupId.name() + ",  "
                 + homeTeam.getName()
                 + " : "
                 + awayTeam.getName();
     }
+
+
 }

@@ -4,7 +4,6 @@ import com.ab.worldcup.knockout.KnockoutTeam;
 import com.ab.worldcup.team.KnockoutTeamCode;
 import com.ab.worldcup.team.Team;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.sun.istack.internal.Nullable;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.hibernate.annotations.Immutable;
@@ -45,13 +44,11 @@ public class KnockoutMatch extends Match implements Serializable {
     }
 
     @Override
-    @Nullable
     public Team getHomeTeam() {
         return Optional.ofNullable(knockoutTeam).map(KnockoutTeam::getHomeTeam).orElse(null);
     }
 
     @Override
-    @Nullable
     public Team getAwayTeam() {
         return Optional.ofNullable(knockoutTeam).map(KnockoutTeam::getAwayTeam).orElse(null);
     }

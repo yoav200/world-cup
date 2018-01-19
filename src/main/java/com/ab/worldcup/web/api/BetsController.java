@@ -2,11 +2,10 @@ package com.ab.worldcup.web.api;
 
 import com.ab.worldcup.account.Account;
 import com.ab.worldcup.account.AccountService;
+import com.ab.worldcup.bet.Bet;
 import com.ab.worldcup.bet.BetService;
 import com.ab.worldcup.bet.UserBet;
-import com.ab.worldcup.match.MatchService;
-import com.ab.worldcup.web.model.BetData;
-import com.google.common.collect.Lists;
+import com.ab.worldcup.web.model.MatchesData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -22,16 +21,20 @@ public class BetsController {
     private BetService betService;
 
     @Autowired
-    private MatchService matchService;
-
-    @Autowired
     private AccountService accountService;
 
-
+    @PreAuthorize("hasRole('ROLE_USER')")
     @RequestMapping("/")
-    public List<BetData> getAllBets() {
-        List<BetData> list = Lists.newArrayList();
-        return list;
+    public List<Bet> getAllBets() {
+        return betService.getAllBets();
+    }
+
+
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @RequestMapping("/data")
+    public MatchesData getMatchesData(Principal principal) {
+        Account account = accountService.findAccountByEmail(principal.getName());
+        return betService.getMatchesData(account.getId());
     }
 
 
@@ -42,13 +45,6 @@ public class BetsController {
         return betService.findByUserBetIdAccountId(account.getId());
     }
 
-//    @PreAuthorize("hasRole('ROLE_USER')")
-//    @RequestMapping(value = "/user/{betId}", method = RequestMethod.GET)
-//    public UserBet getUserBet(@PathVariable Long betId, Principal principal) {
-//        Account account = accountService.findAccountByEmail(principal.getName());
-//        return betService.getUserBetsByBet()
-//    }
-
 
     @ResponseBody
     @RequestMapping(value = "/user/{betId}", method = RequestMethod.POST)
@@ -56,5 +52,4 @@ public class BetsController {
         Account account = accountService.findAccountByEmail(principal.getName());
         return betService.setUserBet(userBet);
     }
-
 }

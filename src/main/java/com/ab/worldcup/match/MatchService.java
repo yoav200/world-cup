@@ -1,22 +1,20 @@
 package com.ab.worldcup.match;
 
-import com.ab.worldcup.bet.Bet;
-import com.ab.worldcup.bet.BetService;
 import com.ab.worldcup.group.GroupService;
 import com.ab.worldcup.knockout.KnockoutService;
 import com.ab.worldcup.knockout.KnockoutTeam;
-import com.ab.worldcup.results.*;
-import com.ab.worldcup.team.Group;
+import com.ab.worldcup.results.MatchResult;
+import com.ab.worldcup.results.MatchResultRepository;
+import com.ab.worldcup.results.Qualifier;
+import com.ab.worldcup.results.ResultsService;
 import com.ab.worldcup.web.model.MatchesData;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -41,9 +39,6 @@ public class MatchService {
     private KnockoutService knockoutService;
 
     @Autowired
-    private BetService betService;
-
-    @Autowired
     private ResultsService resultService;
 
     /**
@@ -54,12 +49,13 @@ public class MatchService {
      */
     @CacheEvict(cacheNames = {"CalculatedUserBets", "knockoutMatches", "matchResults"})
     public void onMatchFinish(Match match) {
-        List<KnockoutTeam> knockoutTeamUpdatedByMatch = getKnockoutTeamUpdatedByMatch(match);
+        List<MatchResult> matchResults = matchResultRepository.findAll();
+        List<KnockoutTeam> knockoutTeamUpdatedByMatch = knockoutService.getKnockoutTeamUpdatedByMatch(match, matchResults);
         for (KnockoutTeam teamUpdatedByMatch : knockoutTeamUpdatedByMatch) {
             if (teamUpdatedByMatch.getHomeTeam() != null) {
                 Qualifier qualifier = Qualifier.builder()
                         .team(teamUpdatedByMatch.getHomeTeam())
-                        .stageId(getMatchStage(match).getNextStage())
+                        .stageId(match.getStageId().getNextStage())
                         .knockoutTeamCode(teamUpdatedByMatch.getKnockoutMatch().getHomeTeamCode())
                         .build();
                 resultService.saveQualifier(qualifier);
@@ -67,7 +63,7 @@ public class MatchService {
             if (teamUpdatedByMatch.getAwayTeam() != null) {
                 Qualifier qualifier = Qualifier.builder()
                         .team(teamUpdatedByMatch.getAwayTeam())
-                        .stageId(getMatchStage(match).getNextStage())
+                        .stageId(match.getStageId().getNextStage())
                         .knockoutTeamCode(teamUpdatedByMatch.getKnockoutMatch().getAwayTeamCode())
                         .build();
                 resultService.saveQualifier(qualifier);
@@ -76,33 +72,6 @@ public class MatchService {
         }
     }
 
-
-    private <T extends ResultInterface> List<KnockoutTeam> getKnockoutTeamUpdatedByMatch(Match match) {
-        List<KnockoutTeam> knockoutTeamList = new ArrayList<>();
-        List<T> matchResultList = (List<T>) matchResultRepository.findAll();
-        Stage currentStage = getMatchStage(match);
-        boolean groupFinished = false;
-
-        if (Stage.GROUP.equals(currentStage)) {
-            Group group = groupService.getGroupIdByMatchId(match.getMatchId());
-            groupFinished = groupService.isGroupFinished(group, matchResultList);
-        }
-
-        if (groupFinished || !Stage.GROUP.equals(currentStage)) {
-            Stage nextStage = currentStage.getNextStage();
-            List<KnockoutMatch> knockoutMatchesInNextStage = knockoutMatchRepository.findAllByStageId(nextStage);
-            for (KnockoutMatch knockoutMatch : knockoutMatchesInNextStage) {
-                Optional<KnockoutTeam> knockoutTeam = knockoutService.getKnockoutTeamForKnockoutMatch(knockoutMatch, matchResultList);
-                knockoutTeam.ifPresent(knockoutTeamList::add);
-            }
-        }
-        return knockoutTeamList;
-    }
-
-    private Stage getMatchStage(Match match) {
-        Bet betForMatch = betService.getBetByMatch(match);
-        return betForMatch.getStageId();
-    }
 
     public Match updateGroupMatchResult(Long matchId, MatchResult matchResult) {
         MatchResult result = matchResultRepository.findOne(matchId);
