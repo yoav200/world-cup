@@ -12,7 +12,6 @@ import javax.persistence.*;
 import static com.ab.worldcup.knockout.KnockoutMatchQualifier.HOME_TEAM;
 
 @Entity
-//@EntityListeners({MatchResultEntityListener.class})
 @ToString
 @EqualsAndHashCode(of = {"matchId"})
 @Table(name = "match_result")
@@ -22,7 +21,7 @@ public class MatchResult implements ResultInterface {
     @Id
     private Long matchId;
 
-    private int homeTeamGoals;
+    private Integer homeTeamGoals;
 
     @JsonIgnore
     @ManyToOne
@@ -34,7 +33,7 @@ public class MatchResult implements ResultInterface {
     @JoinColumn(name = "awayTeam", referencedColumnName = "id")
     private Team awayTeam;
 
-    private int awayTeamGoals;
+    private Integer awayTeamGoals;
 
     // for cases when knockout match ends up with a tie, and the qualifier is set after penalties.
     // WILL BE NULL FOR GROUP MATCHES

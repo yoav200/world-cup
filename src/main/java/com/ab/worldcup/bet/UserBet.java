@@ -28,9 +28,9 @@ public class UserBet implements ResultInterface {
     @JoinColumn(name = "awayTeam", referencedColumnName = "id")
     private Team awayTeam;
 
-    private int homeTeamGoals;
+    private Integer homeTeamGoals;
 
-    private int awayTeamGoals;
+    private Integer awayTeamGoals;
 
     @ManyToOne
     @JoinColumn(name = "qualifier", referencedColumnName = "id")

@@ -3,13 +3,13 @@
 /**
  * Main AngularJS Web Application
  */
-var app = angular.module('worldcup', ['ui.router', 'ui.router.stateHelper', 'ui.bootstrap', 'ngResource', 'ngAnimate', 'ngSanitize', 'angular-loading-bar']);
+var app = angular.module('worldcup', ['ui.router', 'ui.router.stateHelper', 'ui.bootstrap', 'ngResource', 'ngAnimate', 'ngSanitize', 'angular-loading-bar', 'angular-growl']);
 
 
 /**
  * Configure the Routes using ui router
  */
-app.config(function ($stateProvider, $urlRouterProvider, $httpProvider) {
+app.config(function ($stateProvider, $urlRouterProvider, $httpProvider, growlProvider) {
     // $locationProvider.html5Mode(true);
     // For any unmatched url, redirect to /
     $urlRouterProvider.otherwise("/");
@@ -17,6 +17,14 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider) {
     $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
     $httpProvider.defaults.headers.common["Accept"] = "application/json";
     $httpProvider.defaults.headers.common["Content-Type"] = "application/json";
+
+    //growlProvider.messagesKey("my-messages");
+    //growlProvider.messageTextKey("message-text");
+    //growlProvider.messageTitleKey("message-title");
+    //growlProvider.messageSeverityKey("severity-level");
+    $httpProvider.interceptors.push(growlProvider.serverMessagesInterceptor);
+    growlProvider.globalTimeToLive({success: 1000, error: 2000, warning: 3000, info: 4000});
+
 
     // Now set up the states
     $stateProvider.state('site', {
@@ -159,3 +167,6 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider) {
         }
     });
 });
+
+
+

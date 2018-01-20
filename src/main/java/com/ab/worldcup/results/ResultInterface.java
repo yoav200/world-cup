@@ -10,9 +10,9 @@ public interface ResultInterface {
 
     Team getAwayTeam();
 
-    int getHomeTeamGoals();
+    Integer getHomeTeamGoals();
 
-    int getAwayTeamGoals();
+    Integer getAwayTeamGoals();
 
     Team getKnockoutQualifier();
 

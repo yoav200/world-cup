@@ -56,12 +56,16 @@ public class BetService {
         return betRepository.findAll();
     }
 
+    public Bet getBetById(Long id) {
+        return betRepository.findOne(id);
+    }
+
     public List<UserBet> findByUserBetIdAccountId(Long accountId) {
         return userBetRepository.findByUserBetIdAccountId(accountId);
     }
 
     public UserBet setUserBet(UserBet userBet) {
-        return null;
+        return userBetRepository.save(userBet);
     }
 
     public MatchesData getMatchesData(Long accountId) {

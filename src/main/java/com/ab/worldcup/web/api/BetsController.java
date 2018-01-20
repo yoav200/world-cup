@@ -5,9 +5,12 @@ import com.ab.worldcup.account.AccountService;
 import com.ab.worldcup.bet.Bet;
 import com.ab.worldcup.bet.BetService;
 import com.ab.worldcup.bet.UserBet;
+import com.ab.worldcup.bet.UserBetId;
 import com.ab.worldcup.web.model.MatchesData;
+import com.ab.worldcup.web.model.UserBetValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -22,6 +25,12 @@ public class BetsController {
 
     @Autowired
     private AccountService accountService;
+
+
+    @InitBinder("userBet")
+    protected void initBinder(WebDataBinder binder) {
+        binder.addValidators(new UserBetValidator());
+    }
 
     @PreAuthorize("hasRole('ROLE_USER')")
     @RequestMapping("/")
@@ -50,6 +59,9 @@ public class BetsController {
     @RequestMapping(value = "/user/{betId}", method = RequestMethod.POST)
     public UserBet setUserBet(@PathVariable Long betId, @RequestBody UserBet userBet, Principal principal) {
         Account account = accountService.findAccountByEmail(principal.getName());
+        Bet bet = betService.getBetById(betId);
+
+        userBet.setUserBetId(new UserBetId(account, bet));
         return betService.setUserBet(userBet);
     }
 }

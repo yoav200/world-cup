@@ -1,8 +1,9 @@
 package com.ab.worldcup.bet;
 
 import com.ab.worldcup.account.Account;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.Embeddable;
 import javax.persistence.JoinColumn;
@@ -10,8 +11,9 @@ import javax.persistence.ManyToOne;
 import java.io.Serializable;
 
 @Embeddable
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserBetId implements Serializable {
 
     @ManyToOne
