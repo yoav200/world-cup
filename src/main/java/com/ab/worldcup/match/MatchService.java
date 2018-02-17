@@ -105,7 +105,6 @@ public class MatchService {
         List<KnockoutMatch> allKnockoutMatch = addResultsToMatches(knockoutService.getAllKnockoutMatches());
         List<Qualifier> allQualifiers = resultService.getAllQualifiers();
         Map<Stage, List<Qualifier>> map = allQualifiers.stream().collect(Collectors.groupingBy(Qualifier::getStageId));
-
         return MatchesData.builder().firstStage(allGroupMatches).secondStage(allKnockoutMatch).qualifiers(map).build();
     }
 
@@ -113,9 +112,7 @@ public class MatchService {
     public <T extends Match> List<T> addResultsToMatches(List<T> matches) {
         List<MatchResult> allMatchResults = resultService.getAllMatchResults();
         Map<Long, MatchResult> resultMap = allMatchResults.stream().collect(Collectors.toMap(MatchResult::getMatchId, Function.identity()));
-
-        matches.forEach(match ->
-                match.setResult(resultMap.get(match.getMatchId())));
+        matches.forEach(match -> match.setResult(resultMap.get(match.getMatchId())));
         return matches;
     }
 

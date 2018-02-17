@@ -17,12 +17,13 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider, growlPro
     $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
     $httpProvider.defaults.headers.common["Accept"] = "application/json";
     $httpProvider.defaults.headers.common["Content-Type"] = "application/json";
+    $httpProvider.interceptors.push(growlProvider.serverMessagesInterceptor);
 
     //growlProvider.messagesKey("my-messages");
     //growlProvider.messageTextKey("message-text");
     //growlProvider.messageTitleKey("message-title");
     //growlProvider.messageSeverityKey("severity-level");
-    $httpProvider.interceptors.push(growlProvider.serverMessagesInterceptor);
+    growlProvider.globalPosition('top-center');
     growlProvider.globalTimeToLive({success: 1000, error: 2000, warning: 3000, info: 4000});
 
 
