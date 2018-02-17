@@ -109,6 +109,18 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider, growlPro
         }
     });
 
+    // Groups
+    $stateProvider.state('ranking', {
+        parent: 'site',
+        url: '/ranking',
+        views: {
+            'content@': {
+                templateUrl: 'app/ranking/ranking.view.html',
+                controller: 'LBCtrl'
+            }
+        }
+    });
+
     // Bets
     $stateProvider.state('bets-mine', {
         parent: 'site',
