@@ -109,7 +109,7 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider, growlPro
         }
     });
 
-    // Groups
+    // Ranking
     $stateProvider.state('ranking', {
         parent: 'site',
         url: '/ranking',
