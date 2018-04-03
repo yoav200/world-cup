@@ -1,13 +1,16 @@
 package com.ab.worldcup.knockout;
 
-import com.ab.worldcup.match.KnockoutMatch;
 import com.ab.worldcup.team.Team;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import java.io.Serializable;
 
 @Entity
@@ -16,7 +19,7 @@ import java.io.Serializable;
 @ToString
 @EqualsAndHashCode
 @Table(name = "knockout_team")
-public class KnockoutTeam implements Serializable {
+public class KnockoutTeam implements Serializable,KnockoutTeamInterface {
 
     @Id
     private Long matchId;
@@ -29,7 +32,5 @@ public class KnockoutTeam implements Serializable {
     @JoinColumn(name = "awayTeam", referencedColumnName = "id")
     private Team awayTeam;
 
-    @OneToOne
-    @JoinColumn(name="matchId")
-    private KnockoutMatch knockoutMatch;
+
 }

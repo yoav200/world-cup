@@ -1,14 +1,17 @@
 package com.ab.worldcup.match;
 
-import com.ab.worldcup.knockout.KnockoutTeam;
+import com.ab.worldcup.knockout.KnockoutTeamInterface;
 import com.ab.worldcup.team.KnockoutTeamCode;
 import com.ab.worldcup.team.Team;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.hibernate.annotations.Immutable;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.io.Serializable;
 import java.util.Optional;
 
@@ -31,9 +34,8 @@ public class KnockoutMatch extends Match implements Serializable {
     @Enumerated(EnumType.STRING)
     private KnockoutTeamCode awayTeamCode;
 
-    @JsonIgnore
-    @OneToOne(mappedBy = "knockoutMatch")
-    private KnockoutTeam knockoutTeam;
+    @Transient
+    private KnockoutTeamInterface knockoutTeam;
 
     @Override
     public String toString() {
@@ -45,12 +47,16 @@ public class KnockoutMatch extends Match implements Serializable {
 
     @Override
     public Team getHomeTeam() {
-        return Optional.ofNullable(knockoutTeam).map(KnockoutTeam::getHomeTeam).orElse(null);
+        return Optional.ofNullable(knockoutTeam).map(KnockoutTeamInterface::getHomeTeam).orElse(null);
     }
 
     @Override
     public Team getAwayTeam() {
-        return Optional.ofNullable(knockoutTeam).map(KnockoutTeam::getAwayTeam).orElse(null);
+        return Optional.ofNullable(knockoutTeam).map(KnockoutTeamInterface::getAwayTeam).orElse(null);
+    }
+
+    public void setKnockoutTeam(KnockoutTeamInterface knockoutTeam){
+        this.knockoutTeam = knockoutTeam;
     }
 
     public boolean isReady() {

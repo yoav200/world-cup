@@ -91,7 +91,13 @@ public class BetService {
 
     private <T extends Match> List<T> addUserBetsToMatches(List<T> matches, List<UserBet> userBets) {
         Map<Long, UserBet> betMap = userBets.stream().collect(Collectors.toMap(UserBet::getMatchId, Function.identity()));
-        matches.forEach(match -> match.setResult(betMap.get(match.getMatchId())));
+        matches.forEach(match -> {
+            UserBet userBet = betMap.get(match.getMatchId());
+            match.setResult(userBet);
+            if (!match.getStageId().equals(Stage.GROUP)){
+                ((KnockoutMatch)match).setKnockoutTeam(userBet);
+            }
+        });
         return matches;
     }
 
@@ -108,7 +114,7 @@ public class BetService {
                     Qualifier qualifier = Qualifier.builder()
                             .team(teamUpdatedByMatch.getHomeTeam())
                             .stageId(match.getStageId().getNextStage())
-                            .knockoutTeamCode(teamUpdatedByMatch.getKnockoutMatch().getHomeTeamCode())
+                            .knockoutTeamCode(((KnockoutMatch)match).getHomeTeamCode())
                             .build();
                     list.add(qualifier);
                 }
@@ -116,7 +122,7 @@ public class BetService {
                     Qualifier qualifier = Qualifier.builder()
                             .team(teamUpdatedByMatch.getAwayTeam())
                             .stageId(match.getStageId().getNextStage())
-                            .knockoutTeamCode(teamUpdatedByMatch.getKnockoutMatch().getAwayTeamCode())
+                            .knockoutTeamCode(((KnockoutMatch)match).getAwayTeamCode())
                             .build();
                     list.add(qualifier);
                 }

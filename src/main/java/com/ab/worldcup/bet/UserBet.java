@@ -1,5 +1,6 @@
 package com.ab.worldcup.bet;
 
+import com.ab.worldcup.knockout.KnockoutTeamInterface;
 import com.ab.worldcup.results.ResultInterface;
 import com.ab.worldcup.team.Team;
 import lombok.EqualsAndHashCode;
@@ -7,7 +8,11 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.persistence.*;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 @Entity
 @Getter
@@ -15,7 +20,7 @@ import javax.persistence.*;
 @ToString
 @EqualsAndHashCode
 @Table(name = "user_bet")
-public class UserBet implements ResultInterface {
+public class UserBet implements ResultInterface,KnockoutTeamInterface {
 
     @EmbeddedId
     private UserBetId userBetId;

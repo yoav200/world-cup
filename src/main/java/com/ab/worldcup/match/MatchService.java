@@ -52,11 +52,12 @@ public class MatchService {
         List<MatchResult> matchResults = matchResultRepository.findAll();
         List<KnockoutTeam> knockoutTeamUpdatedByMatch = knockoutService.getKnockoutTeamUpdatedByMatch(match, matchResults);
         for (KnockoutTeam teamUpdatedByMatch : knockoutTeamUpdatedByMatch) {
+            KnockoutMatch knockoutMatch = knockoutMatchRepository.findOne(teamUpdatedByMatch.getMatchId());
             if (teamUpdatedByMatch.getHomeTeam() != null) {
                 Qualifier qualifier = Qualifier.builder()
                         .team(teamUpdatedByMatch.getHomeTeam())
                         .stageId(match.getStageId().getNextStage())
-                        .knockoutTeamCode(teamUpdatedByMatch.getKnockoutMatch().getHomeTeamCode())
+                        .knockoutTeamCode(knockoutMatch.getHomeTeamCode())
                         .build();
                 resultService.saveQualifier(qualifier);
             }
@@ -64,7 +65,7 @@ public class MatchService {
                 Qualifier qualifier = Qualifier.builder()
                         .team(teamUpdatedByMatch.getAwayTeam())
                         .stageId(match.getStageId().getNextStage())
-                        .knockoutTeamCode(teamUpdatedByMatch.getKnockoutMatch().getAwayTeamCode())
+                        .knockoutTeamCode(knockoutMatch.getAwayTeamCode())
                         .build();
                 resultService.saveQualifier(qualifier);
             }
@@ -102,7 +103,7 @@ public class MatchService {
 
     public MatchesData getMatchesData() {
         List<GroupMatch> allGroupMatches = addResultsToMatches(groupService.getAllGroupMatches());
-        List<KnockoutMatch> allKnockoutMatch = addResultsToMatches(knockoutService.getAllKnockoutMatches());
+        List<KnockoutMatch> allKnockoutMatch = knockoutService.addKnockoutTeamsOnKnockoutMatch(addResultsToMatches(knockoutService.getAllKnockoutMatches()));
         List<Qualifier> allQualifiers = resultService.getAllQualifiers();
         Map<Stage, List<Qualifier>> map = allQualifiers.stream().collect(Collectors.groupingBy(Qualifier::getStageId));
 

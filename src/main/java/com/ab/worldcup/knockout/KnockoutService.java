@@ -19,9 +19,12 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.TreeSet;
+import java.util.function.Function;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
 
 import static com.ab.worldcup.team.KnockoutTeamCode.LOSER_SF1;
 import static com.ab.worldcup.team.KnockoutTeamCode.LOSER_SF2;
@@ -46,20 +49,22 @@ public class KnockoutService<T extends ResultInterface> {
 
         KnockoutTeam knockoutTeamRecord = knockoutTeamRepository.findOne(match.getMatchId());
 
-        if (knockoutTeamRecord == null && (homeTeam.isPresent() || awayTeam.isPresent())) {
-            knockoutTeamRecord = new KnockoutTeam();
+        if(homeTeam.isPresent() || awayTeam.isPresent()) {
+
+            if (knockoutTeamRecord == null) {
+                knockoutTeamRecord = new KnockoutTeam();
+            }
+
             knockoutTeamRecord.setMatchId(match.getMatchId());
-            knockoutTeamRecord.setKnockoutMatch(match);
-        }
 
-        if (homeTeam.isPresent()) {
-            knockoutTeamRecord.setHomeTeam(homeTeam.get());
-        }
+            if (homeTeam.isPresent()) {
+                knockoutTeamRecord.setHomeTeam(homeTeam.get());
+            }
 
-        if (awayTeam.isPresent()) {
-            knockoutTeamRecord.setAwayTeam(awayTeam.get());
+            if (awayTeam.isPresent()) {
+                knockoutTeamRecord.setAwayTeam(awayTeam.get());
+            }
         }
-
         return Optional.ofNullable(knockoutTeamRecord);
     }
 
@@ -122,6 +127,16 @@ public class KnockoutService<T extends ResultInterface> {
     @Cacheable("knockoutMatches")
     public List<KnockoutMatch> getAllKnockoutMatches() {
         return knockoutMatchRepository.findAll();
+    }
+
+    public List<KnockoutMatch> addKnockoutTeamsOnKnockoutMatch(List<KnockoutMatch> knockoutMatchList) {
+        List<KnockoutTeam> knockoutTeams = knockoutTeamRepository.findAll();
+
+        Map<Long, KnockoutTeam> knockoutTeamByMatchId = knockoutTeams.stream().collect(Collectors.toMap(KnockoutTeam::getMatchId, Function.identity()));
+
+        knockoutMatchList.forEach(match -> match.setKnockoutTeam(knockoutTeamByMatchId.get(match.getMatchId())));
+
+        return knockoutMatchList;
     }
 
     private List<KnockoutMatch> getAllByStageId(Stage nextStage) {

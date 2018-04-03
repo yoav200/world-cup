@@ -46,7 +46,7 @@ public class ResultsService {
             Integer totalPointsForAccount = calculatedUserBets.stream().mapToInt(CalculatedUserBet::getTotalPoints).sum();
             leaderboardList.add(RankingData.builder().account(account).totalPoints(totalPointsForAccount).userBets(calculatedUserBets).build());
         }
-        leaderboardList.sort((o1, o2) -> o1.getTotalPoints() > o2.getTotalPoints() ? 1 : -1);
+        leaderboardList.sort((o1, o2) -> o1.getTotalPoints() > o2.getTotalPoints() ? -1 : 1);
         return leaderboardList;
     }
 
@@ -63,8 +63,11 @@ public class ResultsService {
             Bet bet = userBet.getUserBetId().getBet();
             if (BetType.MATCH.equals(bet.getType())) {
                 MatchResult matchResult = matchResultRepository.findOne(bet.getMatchId());
-                correctWinnerPoints = getPointsForMatchResultCorrectness(userBet, matchResult);
-                exactScorePoints = getPointsForExactScoreCorrectness(userBet, matchResult);
+                // if match finished, calculate the points
+                if(matchResult != null) {
+                    correctWinnerPoints = getPointsForMatchResultCorrectness(userBet, matchResult);
+                    exactScorePoints = getPointsForExactScoreCorrectness(userBet, matchResult);
+                }
             } // else, qualifier bet
             else {
                 correctQualifierPoints = getPointsForQualifierCorrectness(userBet, bet.getStageId());
