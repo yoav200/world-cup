@@ -6,6 +6,10 @@ import com.ab.worldcup.bet.Bet;
 import com.ab.worldcup.bet.BetService;
 import com.ab.worldcup.bet.UserBet;
 import com.ab.worldcup.bet.UserBetId;
+import com.ab.worldcup.group.GroupService;
+import com.ab.worldcup.group.GroupStanding;
+import com.ab.worldcup.results.MatchResult;
+import com.ab.worldcup.team.Group;
 import com.ab.worldcup.web.model.MatchesData;
 import com.ab.worldcup.web.model.UserBetValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,14 +18,19 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 
+@PreAuthorize("hasRole('ROLE_USER')")
 @RestController
 @RequestMapping("/api/bets")
 public class BetsController {
 
     @Autowired
     private BetService betService;
+
+    @Autowired
+    private GroupService groupService;
 
     @Autowired
     private AccountService accountService;
@@ -32,14 +41,23 @@ public class BetsController {
         binder.addValidators(new UserBetValidator());
     }
 
-    @PreAuthorize("hasRole('ROLE_USER')")
     @RequestMapping("/")
     public List<Bet> getAllBets() {
         return betService.getAllBets();
     }
 
+    @RequestMapping("/groups")
+    public List<GroupStanding> getAllGroupStanding() {
+        List<GroupStanding> list = new ArrayList<>();
+        for (Group groupId : Group.values()) {
+            List<UserBet> userBetList = betService.getUserBetForGroup(groupId);
+            GroupStanding groupStanding = groupService.getGroupStanding(groupId, userBetList);
+            list.add(groupStanding);
+        }
+        return list;
+    }
 
-    @PreAuthorize("hasRole('ROLE_USER')")
+
     @RequestMapping("/data")
     public MatchesData getMatchesData(Principal principal) {
         Account account = accountService.findAccountByEmail(principal.getName());
@@ -47,7 +65,6 @@ public class BetsController {
     }
 
 
-    @PreAuthorize("hasRole('ROLE_USER')")
     @RequestMapping("/user/")
     public List<UserBet> getUserBets(Principal principal) {
         Account account = accountService.findAccountByEmail(principal.getName());

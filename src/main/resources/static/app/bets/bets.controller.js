@@ -78,6 +78,6 @@ angular.module('worldcup').controller('betsCtrl', function ($rootScope, $scope, 
                 $scope.userBet.betId = bet.id;
             }
         }
-        //console.log($scope.selected);
+        console.log($scope.selected);
     };
 });

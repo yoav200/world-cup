@@ -3,7 +3,7 @@
 /**
  * Main AngularJS Web Application
  */
-var app = angular.module('worldcup', ['ui.router', 'ui.router.stateHelper', 'ui.bootstrap', 'ngResource', 'ngAnimate', 'ngSanitize', 'angular-loading-bar', 'angular-growl']);
+var app = angular.module('worldcup', ['ui.router', 'ui.router.stateHelper', 'ui.bootstrap','ui.select', 'ngResource', 'ngAnimate', 'ngSanitize', 'angular-loading-bar', 'angular-growl']);
 
 
 /**
@@ -19,10 +19,6 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider, growlPro
     $httpProvider.defaults.headers.common["Content-Type"] = "application/json";
     $httpProvider.interceptors.push(growlProvider.serverMessagesInterceptor);
 
-    //growlProvider.messagesKey("my-messages");
-    //growlProvider.messageTextKey("message-text");
-    //growlProvider.messageTitleKey("message-title");
-    //growlProvider.messageSeverityKey("severity-level");
     growlProvider.globalPosition('top-center');
     growlProvider.globalTimeToLive({success: 1000, error: 2000, warning: 3000, info: 4000});
 
@@ -36,15 +32,6 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider, growlPro
                 controller: 'navbarController'
             }
         }
-    }).state('rules', {
-        parent: 'site',
-        url: "/",
-        data: {},
-        views: {
-            'content@': {
-                templateUrl: 'app/rules/rules.view.html'
-            }
-        }
     }).state('join', {
         parent: 'site',
         url: "/join",
@@ -53,9 +40,18 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider, growlPro
                 templateUrl: 'app/navbar/login.view.html'
             }
         }
+    }).state('ranking', {
+        parent: 'site',
+        // Ranking - default view
+        url: '/',
+        views: {
+            'content@': {
+                templateUrl: 'app/ranking/ranking.view.html',
+                controller: 'rankingCtrl'
+            }
+        }
     });
 
-    
     // Team
     $stateProvider.state('teams', {
         parent: 'site',
@@ -76,8 +72,7 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider, growlPro
         controller: 'teamsCtrl'
     });
 
-    
-    // Matches
+    // under Results menu
     $stateProvider.state('games', {
         parent: 'site',
         url: "/games",
@@ -95,10 +90,7 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider, growlPro
         url: "/second-stage",
         templateUrl: 'app/games/view/games.secondstage.html',
         controller: 'gamesCtrl'
-    });
-
-    // Groups
-    $stateProvider.state('groups', {
+    }).state('groups', {
         parent: 'site',
         url: '/groups',
         views: {
@@ -109,40 +101,48 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider, growlPro
         }
     });
 
-    // Ranking
-    $stateProvider.state('ranking', {
-        parent: 'site',
-        url: '/ranking',
-        views: {
-            'content@': {
-                templateUrl: 'app/ranking/ranking.view.html',
-                controller: 'LBCtrl'
-            }
-        }
-    });
 
     // Bets
-    $stateProvider.state('bets-mine', {
+    $stateProvider.state('bets-manage', {
         parent: 'site',
         permissions: ['ROLE_USER'],
         url: "/bets/mine",
         views: {
             'content@': {
-                templateUrl: 'app/bets/bets.view.html',
+                templateUrl: 'app/bets/view/bets.view.html',
                 controller: 'betsCtrl'
             }
         }
-    }).state('bets-statistics', {
+    }).state('bets-games', {
+            parent: 'site',
+            url: "/bets/games",
+            views: {
+                'content@': {
+                    templateUrl: 'app/bets/view/bets.games.view.html',
+                    controller: 'betsGamesCtrl'
+                }
+            }
+        }).state('bets-games.firststage', {
+        url: "/first-stage",
+        templateUrl: 'app/games/view/games.firststage.html',
+        controller: 'betsGamesCtrl'
+    }).state('bets-games.secondstage', {
+        url: "/second-stage",
+        templateUrl: 'app/games/view/games.secondstage.html',
+        controller: 'betsGamesCtrl'
+    }).state('bets-groups', {
         parent: 'site',
         permissions: ['ROLE_USER'],
-        url: "/bets/statistics",
+        url: '/bets/groups',
         views: {
             'content@': {
-                templateUrl: 'app/bets/bets.view.html',
-                controller: 'betsCtrl'
+                templateUrl: 'app/groups/groups.view.html',
+                controller: 'betsGroupsCtrl'
             }
         }
     });
+
+
 
     // Admin
     $stateProvider.state('admin', {
@@ -156,7 +156,6 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider, growlPro
             }
         }
     })
-    
 }).filter('capitalize', function () {
     return function (input) {
         return (!!input) ? input.charAt(0).toUpperCase() + input.substr(1).toLowerCase() : '';

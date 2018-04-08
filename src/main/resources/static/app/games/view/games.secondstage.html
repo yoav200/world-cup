@@ -33,29 +33,21 @@
             </td>
 
             <td class="round_column r_2 final">
+
                 <div class="winner_team">
-                    <span>WINNER<a href="#"><img src="imgs/flags/Brazil.png" alt="Brazil"><span>Brazil</span></a></span>
+                    <span>WINNER<a href="#">
+                        <team data="finalWinner"/>
+                    </span>
                 </div>
+
                 <div class="mtch_container">
-                    <div class="match_unit">
-                        <div class="m_segment m_top winner first" data-team-id="9"><span><a href="#"><img
-                                src="imgs/flags/Brazil.png"
-                                alt="Brazil"><span>Brazil</span></a><strong>4</strong></span></div>
-                        <div class="m_segment m_botm winner second" data-team-id="2"><span><a href="#"><img
-                                src="imgs/flags/Algeria.png"
-                                alt="Algeria"><span>Algeria</span></a><strong>3</strong></span></div>
-                        <div class="m_dtls"><span>June 10, 2015 - 8:00 pm</span></div>
+                    <div class="mtch_container" ng-repeat="match in matches.finals">
+                        <brackets-team data="match"/>
                     </div>
                 </div>
                 <div class="mtch_container third_position">
-                    <div class="match_unit">
-                        <div class="m_segment m_botm winner third" data-team-id="16"><span><a href="#"><img
-                                src="imgs/flags/England.png"
-                                alt="England"><span>England</span></a><strong>3</strong></span></div>
-                        <div class="m_segment m_top losers fourth" data-team-id="8"><span><a href="#"><img
-                                src="imgs/flags/Saudi-Arabia.png"
-                                alt="Saudi-Arabia"><span>Saudi</span></a><strong>2</strong></span></div>
-                        <div class="m_dtls"><span>June 10, 2015 - 8:00 pm</span></div>
+                    <div class="mtch_container" ng-repeat="match in matches.thirdPlace">
+                        <brackets-team data="match"/>
                     </div>
                 </div>
             </td>

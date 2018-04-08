@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('worldcup').controller('LBCtrl', function ($rootScope, $scope, $state, $stateParams, $http, $filter, Ranking) {
+angular.module('worldcup').controller('rankingCtrl', function ($rootScope, $scope, $state, $stateParams, $http, $filter, Ranking) {
 
     $scope.rankingData = [];
 
