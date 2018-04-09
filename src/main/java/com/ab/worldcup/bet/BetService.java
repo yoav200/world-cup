@@ -133,8 +133,8 @@ public class BetService {
     }
 
 
-    public List<UserBet> getUserBetForGroup(Group group) {
-        return userBetRepository.findUserBetByGroup(group.toString());
+    public List<UserBet> getUserBetForGroup(Group group, Long accountId) {
+        return userBetRepository.findUserBetByGroup(group.toString(),accountId);
     }
 
 }

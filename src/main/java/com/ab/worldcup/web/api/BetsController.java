@@ -8,14 +8,19 @@ import com.ab.worldcup.bet.UserBet;
 import com.ab.worldcup.bet.UserBetId;
 import com.ab.worldcup.group.GroupService;
 import com.ab.worldcup.group.GroupStanding;
-import com.ab.worldcup.results.MatchResult;
 import com.ab.worldcup.team.Group;
 import com.ab.worldcup.web.model.MatchesData;
 import com.ab.worldcup.web.model.UserBetValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
 import java.util.ArrayList;
@@ -47,10 +52,11 @@ public class BetsController {
     }
 
     @RequestMapping("/groups")
-    public List<GroupStanding> getAllGroupStanding() {
+    public List<GroupStanding> getAllGroupStanding(Principal principal) {
         List<GroupStanding> list = new ArrayList<>();
+        Account account = accountService.findAccountByEmail(principal.getName());
         for (Group groupId : Group.values()) {
-            List<UserBet> userBetList = betService.getUserBetForGroup(groupId);
+            List<UserBet> userBetList = betService.getUserBetForGroup(groupId,account.getId());
             GroupStanding groupStanding = groupService.getGroupStanding(groupId, userBetList);
             list.add(groupStanding);
         }
