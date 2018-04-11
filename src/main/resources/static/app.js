@@ -20,7 +20,7 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider, growlPro
     $httpProvider.interceptors.push(growlProvider.serverMessagesInterceptor);
 
     growlProvider.globalPosition('top-center');
-    growlProvider.globalTimeToLive({success: 1000, error: 2000, warning: 3000, info: 4000});
+    growlProvider.globalTimeToLive({success: 4000, error: 5000, warning: 5000, info: 5000});
 
 
     // Now set up the states
@@ -30,14 +30,6 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider, growlPro
             'navbar@': {
                 templateUrl: 'app/navbar/navbar.view.html',
                 controller: 'navbarController'
-            }
-        }
-    }).state('join', {
-        parent: 'site',
-        url: "/join",
-        views: {
-            'content@': {
-                templateUrl: 'app/navbar/login.view.html'
             }
         }
     }).state('ranking', {
@@ -50,9 +42,17 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider, growlPro
                 controller: 'rankingCtrl'
             }
         }
+    }).state('join', {
+        parent: 'site',
+        url: "/join",
+        views: {
+            'content@': {
+                templateUrl: 'app/navbar/login.view.html'
+            }
+        }
     });
 
-    // Team
+    // Teams
     $stateProvider.state('teams', {
         parent: 'site',
         url: '/teams',
@@ -72,7 +72,7 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider, growlPro
         controller: 'teamsCtrl'
     });
 
-    // under Results menu
+    // Games
     $stateProvider.state('games', {
         parent: 'site',
         url: "/games",
@@ -100,7 +100,6 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider, growlPro
             }
         }
     });
-
 
     // Bets
     $stateProvider.state('bets-manage', {
@@ -142,8 +141,6 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider, growlPro
         }
     });
 
-
-
     // Admin
     $stateProvider.state('admin', {
         parent: 'site',
@@ -168,7 +165,7 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider, growlPro
     return function (input) {
         return input.replace(/_/g, ' ');
     };
-}).run(function ($rootScope, $state, Auth) {
+}).run(function ($rootScope, $state, $location, $anchorScroll, Auth) {
 
     Auth.init();
 
@@ -178,6 +175,12 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider, growlPro
             $state.go('join');
         }
     });
+
+    $rootScope.scrollTo = function(id) {
+        $location.hash(id);
+        $anchorScroll.yOffset = 60;
+        $anchorScroll();
+    };
 });
 
 

@@ -7,6 +7,7 @@ import com.ab.worldcup.match.KnockoutMatch;
 import com.ab.worldcup.match.Match;
 import com.ab.worldcup.match.MatchService;
 import com.ab.worldcup.results.MatchResult;
+import com.ab.worldcup.web.model.MatchResultData;
 import com.ab.worldcup.web.model.MatchesData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -50,10 +51,10 @@ public class MatchController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @ResponseBody
     @RequestMapping(value = "/groups/{matchId}", method = RequestMethod.POST)
-    public Match updateGroupMatches(@PathVariable Long matchId, @RequestBody MatchResult matchResult) {
-        Match groupMatch = matchService.updateGroupMatchResult(matchId, matchResult);
-        matchService.onMatchFinish(groupMatch);
-        return groupMatch;
+    public Match updateGroupMatches(@PathVariable Long matchId, @RequestBody MatchResultData matchResult) {
+        Match match = matchService.updateGroupMatchResult(matchId, matchResult);
+        matchService.onMatchFinish(match);
+        return match;
     }
 
 

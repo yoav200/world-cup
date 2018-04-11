@@ -18,7 +18,7 @@ CREATE TABLE account (
 CREATE TABLE team (
   id              SERIAL PRIMARY KEY,
   name            VARCHAR UNIQUE,
-  code            VARCHAR NOT NULL,
+  code            VARCHAR UNIQUE,
   fifaRanking     INT,
   appearances     INT,
   titles          INT,

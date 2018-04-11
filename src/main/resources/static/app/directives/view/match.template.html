@@ -1,19 +1,20 @@
-<table class="table table-condensed">
+<table class="table table-hover table-striped table-condensed">
     <tbody>
     <tr ng-repeat="match in matches">
         <td class="col-md-1">
             <div><b>{{match.stage}}</b></div>
             <div>{{match.kickoff | date : 'MMM d, h:mm a'}}</div>
         </td>
-        <td class="col-md-2">
-            <h2><team data="match.homeTeam"/></h2>
+        <td class="col-md-1">
+            <h4><team data="match.homeTeam"/></h4>
         </td>
-        <td class="col-md-2 text-center">
-            <h1>{{match.result.homeTeamGoals}} : {{match.result.awayTeamGoals}}</h1>
+        <td class="col-md-1 text-center">
+            <h3>{{match.result.homeTeamGoals}} : {{match.result.awayTeamGoals}}</h3>
         </td>
-        <td class="col-md-2">
-            <h2><team data="match.awayTeam"/></h2>
+        <td class="col-md-1">
+            <h4><team data="match.awayTeam"/></h4>
         </td>
+        <td class="col-md-3">&nbsp;</td>
     </tr>
     </tbody>
 </table>

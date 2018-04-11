@@ -4,9 +4,9 @@ import com.ab.worldcup.group.GroupService;
 import com.ab.worldcup.knockout.KnockoutService;
 import com.ab.worldcup.knockout.KnockoutTeam;
 import com.ab.worldcup.results.MatchResult;
-import com.ab.worldcup.results.MatchResultRepository;
 import com.ab.worldcup.results.Qualifier;
 import com.ab.worldcup.results.ResultsService;
+import com.ab.worldcup.web.model.MatchResultData;
 import com.ab.worldcup.web.model.MatchesData;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,9 +27,6 @@ public class MatchService {
     private KnockoutMatchRepository knockoutMatchRepository;
 
     @Autowired
-    private MatchResultRepository matchResultRepository;
-
-    @Autowired
     private GroupMatchRepository groupMatchRepository;
 
     @Autowired
@@ -47,9 +44,9 @@ public class MatchService {
      * 1. update the relevant KnockoutTeam record if needed
      * 2. will add a record to qualifier table if needed
      */
-    @CacheEvict(cacheNames = {"CalculatedUserBets", "knockoutMatches", "matchResults"})
+    @CacheEvict(cacheNames = {"CalculatedUserBets", "knockoutMatches", "matchResults"}, allEntries=true)
     public void onMatchFinish(Match match) {
-        List<MatchResult> matchResults = matchResultRepository.findAll();
+        List<MatchResult> matchResults = resultService.getAllMatchResults();
         List<KnockoutTeam> knockoutTeamUpdatedByMatch = knockoutService.getKnockoutTeamUpdatedByMatch(match, matchResults);
         for (KnockoutTeam teamUpdatedByMatch : knockoutTeamUpdatedByMatch) {
             KnockoutMatch knockoutMatch = knockoutMatchRepository.findOne(teamUpdatedByMatch.getMatchId());
@@ -74,26 +71,34 @@ public class MatchService {
     }
 
 
-    public Match updateGroupMatchResult(Long matchId, MatchResult matchResult) {
-        MatchResult result = matchResultRepository.findOne(matchId);
+    public Match updateGroupMatchResult(Long matchId, MatchResultData matchResult) {
+        // get related match
+        Match match = getMatchById(matchId);
+
+        MatchResult result = resultService.findMatchResultByMatchId(match.getMatchId());
         if (result == null) {
             result = new MatchResult();
-            result.setMatchId(matchId);
+            result.setMatchId(match.getMatchId());
         }
-        if (result.equals(matchResult)) {
-            result.setHomeTeamGoals(matchResult.getHomeTeamGoals());
-            result.setAwayTeamGoals(matchResult.getAwayTeamGoals());
+        // set goals
+        result.setHomeTeamGoals(matchResult.getHomeTeamGoals());
+        result.setAwayTeamGoals(matchResult.getAwayTeamGoals());
+        // knockout match
+        if (!Stage.GROUP.equals(match.getStageId())) {
+            result.setHomeTeam(groupService.findTeamByCode(matchResult.getHomeTeamCode()));
+            result.setAwayTeam(groupService.findTeamByCode(matchResult.getAwayTeamCode()));
+            result.setMatchQualifier(matchResult.getMatchQualifier());
         } else {
-            throw new IllegalArgumentException("Match result do not match");
+            result.setHomeTeam(match.getHomeTeam());
+            result.setAwayTeam(match.getAwayTeam());
         }
-        matchResultRepository.save(matchResult);
+        // save the result
+        resultService.save(result);
 
-        Match groupMatch = getMatchById(matchId);
-        groupMatch.setResult(result);
-        return groupMatch;
+        return getMatchById(match.getMatchId()).setResult(result);
     }
 
-    public Match getMatchById(Long matchId) {
+    Match getMatchById(Long matchId) {
         Match one = groupMatchRepository.findOne(matchId);
         if (one == null) {
             one = knockoutMatchRepository.findOne(matchId);
@@ -109,12 +114,10 @@ public class MatchService {
         return MatchesData.builder().firstStage(allGroupMatches).secondStage(allKnockoutMatch).qualifiers(map).build();
     }
 
-
     public <T extends Match> List<T> addResultsToMatches(List<T> matches) {
         List<MatchResult> allMatchResults = resultService.getAllMatchResults();
         Map<Long, MatchResult> resultMap = allMatchResults.stream().collect(Collectors.toMap(MatchResult::getMatchId, Function.identity()));
         matches.forEach(match -> match.setResult(resultMap.get(match.getMatchId())));
         return matches;
     }
-
 }

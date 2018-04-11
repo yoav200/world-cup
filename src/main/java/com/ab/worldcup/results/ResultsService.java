@@ -12,6 +12,7 @@ import com.ab.worldcup.match.Stage;
 import com.ab.worldcup.team.Group;
 import com.ab.worldcup.web.model.RankingData;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -119,8 +120,9 @@ public class ResultsService {
         return userBet.winnerEquals(matchResult);
     }
 
-    public void saveMatchResult(MatchResult result) {
-        matchResultRepository.saveAndFlush(result);
+    @CacheEvict(value="matchResults", allEntries=true)
+    public MatchResult save(MatchResult result) {
+        return matchResultRepository.save(result);
     }
 
     public void saveKnockoutTeam(KnockoutTeam knockoutTeam) {
@@ -142,5 +144,9 @@ public class ResultsService {
     @Cacheable("matchResults")
     public List<MatchResult> getAllMatchResults() {
         return matchResultRepository.findAll();
+    }
+
+    public MatchResult findMatchResultByMatchId(Long matchId) {
+        return matchResultRepository.findOne(matchId);
     }
 }
