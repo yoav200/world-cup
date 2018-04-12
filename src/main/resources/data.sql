@@ -323,5 +323,5 @@ INSERT INTO bet (id, description, stageId, type, lockTime) VALUES
 --   (45, 8, 18, 0, 3),
 --   (46, 4, 30, 2, 3),
 --   (47, 27, 5, 3, 3);
--- --   (48, 14, 11, 2, 1);
+--   (48, 14, 11, 2, 1);
 
