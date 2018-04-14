@@ -20,7 +20,7 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider, growlPro
     $httpProvider.interceptors.push(growlProvider.serverMessagesInterceptor);
 
     growlProvider.globalPosition('top-center');
-    growlProvider.globalTimeToLive({success: 4000, error: 5000, warning: 5000, info: 5000});
+    growlProvider.globalTimeToLive({success: 10000, error: 10000, warning: 10000, info: 10000});
 
 
     // Now set up the states

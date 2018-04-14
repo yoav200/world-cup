@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 public class MatchResultData {
 
-    //private Long matchId;
+    private Long matchId;
 
     private String homeTeamCode;
 

@@ -21,7 +21,7 @@ body {
     padding: 10px;
     font-family: tahoma;
     min-width: 550px;
-    background-color: darkslategray;
+    background-color: slateblue;
     color: #000;
 }
 
@@ -159,7 +159,7 @@ body {
     right: 0;
     display: block;
     background: #fff;
-    font-size: 13px;
+    font-size: 12px;
     z-index: 1;
     height: 37px;
     line-height: 29px;

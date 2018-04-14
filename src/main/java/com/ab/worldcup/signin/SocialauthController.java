@@ -91,6 +91,12 @@ public class SocialauthController {
         return "user_denied".equals(error) ? "redirect:/" + config.getAccessDeniedPageUrl() : "redirect:/";
     }
 
+    @RequestMapping(params = {"error_code", "error_message"})
+    private String fbCancel2(@RequestParam("error_code") String errorCode, @RequestParam("error_message") String error) {
+        this.logger.debug("Facebook send an error_code : " + errorCode + ", message: " + error);
+        return "redirect:/" + config.getAccessDeniedPageUrl();
+    }
+
     @RequestMapping(params = {"openid.mode=cancel"})
     private String googleCancel(@RequestParam("openid.mode") String error) {
         this.logger.debug("Google send an error : " + error);

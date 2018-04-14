@@ -71,7 +71,7 @@ public class MatchService {
     }
 
 
-    public Match updateGroupMatchResult(Long matchId, MatchResultData matchResult) {
+    public Match updateMatchResult(Long matchId, MatchResultData matchResult) {
         // get related match
         Match match = getMatchById(matchId);
 
@@ -98,7 +98,7 @@ public class MatchService {
         return getMatchById(match.getMatchId()).setResult(result);
     }
 
-    Match getMatchById(Long matchId) {
+    public Match getMatchById(Long matchId) {
         Match one = groupMatchRepository.findOne(matchId);
         if (one == null) {
             one = knockoutMatchRepository.findOne(matchId);

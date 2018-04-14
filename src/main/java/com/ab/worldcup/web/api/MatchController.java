@@ -10,9 +10,13 @@ import com.ab.worldcup.results.MatchResult;
 import com.ab.worldcup.web.model.MatchResultData;
 import com.ab.worldcup.web.model.MatchesData;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.Validator;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -28,6 +32,14 @@ public class MatchController {
     @Autowired
     private KnockoutService<MatchResult> knockoutService;
 
+    @Autowired
+    @Qualifier("MatchResultDataValidator")
+    private Validator validator;
+
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        binder.addValidators(validator);
+    }
 
     @ResponseBody
     @RequestMapping(value = "/data")
@@ -41,7 +53,6 @@ public class MatchController {
         return matchService.addResultsToMatches(knockoutService.getAllKnockoutMatches());
     }
 
-
     @ResponseBody
     @RequestMapping(value = "/groups")
     public List<GroupMatch> getAllGroupMatches() {
@@ -51,11 +62,9 @@ public class MatchController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @ResponseBody
     @RequestMapping(value = "/groups/{matchId}", method = RequestMethod.POST)
-    public Match updateGroupMatches(@PathVariable Long matchId, @RequestBody MatchResultData matchResult) {
-        Match match = matchService.updateGroupMatchResult(matchId, matchResult);
+    public Match updateGroupMatches(@PathVariable Long matchId, @RequestBody @Valid MatchResultData matchResultData) {
+        Match match = matchService.updateMatchResult(matchId, matchResultData);
         matchService.onMatchFinish(match);
         return match;
     }
-
-
 }

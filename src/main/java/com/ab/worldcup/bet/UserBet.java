@@ -8,11 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Getter
@@ -20,7 +16,7 @@ import javax.persistence.Table;
 @ToString
 @EqualsAndHashCode
 @Table(name = "user_bet")
-public class UserBet implements ResultInterface,KnockoutTeamInterface {
+public class UserBet implements ResultInterface, KnockoutTeamInterface {
 
     @EmbeddedId
     private UserBetId userBetId;
@@ -49,5 +45,13 @@ public class UserBet implements ResultInterface,KnockoutTeamInterface {
     @Override
     public Team getKnockoutQualifier() {
         return qualifier;
+    }
+
+    private UserBet() {
+        // for JPA
+    }
+
+    public UserBet(UserBetId userBetId) {
+        this.userBetId = userBetId;
     }
 }

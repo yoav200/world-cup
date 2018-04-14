@@ -36,7 +36,9 @@ public class GroupMatch extends Match {
         return this.kickoff + ", Group " + groupId.name() + ",  "
                 + homeTeam.getName()
                 + " : "
-                + awayTeam.getName();
+                + awayTeam.getName()
+                + (getResult() != null ? " (F)" : "");
+                // + (getResult() != null ? " &#10004;" : "");
     }
 
 

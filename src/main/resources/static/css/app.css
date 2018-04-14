@@ -46,7 +46,8 @@ body {
 
 .flag {
     width: 48px;
-    height: 32px;
+    /*height: 32px;*/
+    margin-top: 2px;
     border: 1px solid #c7c6c6;
 }
 
