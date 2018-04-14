@@ -13,7 +13,7 @@
                         <select id="firstStageMatchesList"
                                 class="form-control"
                                 ng-options="match as match.label for match in matchesData.firstStage track by match.matchId"
-                                ng-model="selectedMatch"
+                                ng-model="selected.match"
                                 ng-change="onMatchSelected('first')"></select>
                     </div>
                 </div>
@@ -34,7 +34,7 @@
                         <select id="secondStageMatchesList"
                                 class="form-control"
                                 ng-options="match as match.label for match in matchesData.secondStage | filter:{ready:true} track by match.matchId"
-                                ng-model="selectedMatch"
+                                ng-model="selected.match"
                                 ng-change="onMatchSelected('second')"></select>
                     </div>
                 </div>
@@ -43,7 +43,7 @@
     </div>
 
 
-    <div class="panel panel-primary" ng-if="selectedMatch">
+    <div class="panel panel-primary" ng-if="selected.match">
         <div class="panel-heading">Result Form</div>
         <div class="panel-body">
 
@@ -61,8 +61,8 @@
                         <table class="table table-condensed">
                         <tbody>
                         <tr>
-                            <td class="col-md-4"><team data="selectedMatch.homeTeam"></team></td>
-                            <td class="col-md-4"><team data="selectedMatch.awayTeam"></team></td>
+                            <td class="col-md-4"><team data="selected.match.homeTeam"></team></td>
+                            <td class="col-md-4"><team data="selected.match.awayTeam"></team></td>
                             <td class="col-md-1 text-center">
                                 <input type="number"
                                        class="form-control"

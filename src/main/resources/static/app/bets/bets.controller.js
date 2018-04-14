@@ -3,13 +3,8 @@
 angular.module('worldcup').controller('betsCtrl', function ($rootScope, $scope, $state, $stateParams, Bets, growl) {
 
     $scope.matchesData = {};
-    $scope.betsMap = {};
-    $scope.matchesMap = {};
 
-    $scope.betsData = {
-        match: [],
-        qualifier: []
-    };
+    $scope.betsMap = {};
 
     $scope.selected = {
         match: undefined,
@@ -20,64 +15,70 @@ angular.module('worldcup').controller('betsCtrl', function ($rootScope, $scope, 
         matchId: undefined,
         betId: undefined,
         label: undefined,
+        homeTeamCode: undefined,
+        awayTeamCode: undefined,
         homeTeamGoals: undefined,
         awayTeamGoals: undefined,
-        qualifier: undefined
+        matchQualifier: undefined
     };
 
-    Bets.getMatchesData().then(function (response) {
-        $scope.matchesData = response;
+    var getMatchData = function() {
+        Bets.getMatchesData().then(function (response) {
+            $scope.matchesData = response;
+        });
+    };
 
-        angular.forEach($scope.matchesData.firstStage , function (match, index) {
-            $scope.matchesMap[match.matchId] = match;
-        });
-        angular.forEach($scope.matchesData.secondStage, function (match, index) {
-            $scope.matchesMap[match.matchId] = match;
-        });
-    });
+    var getAllBets = function() {
+        Bets.getAllBets().then(function (response) {
+            $scope.bets = response;
 
-    Bets.getAllBets().then(function (response) {
-        $scope.bets = response;
-        angular.forEach(response, function (bet, index) {
-            $scope.betsMap[bet.matchId] = bet;
+            angular.forEach(response, function (bet, index) {
+                $scope.betsMap[bet.matchId] = bet;
+            });
         });
-    });
+    };
 
     $scope.postUserBet = function () {
-        if($scope.selected.match && $scope.selected.bet
-            && $scope.selected.match.matchId === $scope.selected.bet.matchId
-            && $scope.userBet.matchId === $scope.selected.bet.matchId
-            && $scope.userBet.betId === $scope.selected.bet.id
-            && $scope.userBet.homeTeamGoals && $scope.userBet.awayTeamGoals) {
-
-            Bets.updateBet($scope.userBet.betId, $scope.userBet).then(function (response) {
-                console.log(response);
-                growl.success('You\'re bet saved successfully.',{title: 'Success!'});
-            });
-        } else {
-            growl.warning('You must set home and away teams goals',{title: 'Validation error!!'});
-        }
+        Bets.updateBet($scope.userBet.betId, $scope.userBet).then(function (response) {
+            getMatchData();
+            growl.success('You\'re bet saved successfully.',{title: 'Success!'});
+        });
     };
 
     $scope.onMatchSelected = function (stage) {
 
-        var match = $scope.matchesMap[$scope.selected.match.matchId];
+        var list = stage === 'first' ? $scope.matchesData.firstStage : $scope.matchesData.secondStage;
 
-        if(match) {
-            $scope.selected.match = match;
-            $scope.userBet = {
-                matchId: $scope.selected.match.matchId,
-                homeTeamGoals: $scope.selected.match.result ? $scope.selected.match.result.homeTeamGoals : undefined,
-                awayTeamGoals: $scope.selected.match.result ? $scope.selected.match.result.awayTeamGoals : undefined
-            };
+        angular.forEach(list, function (match, index) {
+            if ($scope.selected.match.matchId === match.matchId) {
+                //$scope.selected.match = match;
 
-            var bet = $scope.betsMap[match.matchId];
+                var bet = $scope.betsMap[match.matchId];
 
-            if(bet) {
                 $scope.selected.bet = bet;
-                $scope.userBet.betId = bet.id;
+
+                $scope.userBet = {
+                    betId: bet.id,
+                    matchId: $scope.selected.match.matchId,
+                    homeTeamCode: $scope.selected.match.homeTeam.code,
+                    awayTeamCode: $scope.selected.match.awayTeam.code,
+                    homeTeamGoals: $scope.selected.match.result ? $scope.selected.match.result.homeTeamGoals : undefined,
+                    awayTeamGoals: $scope.selected.match.result ? $scope.selected.match.result.awayTeamGoals : undefined,
+                    matchQualifier: $scope.selected.match.result ? $scope.selected.match.result.matchQualifier : undefined
+                };
+                console.log($scope.userBet);
+                console.log($scope.selected);
             }
-        }
-        console.log($scope.selected);
+        });
     };
+
+
+    var init = function() {
+        getMatchData();
+        getAllBets();
+    };
+
+    init();
+
+
 });

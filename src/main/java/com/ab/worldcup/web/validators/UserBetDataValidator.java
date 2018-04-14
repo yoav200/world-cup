@@ -2,7 +2,6 @@ package com.ab.worldcup.web.validators;
 
 import com.ab.worldcup.bet.Bet;
 import com.ab.worldcup.bet.BetService;
-import com.ab.worldcup.bet.BetType;
 import com.ab.worldcup.web.model.UserBetData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -33,19 +32,7 @@ public class UserBetDataValidator implements Validator {
         if (bet == null) {
             errors.rejectValue("betId", "", "Bet not found");
         } else {
-            if ((userBetData.getHomeTeamGoals() == null || userBetData.getHomeTeamGoals() < 0)) {
-                errors.rejectValue("homeTeamGoals", "", "Home team goals result must be set");
-            }
-
-            if ((userBetData.getAwayTeamGoals() == null || userBetData.getAwayTeamGoals() < 0)) {
-                errors.rejectValue("awayTeamGoals", "", "Away team goals result must be set");
-            }
-
-            if (bet.getType().equals(BetType.QUALIFIER)) {
-                if (userBetData.getMatchQualifier() == null) {
-                    errors.rejectValue("qualifier", "userBet.team.qualifier", "Bet missing qualifier");
-                }
-            }
+            userBetData.validate(errors, bet.getStageId());
         }
     }
 }

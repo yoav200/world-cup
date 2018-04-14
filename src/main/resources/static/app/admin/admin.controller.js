@@ -2,11 +2,13 @@
 
 angular.module('worldcup').controller('adminCtrl', function ($rootScope, $scope, $state, $stateParams, growl, Matches) {
 
-    console.log("Only admin can view this page");
-
     $scope.matchesData = {};
 
-    $scope.selectedMatch = undefined;
+    $scope.selected = {
+        match: undefined
+    };
+    
+    $scope.selected.match = undefined;
 
     $scope.matchResult = {
         matchId: undefined,
@@ -35,16 +37,16 @@ angular.module('worldcup').controller('adminCtrl', function ($rootScope, $scope,
         var list = stage === 'first' ? $scope.matchesData.firstStage : $scope.matchesData.secondStage;
 
         angular.forEach(list, function (match, index) {
-            if ($scope.selectedMatch.matchId === match.matchId) {
-                $scope.selectedMatch = match;
+            if ($scope.selected.match.matchId === match.matchId) {
+                //$scope.selected.match = match;
 
                 $scope.matchResult = {
-                    matchId: $scope.selectedMatch.matchId,
-                    homeTeamCode: $scope.selectedMatch.homeTeam.code,
-                    awayTeamCode: $scope.selectedMatch.awayTeam.code,
-                    homeTeamGoals: $scope.selectedMatch.result ? $scope.selectedMatch.result.homeTeamGoals : undefined,
-                    awayTeamGoals: $scope.selectedMatch.result ? $scope.selectedMatch.result.awayTeamGoals : undefined,
-                    matchQualifier: $scope.selectedMatch.result ? $scope.selectedMatch.result.matchQualifier : undefined
+                    matchId: $scope.selected.match.matchId,
+                    homeTeamCode: $scope.selected.match.homeTeam.code,
+                    awayTeamCode: $scope.selected.match.awayTeam.code,
+                    homeTeamGoals: $scope.selected.match.result ? $scope.selected.match.result.homeTeamGoals : undefined,
+                    awayTeamGoals: $scope.selected.match.result ? $scope.selected.match.result.awayTeamGoals : undefined,
+                    matchQualifier: $scope.selected.match.result ? $scope.selected.match.result.matchQualifier : undefined
                 };
 
                 console.log($scope.matchResult);

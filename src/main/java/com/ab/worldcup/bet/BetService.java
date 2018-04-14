@@ -72,14 +72,6 @@ public class BetService {
         return MatchesData.builder().firstStage(allGroupMatches).secondStage(allKnockoutMatch).qualifiers(map).build();
     }
 
-//    private List<Match> addBetsToMatchs(List<Match> matches) {
-//        List<UserBet> userBets = userBetRepository.findAll();
-//        Map<Long, UserBet> betsMap = userBets.stream()
-//                .filter(b -> b.getUserBetId().getBet().getMatchId() != null)
-//                .collect(Collectors.toMap(b -> b.getUserBetId().getBet().getMatchId(), Function.identity()));
-//        matches.forEach(match -> match.setResult(betsMap.get(match.getMatchId())));
-//        return matches;
-//    }
 
     private <T extends Match> List<T> addUserBetsToMatches(List<T> matches, List<UserBet> userBets) {
         Map<Long, UserBet> betMap = userBets.stream().collect(Collectors.toMap(UserBet::getMatchId, Function.identity()));
