@@ -5,16 +5,21 @@ import com.ab.worldcup.group.GroupService;
 import com.ab.worldcup.knockout.KnockoutMatchQualifier;
 import com.ab.worldcup.knockout.KnockoutService;
 import com.ab.worldcup.knockout.KnockoutTeam;
-import com.ab.worldcup.match.*;
+import com.ab.worldcup.match.GroupMatch;
+import com.ab.worldcup.match.KnockoutMatch;
+import com.ab.worldcup.match.Match;
+import com.ab.worldcup.match.MatchService;
+import com.ab.worldcup.match.Stage;
 import com.ab.worldcup.results.Qualifier;
 import com.ab.worldcup.team.Group;
+import com.ab.worldcup.team.KnockoutTeamCode;
 import com.ab.worldcup.web.model.MatchesData;
 import com.ab.worldcup.web.model.UserBetData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -86,34 +91,37 @@ public class BetService {
     }
 
     private List<Qualifier> getAllQualifiers(List<UserBet> userBets) {
-        List<Qualifier> list = new ArrayList<>();
+        Map<KnockoutTeamCode,Qualifier> qualifiersMap = new HashMap<>();
         List<? extends Match> allGroupMatches = groupService.getAllGroupMatches();
         List<? extends Match> allKnockoutMatches = knockoutService.getAllKnockoutMatches();
 
         Stream.concat(allGroupMatches.stream(), allKnockoutMatches.stream()).forEach(match -> {
             List<KnockoutTeam> knockoutTeamUpdatedByMatch = knockoutService.getKnockoutTeamUpdatedByMatch(match, userBets);
             for (KnockoutTeam teamUpdatedByMatch : knockoutTeamUpdatedByMatch) {
+                KnockoutMatch knockoutMatch = knockoutService.getKnockoutMatchByMatchId(teamUpdatedByMatch.getMatchId());
+
+
                 if (teamUpdatedByMatch.getHomeTeam() != null) {
                     Qualifier.QualifierBuilder qualifierBuilder = Qualifier.builder()
                             .team(teamUpdatedByMatch.getHomeTeam())
-                            .stageId(match.getStageId().getNextStage());
-                    if (match instanceof KnockoutMatch) {
-                        qualifierBuilder.knockoutTeamCode(((KnockoutMatch) match).getHomeTeamCode());
-                    }
-                    list.add(qualifierBuilder.build());
+                            .stageId(match.getStageId().getNextStage())
+                            .knockoutTeamCode(knockoutMatch.getHomeTeamCode());
+
+                    Qualifier qualifier = qualifierBuilder.build();
+                    qualifiersMap.put(qualifier.getKnockoutTeamCode(),qualifier);
                 }
                 if (teamUpdatedByMatch.getAwayTeam() != null) {
                     Qualifier.QualifierBuilder qualifierBuilder = Qualifier.builder()
                             .team(teamUpdatedByMatch.getAwayTeam())
-                            .stageId(match.getStageId().getNextStage());
-                    if (match instanceof KnockoutMatch) {
-                        qualifierBuilder.knockoutTeamCode(((KnockoutMatch) match).getAwayTeamCode());
-                    }
-                    list.add(qualifierBuilder.build());
+                            .stageId(match.getStageId().getNextStage())
+                            .knockoutTeamCode(knockoutMatch.getAwayTeamCode());
+
+                    Qualifier qualifier = qualifierBuilder.build();
+                    qualifiersMap.put(qualifier.getKnockoutTeamCode(),qualifier);
                 }
             }
         });
-        return list;
+        return qualifiersMap.values().stream().collect(Collectors.toList());
     }
 
 

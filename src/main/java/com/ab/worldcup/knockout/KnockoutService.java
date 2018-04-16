@@ -42,6 +42,9 @@ public class KnockoutService<T extends ResultInterface> {
     @Autowired
     private GroupService groupService;
 
+    public KnockoutMatch getKnockoutMatchByMatchId(Long matchId){
+        return knockoutMatchRepository.findOne(matchId);
+    }
 
     private Optional<KnockoutTeam> getKnockoutTeamForKnockoutMatch(KnockoutMatch match, List<T> results) {
         Optional<Team> homeTeam = getKnockoutTeamByTeamCode(match.getHomeTeamCode(), results);
