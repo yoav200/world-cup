@@ -2,6 +2,15 @@
 
 angular.module('worldcup').controller('betsCtrl', function ($rootScope, $scope, $state, $stateParams, Bets, growl) {
 
+    var matchHomeWon = 'HOME_TEAM';
+
+    var matchAwayWon = 'AWAY_TEAM';
+
+    $scope.options = {
+        matchQualifier : [matchHomeWon, matchAwayWon],
+        bets : undefined
+    };
+
     $scope.matchesData = {};
 
     $scope.betsMap = {};
@@ -30,8 +39,7 @@ angular.module('worldcup').controller('betsCtrl', function ($rootScope, $scope, 
 
     var getAllBets = function() {
         Bets.getAllBets().then(function (response) {
-            $scope.bets = response;
-
+            $scope.options.bets = response;
             angular.forEach(response, function (bet, index) {
                 $scope.betsMap[bet.matchId] = bet;
             });
@@ -45,20 +53,27 @@ angular.module('worldcup').controller('betsCtrl', function ($rootScope, $scope, 
         });
     };
 
+    $scope.onGoalsChanged = function() {
+        var q = undefined;
+        if($scope.userBet.homeTeamGoals > $scope.userBet.awayTeamGoals) {
+            q = matchHomeWon;
+        } else if($scope.userBet.homeTeamGoals < $scope.userBet.awayTeamGoals) {
+            q = matchAwayWon;
+        }
+        $scope.userBet.matchQualifier = q;
+    };
+
     $scope.onMatchSelected = function (stage) {
 
         var list = stage === 'first' ? $scope.matchesData.firstStage : $scope.matchesData.secondStage;
 
         angular.forEach(list, function (match, index) {
             if ($scope.selected.match.matchId === match.matchId) {
-                //$scope.selected.match = match;
 
-                var bet = $scope.betsMap[match.matchId];
-
-                $scope.selected.bet = bet;
+                $scope.selected.bet = $scope.betsMap[match.matchId];
 
                 $scope.userBet = {
-                    betId: bet.id,
+                    betId: $scope.selected.bet.id,
                     matchId: $scope.selected.match.matchId,
                     homeTeamCode: $scope.selected.match.homeTeam.code,
                     awayTeamCode: $scope.selected.match.awayTeam.code,
@@ -66,8 +81,6 @@ angular.module('worldcup').controller('betsCtrl', function ($rootScope, $scope, 
                     awayTeamGoals: $scope.selected.match.result ? $scope.selected.match.result.awayTeamGoals : undefined,
                     matchQualifier: $scope.selected.match.result ? $scope.selected.match.result.matchQualifier : undefined
                 };
-                console.log($scope.userBet);
-                console.log($scope.selected);
             }
         });
     };
@@ -79,6 +92,5 @@ angular.module('worldcup').controller('betsCtrl', function ($rootScope, $scope, 
     };
 
     init();
-
 
 });

@@ -2,13 +2,19 @@
 
 angular.module('worldcup').controller('adminCtrl', function ($rootScope, $scope, $state, $stateParams, growl, Matches) {
 
+    var matchHomeWon = 'HOME_TEAM';
+
+    var matchAwayWon = 'AWAY_TEAM';
+
+    $scope.options = {
+        matchQualifier : [matchHomeWon, matchAwayWon]
+    };
+    
     $scope.matchesData = {};
 
     $scope.selected = {
         match: undefined
     };
-    
-    $scope.selected.match = undefined;
 
     $scope.matchResult = {
         matchId: undefined,
@@ -33,13 +39,21 @@ angular.module('worldcup').controller('adminCtrl', function ($rootScope, $scope,
         });
     };
 
+    $scope.onGoalsChanged = function() {
+        var q = undefined;
+        if($scope.matchResult.homeTeamGoals > $scope.matchResult.awayTeamGoals) {
+            q = matchHomeWon;
+        } else if($scope.matchResult.homeTeamGoals < $scope.matchResult.awayTeamGoals) {
+            q = matchAwayWon;
+        }
+        $scope.matchResult.matchQualifier = q;
+    };
+    
     $scope.onMatchSelected = function (stage) {
         var list = stage === 'first' ? $scope.matchesData.firstStage : $scope.matchesData.secondStage;
 
         angular.forEach(list, function (match, index) {
             if ($scope.selected.match.matchId === match.matchId) {
-                //$scope.selected.match = match;
-
                 $scope.matchResult = {
                     matchId: $scope.selected.match.matchId,
                     homeTeamCode: $scope.selected.match.homeTeam.code,
@@ -48,8 +62,6 @@ angular.module('worldcup').controller('adminCtrl', function ($rootScope, $scope,
                     awayTeamGoals: $scope.selected.match.result ? $scope.selected.match.result.awayTeamGoals : undefined,
                     matchQualifier: $scope.selected.match.result ? $scope.selected.match.result.matchQualifier : undefined
                 };
-
-                console.log($scope.matchResult);
             }
         });
     };

@@ -105,7 +105,7 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider, growlPro
     $stateProvider.state('bets-manage', {
         parent: 'site',
         permissions: ['ROLE_USER'],
-        url: "/bets/mine",
+        url: "/bets/manage",
         views: {
             'content@': {
                 templateUrl: 'app/bets/view/bets.view.html',
@@ -113,19 +113,22 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider, growlPro
             }
         }
     }).state('bets-games', {
-            parent: 'site',
-            url: "/bets/games",
-            views: {
-                'content@': {
-                    templateUrl: 'app/bets/view/bets.games.view.html',
-                    controller: 'betsGamesCtrl'
-                }
+        parent: 'site',
+        permissions: ['ROLE_USER'],
+        url: "/bets/games",
+        views: {
+            'content@': {
+                templateUrl: 'app/bets/view/bets.games.view.html',
+                controller: 'betsGamesCtrl'
             }
-        }).state('bets-games.firststage', {
+        }
+    }).state('bets-games.firststage', {
+        permissions: ['ROLE_USER'],
         url: "/first-stage",
         templateUrl: 'app/games/view/games.firststage.html',
         controller: 'betsGamesCtrl'
     }).state('bets-games.secondstage', {
+        permissions: ['ROLE_USER'],
         url: "/second-stage",
         templateUrl: 'app/games/view/games.secondstage.html',
         controller: 'betsGamesCtrl'
