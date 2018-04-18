@@ -1,6 +1,7 @@
 package com.ab.worldcup.account;
 
 
+import com.ab.worldcup.web.components.EncryptionUtil;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
@@ -19,6 +20,10 @@ import java.util.Set;
 @ToString
 @EqualsAndHashCode
 public class Account {
+
+    public enum AccountStatus {
+        REGISTER, ACTIVE
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -48,15 +53,22 @@ public class Account {
 
     private String profileImageUrl;
 
-    @JsonIgnore
+    //@JsonIgnore
     private String providerId;
 
     private String country;
 
     private String language;
 
+    @Enumerated(EnumType.STRING)
+    private AccountStatus status;
+
     @Transient
     @JsonProperty("roles")
     private final Set<String> roles = new HashSet<>();
 
+
+    public String getAccountId() {
+        return EncryptionUtil.encodeId(id);
+    }
 }

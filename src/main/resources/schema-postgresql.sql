@@ -12,7 +12,8 @@ CREATE TABLE account (
   profileImageUrl VARCHAR,
   providerId      VARCHAR NOT NULL,
   country         VARCHAR,
-  language        VARCHAR
+  language        VARCHAR,
+  status          VARCHAR
 );
 
 CREATE TABLE team (

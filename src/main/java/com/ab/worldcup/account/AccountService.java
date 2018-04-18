@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
@@ -66,6 +67,7 @@ public class AccountService implements UserDetailsService {
                 .profileImageUrl(userProfile.getProfileImageURL())
                 .providerId(userProfile.getProviderId())
                 .country(userProfile.getCountry())
+                .status(Account.AccountStatus.REGISTER)
                 .language(userProfile.getLanguage()).build();
         return accountRepository.save(account);
     }
@@ -100,4 +102,13 @@ public class AccountService implements UserDetailsService {
         return authorities;
     }
 
+    public Account updateAccountStatus(Long id, Account.AccountStatus status) {
+        Account account = accountRepository.findOne(id);
+        account.setStatus(status);
+        return accountRepository.save(account);
+    }
+
+    public List<Account> getAllAccounts() {
+        return accountRepository.findAll();
+    }
 }

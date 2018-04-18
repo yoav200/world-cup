@@ -3,7 +3,7 @@
 /**
  * Main AngularJS Web Application
  */
-var app = angular.module('worldcup', ['ui.router', 'ui.router.stateHelper', 'ui.bootstrap','ui.select', 'ngResource', 'ngAnimate', 'ngSanitize', 'angular-loading-bar', 'angular-growl']);
+var app = angular.module('worldcup', ['ui.router', 'ui.router.stateHelper', 'ui.bootstrap', 'ui.select', 'ngResource', 'ngAnimate', 'ngSanitize', 'angular-loading-bar', 'angular-growl']);
 
 
 /**
@@ -21,7 +21,6 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider, growlPro
 
     growlProvider.globalPosition('top-center');
     growlProvider.globalTimeToLive({success: 10000, error: 10000, warning: 10000, info: 10000});
-
 
     // Now set up the states
     $stateProvider.state('site', {
@@ -64,13 +63,14 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider, growlPro
         }
     }).state('teams.confederation', {
         url: "/confederation",
-        templateUrl: 'app/teams/view/teams.confederations.html', 
+        templateUrl: 'app/teams/view/teams.confederations.html',
         controller: 'teamsCtrl'
     }).state('teams.fifaranking', {
         url: "/ranking",
         templateUrl: 'app/teams/view/teams.fifaranking.html',
         controller: 'teamsCtrl'
     });
+
 
     // Games
     $stateProvider.state('games', {
@@ -90,72 +90,82 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider, growlPro
         url: "/second-stage",
         templateUrl: 'app/games/view/games.secondstage.html',
         controller: 'gamesCtrl'
-    }).state('groups', {
-        parent: 'site',
+    }).state('games.groups', {
+        //parent: 'site',
         url: '/groups',
         views: {
             'content@': {
-                templateUrl: 'app/groups/groups.view.html',
+                templateUrl: 'app/games/view/games.groups.html',
                 controller: 'groupsCtrl'
             }
         }
-    });
-
-    // Bets
-    $stateProvider.state('bets-manage', {
-        parent: 'site',
-        permissions: ['ROLE_USER'],
-        url: "/bets/manage",
-        views: {
-            'content@': {
-                templateUrl: 'app/bets/view/bets.view.html',
-                controller: 'betsCtrl'
-            }
-        }
-    }).state('bets-games', {
-        parent: 'site',
-        permissions: ['ROLE_USER'],
-        url: "/bets/games",
-        views: {
-            'content@': {
-                templateUrl: 'app/bets/view/bets.games.view.html',
-                controller: 'betsGamesCtrl'
-            }
-        }
-    }).state('bets-games.firststage', {
-        permissions: ['ROLE_USER'],
-        url: "/first-stage",
-        templateUrl: 'app/games/view/games.firststage.html',
-        controller: 'betsGamesCtrl'
-    }).state('bets-games.secondstage', {
-        permissions: ['ROLE_USER'],
-        url: "/second-stage",
-        templateUrl: 'app/games/view/games.secondstage.html',
-        controller: 'betsGamesCtrl'
-    }).state('bets-groups', {
-        parent: 'site',
-        permissions: ['ROLE_USER'],
-        url: '/bets/groups',
-        views: {
-            'content@': {
-                templateUrl: 'app/groups/groups.view.html',
-                controller: 'betsGroupsCtrl'
-            }
-        }
-    });
-
-    // Admin
-    $stateProvider.state('admin', {
-        parent: 'site',
+    }).state('games.manage', {
+        //parent: 'site',
         permissions: ['ROLE_ADMIN'],
-        url: "/admin",
+        url: "/manage",
         views: {
             'content@': {
                 templateUrl: 'app/admin/admin.view.html',
                 controller: 'adminCtrl'
             }
         }
-    })
+    });
+
+    // Bets
+    $stateProvider.state('bets', {
+        parent: 'site',
+        url: "/bets",
+        views: {
+            'content@': {
+                templateUrl: 'app/bets/view/bets.games.view.html',
+                controller: 'betsGamesCtrl'
+            }
+        }
+    }).state('bets.firststage', {
+        permissions: ['ROLE_USER'],
+        url: "/first-stage",
+        templateUrl: 'app/games/view/games.firststage.html',
+        controller: 'betsGamesCtrl'
+    }).state('bets.secondstage', {
+        permissions: ['ROLE_USER'],
+        url: "/second-stage",
+        templateUrl: 'app/games/view/games.secondstage.html',
+        controller: 'betsGamesCtrl'
+    }).state('bets.groups', {
+        //parent: 'site',
+        permissions: ['ROLE_USER'],
+        url: '/groups',
+        views: {
+            'content@': {
+                templateUrl: 'app/games/view/games.groups.html',
+                controller: 'betsGroupsCtrl'
+            }
+        }
+    }).state('bets.manage', {
+        //parent: 'site',
+        permissions: ['ROLE_USER'],
+        url: "/manage",
+        views: {
+            'content@': {
+                templateUrl: 'app/bets/view/bets.view.html',
+                controller: 'betsCtrl'
+            }
+        }
+    });
+
+    // Accounts
+    $stateProvider.state('accounts', {
+        parent: 'site',
+        permissions: ['ROLE_ADMIN'],
+        url: '/accounts',
+        views: {
+            'content@': {
+                templateUrl: 'app/accounts/accounts.view.html',
+                controller: 'accountCtrl'
+            }
+        }
+    });
+
 }).filter('capitalize', function () {
     return function (input) {
         return (!!input) ? input.charAt(0).toUpperCase() + input.substr(1).toLowerCase() : '';
@@ -179,7 +189,7 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider, growlPro
         }
     });
 
-    $rootScope.scrollTo = function(id) {
+    $rootScope.scrollTo = function (id) {
         $location.hash(id);
         $anchorScroll.yOffset = 60;
         $anchorScroll();

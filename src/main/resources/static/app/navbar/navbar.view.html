@@ -22,8 +22,8 @@
                         Games <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a ui-sref-active="active" ui-sref="games.groups">Groups View</a></li>
-                        <li><a ui-sref-active="active" ui-sref="games">Matches View</a></li>
+                        <li ui-sref-active="active"><a ui-sref="games.groups">Groups View</a></li>
+                        <li ui-sref-active="active"><a ui-sref="games.firststage">Matches View</a></li>
                         <li role="separator" class="divider" permission="['ROLE_ADMIN']"></li>
                         <li ui-sref-active="active" permission="['ROLE_ADMIN']">
                             <a ui-sref="games.manage">Update Match <small>admin only!</small></a></li>
@@ -36,14 +36,17 @@
                         Bets <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a ui-sref-active="active" ui-sref="bets.groups">Groups View</a></li>
-                        <li><a ui-sref-active="active" ui-sref="bets">Matches View</a></li>
+                        <li ui-sref-active="active"><a ui-sref="bets.groups">Groups View</a></li>
+                        <li ui-sref-active="active"><a ui-sref="bets.firststage">Matches View</a></li>
                         <li role="separator" class="divider"></li>
-                        <li><a ui-sref-active="active" ui-sref="bets.manage">Manage Bets</a></li>
+                        <li ui-sref-active="active"><a ui-sref="bets.manage">Manage Bets</a></li>
                     </ul>
                 </li>
 
-                <li><a href="#/">Contact</a></li>
+                <li ui-sref-active="active" permission="['ROLE_ADMIN']">
+                    <a ui-sref="accounts">Accounts</a></li>
+                </li>
+
             </ul>
 
             <ul class="nav navbar-nav navbar-right" >
@@ -57,11 +60,6 @@
                         <li><a href="#">Profile</a></li>
                         <li><a href="#">Settings</a></li>
                         <li role="separator" class="divider"></li>
-                        <!--
-                        <li ui-sref-active="active" permission="['ROLE_ADMIN']">
-                           <a ui-sref="admin">Update Match <small>admin</small></a></li>
-                        </li>
-                        -->
                         <li><a href data-ng-click="logout()">Log out</a></li>
                     </ul>
                 </li>

@@ -1,0 +1,20 @@
+<section id="admin" permission="['ROLE_ADMIN']">
+    <h1>Manage Accounts panel
+        <small>Admin Only!</small>
+    </h1>
+
+
+    <table class="table table-hover table-striped table-condensed">
+        <tbody>
+        <tr ng-repeat="account in accounts">
+            <td class="col-md-1"><img ng-src="{{account.profileImageUrl}}" style="max-height: 50px;"/></td>
+            <td class="col-md-1 text-center">{{account.fullName}}</td>
+            <td ng-show="false" class="col-md-1">{{account.accountId}}</td>
+            <td class="col-md-1">{{account.email}}</td>
+            <td class="col-md-1">{{account.providerId}}</td>
+            <td class="col-md-1">{{account.status}}</td>
+        </tr>
+        </tbody>
+    </table>
+
+</section>
