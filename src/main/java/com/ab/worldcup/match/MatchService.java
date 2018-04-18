@@ -9,6 +9,7 @@ import com.ab.worldcup.results.ResultsService;
 import com.ab.worldcup.web.model.MatchResultData;
 import com.ab.worldcup.web.model.MatchesData;
 import lombok.extern.java.Log;
+import org.apache.commons.collections4.ListUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
@@ -44,7 +45,8 @@ public class MatchService {
      * 1. update the relevant KnockoutTeam record if needed
      * 2. will add a record to qualifier table if needed
      */
-    @CacheEvict(cacheNames = {"CalculatedUserBets", "knockoutMatches", "matchResults"}, allEntries=true)
+    @SuppressWarnings("unchecked")
+    @CacheEvict(cacheNames = {"CalculatedUserBets", "knockoutMatches", "matchResults"}, allEntries = true)
     public void onMatchFinish(Match match) {
         List<MatchResult> matchResults = resultService.getAllMatchResults();
         List<KnockoutTeam> knockoutTeamUpdatedByMatch = knockoutService.getKnockoutTeamUpdatedByMatch(match, matchResults);
@@ -69,7 +71,6 @@ public class MatchService {
             resultService.saveKnockoutTeam(teamUpdatedByMatch);
         }
     }
-
 
     public Match updateMatchResult(Long matchId, MatchResultData matchResult) {
         // get related match
@@ -106,9 +107,12 @@ public class MatchService {
         return one;
     }
 
+    @SuppressWarnings("unchecked")
     public MatchesData getMatchesData() {
         List<GroupMatch> allGroupMatches = addResultsToMatches(groupService.getAllGroupMatches());
-        List<KnockoutMatch> allKnockoutMatch = knockoutService.addKnockoutTeamsOnKnockoutMatch(addResultsToMatches(knockoutService.getAllKnockoutMatches()));
+        List<KnockoutMatch> allKnockoutMatch = knockoutService.addKnockoutTeamsOnKnockoutMatch(
+                addResultsToMatches(knockoutService.getAllKnockoutMatches()));
+
         List<Qualifier> allQualifiers = resultService.getAllQualifiers();
         Map<Stage, List<Qualifier>> map = allQualifiers.stream().collect(Collectors.groupingBy(Qualifier::getStageId));
         return MatchesData.builder().firstStage(allGroupMatches).secondStage(allKnockoutMatch).qualifiers(map).build();
@@ -119,5 +123,10 @@ public class MatchService {
         Map<Long, MatchResult> resultMap = allMatchResults.stream().collect(Collectors.toMap(MatchResult::getMatchId, Function.identity()));
         matches.forEach(match -> match.setResult(resultMap.get(match.getMatchId())));
         return matches;
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<? extends Match> getAllMatches() {
+        return ListUtils.union(groupService.getAllGroupMatches(), knockoutService.getAllKnockoutMatches());
     }
 }

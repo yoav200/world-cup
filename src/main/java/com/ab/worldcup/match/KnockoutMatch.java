@@ -42,7 +42,8 @@ public class KnockoutMatch extends Match implements Serializable {
         return this.kickoff + ",  " + matchCode + ", "
                 + ((getHomeTeam() == null) ? homeTeamCode : getHomeTeam().getName())
                 + " : "
-                + ((getAwayTeam() == null) ? awayTeamCode : getAwayTeam().getName());
+                + ((getAwayTeam() == null) ? awayTeamCode : getAwayTeam().getName())
+                + (getResult() != null ? " (F)" : "");
     }
 
     @Override

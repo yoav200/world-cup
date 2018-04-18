@@ -3,7 +3,6 @@ package com.ab.worldcup.group;
 import com.ab.worldcup.match.GroupMatch;
 import com.ab.worldcup.match.GroupMatchRepository;
 import com.ab.worldcup.match.Match;
-import com.ab.worldcup.results.MatchResultRepository;
 import com.ab.worldcup.results.ResultInterface;
 import com.ab.worldcup.team.Group;
 import com.ab.worldcup.team.Team;

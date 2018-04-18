@@ -6,11 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
@@ -19,7 +15,7 @@ import java.io.Serializable;
 @ToString
 @EqualsAndHashCode
 @Table(name = "knockout_team")
-public class KnockoutTeam implements Serializable,KnockoutTeamInterface {
+public class KnockoutTeam implements Serializable, KnockoutTeamInterface {
 
     @Id
     private Long matchId;
@@ -31,6 +27,5 @@ public class KnockoutTeam implements Serializable,KnockoutTeamInterface {
     @ManyToOne
     @JoinColumn(name = "awayTeam", referencedColumnName = "id")
     private Team awayTeam;
-
 
 }
