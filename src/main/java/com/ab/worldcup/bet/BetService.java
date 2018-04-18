@@ -27,11 +27,6 @@ public class BetService {
     @Autowired
     private UserBetRepository userBetRepository;
 
-
-    @Autowired
-    private KnockoutMatchRepository knockoutMatchRepository;
-
-
     @Autowired
     private GroupService groupService;
 
@@ -52,30 +47,31 @@ public class BetService {
 
     @SuppressWarnings("unchecked")
     public MatchesData getMatchesData(Long accountId) {
+        // all user bets
         List<UserBet> userBets = userBetRepository.findByUserBetIdAccountId(accountId);
-        List<? extends Match> allMatches = matchService.getAllMatches();
-
+        // all matches with results added
+        List<? extends Match> allMatches = addUserBetsToMatches( matchService.getAllMatches(), userBets);
+        // filter group stage matches
         List<GroupMatch> groupMatches = allMatches.stream()
                 .filter(m -> m.getStageId().equals(Stage.GROUP))
-                .map(m->(GroupMatch)m)
+                .map(m -> (GroupMatch) m)
                 .collect(Collectors.toList());
-
+        // filter knockout stage matches
         List<KnockoutMatch> knockoutMatches = allMatches.stream()
                 .filter(m -> !m.getStageId().equals(Stage.GROUP))
                 .map(m -> (KnockoutMatch) m)
                 .collect(Collectors.toList());
-
-
-        List<GroupMatch> allGroupMatches = addUserBetsToMatches(groupMatches, userBets);
+        // add results to matches
+        //List<GroupMatch> allGroupMatches = addUserBetsToMatches(groupMatches, userBets);
+        //List knockoutMatchList = addUserBetsToMatches(knockoutMatches, userBets);
 
         Set<KnockoutTeam> knockoutTeams = calculateKnockoutTeams(allMatches, userBets);
-
-        List knockoutMatchList = addUserBetsToMatches(knockoutMatches, userBets);
-        List<KnockoutMatch> allKnockoutMatch = addKnockoutTeamsOnKnockoutMatch(knockoutMatchList, knockoutTeams);
+        List<KnockoutMatch> allKnockoutMatch = addKnockoutTeamsOnKnockoutMatch(knockoutMatches, knockoutTeams);
 
         List<Qualifier> allQualifiers = getQualifiers(knockoutTeams);
-        Map<Stage, List<Qualifier>> map = allQualifiers.stream().collect(Collectors.groupingBy(Qualifier::getStageId));
-        return MatchesData.builder().firstStage(allGroupMatches).secondStage(allKnockoutMatch).qualifiers(map).build();
+        Map<Stage, List<Qualifier>> qualifiersMap = allQualifiers.stream().collect(Collectors.groupingBy(Qualifier::getStageId));
+
+        return MatchesData.builder().firstStage(groupMatches).secondStage(allKnockoutMatch).qualifiers(qualifiersMap).build();
     }
 
 
@@ -100,7 +96,7 @@ public class BetService {
     private List<Qualifier> getQualifiers(Set<KnockoutTeam> knockoutTeams) {
         List<Qualifier> qualifiers = new ArrayList<>();
         for (KnockoutTeam teamUpdatedByMatch : knockoutTeams) {
-            KnockoutMatch knockoutMatch = knockoutMatchRepository.findOne(teamUpdatedByMatch.getMatchId());
+            KnockoutMatch knockoutMatch = knockoutService.findKnockoutMatch(teamUpdatedByMatch.getMatchId());
             if (teamUpdatedByMatch.getHomeTeam() != null) {
                 Qualifier qualifier = Qualifier.builder()
                         .team(teamUpdatedByMatch.getHomeTeam())
@@ -127,7 +123,6 @@ public class BetService {
         knockoutMatchList.forEach(match -> match.setKnockoutTeam(knockoutTeamByMatchId.get(match.getMatchId())));
         return knockoutMatchList;
     }
-
 
     // **************************  User Bet ***********************************
 

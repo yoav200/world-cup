@@ -22,11 +22,11 @@
                         Games <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a ui-sref="groups">Groups View</a></li>
-                        <li><a ui-sref="games">Matches View</a></li>
+                        <li><a ui-sref-active="active" ui-sref="games.groups">Groups View</a></li>
+                        <li><a ui-sref-active="active" ui-sref="games">Matches View</a></li>
                         <li role="separator" class="divider" permission="['ROLE_ADMIN']"></li>
                         <li ui-sref-active="active" permission="['ROLE_ADMIN']">
-                            <a ui-sref="admin">Update Match <small>admin only!</small></a></li>
+                            <a ui-sref="games.manage">Update Match <small>admin only!</small></a></li>
                         </li>
                     </ul>
                 </li>
@@ -36,10 +36,10 @@
                         Bets <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a ui-sref="bets-groups">Groups View</a></li>
-                        <li><a ui-sref="bets-games">Matches View</a></li>
+                        <li><a ui-sref-active="active" ui-sref="bets.groups">Groups View</a></li>
+                        <li><a ui-sref-active="active" ui-sref="bets">Matches View</a></li>
                         <li role="separator" class="divider"></li>
-                        <li><a ui-sref="bets-manage">Manage Bets</a></li>
+                        <li><a ui-sref-active="active" ui-sref="bets.manage">Manage Bets</a></li>
                     </ul>
                 </li>
 

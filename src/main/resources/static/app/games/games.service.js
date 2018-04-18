@@ -20,8 +20,8 @@ angular.module('worldcup').factory('Matches', function($http) {
     //     });
     // };
 
-    var updateStageMatch = function(result) {
-        return $http.post("api/match/groups/" + result.matchId, result).then(function(response) {
+    var updateMatchResults = function(result) {
+        return $http.post("api/match/" + result.matchId, result).then(function(response) {
             return  response.data;
         });
     };
@@ -77,9 +77,9 @@ angular.module('worldcup').factory('Matches', function($http) {
                 matchesByStage.thirdPlace.push(match);
             } else if (stageId === 'FINAL') {
                 matchesByStage.finals.push(match);
-                if(match.results && match.results.winner === 'HOME_TEAM_WON') {
+                if(match.result && match.result.winner === 'HOME_TEAM_WON') {
                     matchesByStage.finalWinner = match.homeTeam;
-                } else if(match.results && match.results.winner === 'AWAY_TEAM_WON') {
+                } else if(match.result && match.result.winner === 'AWAY_TEAM_WON') {
                     matchesByStage.finalWinner = match.awayTeam;
                 }
             }
@@ -91,7 +91,7 @@ angular.module('worldcup').factory('Matches', function($http) {
         getMatchesData: getMatchesData,
         //getFirstStageMatches: getFirstStageMatches,
         //getSecondStageMatches: getSecondStageMatches,
-        updateStageMatch: updateStageMatch,
+        updateStageMatch: updateMatchResults,
         getMatchesForStage : getMatchesForStage
     };
 

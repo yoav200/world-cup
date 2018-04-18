@@ -61,7 +61,7 @@ public class MatchController {
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @ResponseBody
-    @RequestMapping(value = "/groups/{matchId}", method = RequestMethod.POST)
+    @RequestMapping(value = "/{matchId}", method = RequestMethod.POST)
     public Match updateGroupMatches(@PathVariable Long matchId, @RequestBody @Valid MatchResultData matchResultData) {
         Match match = matchService.updateMatchResult(matchId, matchResultData);
         matchService.onMatchFinish(match);

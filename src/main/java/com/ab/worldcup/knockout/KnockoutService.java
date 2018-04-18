@@ -149,4 +149,8 @@ public class KnockoutService<T extends ResultInterface> {
         }
         return knockoutTeamList;
     }
+
+    public KnockoutMatch findKnockoutMatch(Long matchId) {
+        return knockoutMatchRepository.findOne(matchId);
+    }
 }

@@ -6,7 +6,7 @@ angular.module('worldcup').controller('betsGamesCtrl', function ($rootScope, $sc
 
     $scope.matches = {};
 
-    var parentState = 'bets-games', defaultChildState = '.firststage';
+    var parentState = 'bets', defaultChildState = '.firststage';
     // If the parent state has been transitioned to, redirect to the default child.
     if ($state.current.name.substr(-parentState.length) === parentState) {
         $state.go(defaultChildState);
@@ -21,10 +21,10 @@ angular.module('worldcup').controller('betsGamesCtrl', function ($rootScope, $sc
     var init = function () {
         var viewName = '';
         switch ($state.current.name) {
-            case 'bets-games.firststage' :
+            case 'bets.firststage' :
                 viewName = "First Stage";
                 break;
-            case 'bets-games.secondstage' :
+            case 'bets.secondstage' :
                 viewName = "Second Stage";
                 break;
         }
