@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('worldcup').controller('betsCtrl', function ($rootScope, $scope, $state, $stateParams, Bets, growl) {
+angular.module('worldcup').controller('betsCtrl', function ($rootScope, $scope, $state, $stateParams, Bets, growl, $uibModal, $log) {
 
     var matchHomeWon = 'HOME_TEAM';
 
@@ -46,6 +46,37 @@ angular.module('worldcup').controller('betsCtrl', function ($rootScope, $scope, 
         });
     };
 
+
+    $scope.confirmDeleteBet = function() {
+        $scope.modalInstance =  $uibModal.open({
+            animation: true,
+            ariaLabelledBy: 'modal-title-top',
+            ariaDescribedBy: 'modal-body-top',
+            templateUrl: 'confirmModalContent.html',
+            size: 'sm',
+            scope: $scope
+        });
+
+        $scope.modalInstance.result.then(function () {
+            $log.info('Modal is here');
+        }, function () {
+            $log.info('Modal dismissed at: ' + new Date());
+        });
+    };
+
+    $scope.deleteBet = function () {
+        $scope.modalInstance.close();
+
+        Bets.deleteUserBet($scope.userBet.betId).then(function() {
+            getMatchData();
+            growl.info('You\'re bet deleted successfully.',{title: 'Deleted!'});
+        });
+    };
+
+    $scope.cancel = function () {
+        $scope.modalInstance.dismiss('cancel');
+    };
+
     $scope.postUserBet = function () {
         Bets.updateBet($scope.userBet.betId, $scope.userBet).then(function (response) {
             getMatchData();
@@ -84,9 +115,9 @@ angular.module('worldcup').controller('betsCtrl', function ($rootScope, $scope, 
             }
         });
     };
-
-
+    
     var init = function() {
+        $log.info("controller init");
         getMatchData();
         getAllBets();
     };

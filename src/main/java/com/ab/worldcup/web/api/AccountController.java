@@ -24,17 +24,6 @@ public class AccountController {
         this.accountService = accountService;
     }
 
-//    @InitBinder
-//    public void initBinder(final WebDataBinder webdataBinder) {
-//        webdataBinder.registerCustomEditor(AccountStatus.class, new PropertyEditorSupport() {
-//            @Override
-//            public void setAsText(final String text) throws IllegalArgumentException {
-//                setValue(AccountStatus.valueOf(text));
-//            }
-//        });
-//    }
-
-
     @RequestMapping(value = "/identity", produces = {MediaType.APPLICATION_JSON_VALUE}, method = RequestMethod.GET)
     @ResponseBody
     public Account connect() {
@@ -50,10 +39,8 @@ public class AccountController {
         }
         return account;
     }
-
-
+    
     // ~ ===============================  ADMIN ONLY ==========================
-
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping(value = "/", method = RequestMethod.GET)

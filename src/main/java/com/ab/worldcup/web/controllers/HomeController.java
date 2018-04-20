@@ -1,8 +1,8 @@
 package com.ab.worldcup.web.controllers;
 
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class HomeController {
@@ -13,10 +13,11 @@ public class HomeController {
     }
 
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @RequestMapping("/admin")
-    public String adminHome() {
-        return "/admin/index.html";
+    @RequestMapping("/api/heartbeat")
+    @ResponseBody
+    public String heartbeat() {
+        return "index.html";
     }
+
 
 }

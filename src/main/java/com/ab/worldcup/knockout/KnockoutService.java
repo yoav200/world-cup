@@ -3,10 +3,7 @@ package com.ab.worldcup.knockout;
 import com.ab.worldcup.group.GroupService;
 import com.ab.worldcup.group.GroupStanding;
 import com.ab.worldcup.group.TeamInGroup;
-import com.ab.worldcup.match.KnockoutMatch;
-import com.ab.worldcup.match.KnockoutMatchRepository;
-import com.ab.worldcup.match.Match;
-import com.ab.worldcup.match.Stage;
+import com.ab.worldcup.match.*;
 import com.ab.worldcup.results.ResultInterface;
 import com.ab.worldcup.team.Group;
 import com.ab.worldcup.team.KnockoutTeamCode;
@@ -38,7 +35,6 @@ public class KnockoutService<T extends ResultInterface> {
     @Autowired
     private GroupService groupService;
 
-
     private Optional<KnockoutTeam> getKnockoutTeamForKnockoutMatch(KnockoutMatch match, List<T> results) {
         Optional<Team> homeTeam = getKnockoutTeamByTeamCode(match.getHomeTeamCode(), results);
         Optional<Team> awayTeam = getKnockoutTeamByTeamCode(match.getAwayTeamCode(), results);
@@ -60,7 +56,7 @@ public class KnockoutService<T extends ResultInterface> {
             case GROUP_QUALIFIER:
                 team = getGroupQualifierByTeamCode(teamCode, results);
                 break;
-            case KNOCKOUT_MATCH_QULIFIER:
+            case KNOCKOUT_MATCH_QUALIFIER:
                 team = getKnockoutQualifierByTeamCode(teamCode, results);
         }
         return team;
@@ -149,5 +145,24 @@ public class KnockoutService<T extends ResultInterface> {
 
     public KnockoutMatch findKnockoutMatch(Long matchId) {
         return knockoutMatchRepository.findOne(matchId);
+    }
+
+    private List<KnockoutMatch> findNextEffectedMatches(Match match) {
+        Set<KnockoutTeamCode> nextEffectedStage = new HashSet<>();
+        if (match.getStageId().equals(Stage.GROUP)) {
+            GroupMatch groupMatch = (GroupMatch) match;
+            nextEffectedStage.addAll(KnockoutTeamCode.getNextEffectedStage(groupMatch.getGroupId()));
+        } else {
+            KnockoutMatch knockoutMatch = (KnockoutMatch) match;
+            nextEffectedStage.add(KnockoutTeamCode.getNextEffectedStage(knockoutMatch.getHomeTeamCode()));
+        }
+        return knockoutMatchRepository.findAllByHomeTeamCodeInOrAwayTeamCodeIn(nextEffectedStage, nextEffectedStage);
+    }
+
+    public boolean isResultsEffected(Match match, List<ResultInterface> results) {
+        Map<Long, List<ResultInterface>> resultsMap = results.stream().collect(Collectors.groupingBy(ResultInterface::getMatchId));
+        List<KnockoutMatch> nextEffectedMatches = findNextEffectedMatches(match);
+        List<Long> effectedMatchesIds = nextEffectedMatches.stream().map(Match::getMatchId).collect(Collectors.toList());
+        return resultsMap.keySet().stream().anyMatch(effectedMatchesIds::contains);
     }
 }

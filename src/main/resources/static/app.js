@@ -9,7 +9,7 @@ var app = angular.module('worldcup', ['ui.router', 'ui.router.stateHelper', 'ui.
 /**
  * Configure the Routes using ui router
  */
-app.config(function ($stateProvider, $urlRouterProvider, $httpProvider, growlProvider) {
+app.config(function ($urlRouterProvider, $httpProvider, growlProvider) {
     // $locationProvider.html5Mode(true);
     // For any unmatched url, redirect to /
     $urlRouterProvider.otherwise("/");
@@ -22,6 +22,7 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider, growlPro
     growlProvider.globalPosition('top-center');
     growlProvider.globalTimeToLive({success: 10000, error: 10000, warning: 10000, info: 10000});
 
+}).config(function ($stateProvider) {
     // Now set up the states
     $stateProvider.state('site', {
         abstract: true,
@@ -70,7 +71,6 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider, growlPro
         templateUrl: 'app/teams/view/teams.fifaranking.html',
         controller: 'teamsCtrl'
     });
-
 
     // Games
     $stateProvider.state('games', {
@@ -178,7 +178,7 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider, growlPro
     return function (input) {
         return input.replace(/_/g, ' ');
     };
-}).run(function ($rootScope, $state, $location, $anchorScroll, Auth, editableOptions) {
+}).run(function ($rootScope, $state, Auth) {
 
     Auth.init();
 
@@ -188,6 +188,7 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider, growlPro
             $state.go('join');
         }
     });
+}).run(function($rootScope, $location, $anchorScroll, editableOptions) {
 
     $rootScope.scrollTo = function (id) {
         $location.hash(id);
@@ -195,7 +196,9 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider, growlPro
         $anchorScroll();
     };
 
-    editableOptions.theme = 'bs3'; // bootstrap3 theme. Can be also 'bs2', 'default'
+    // inline edit style
+    // bootstrap3 theme. Can be also 'bs2', 'default'
+    editableOptions.theme = 'bs3';
 });
 
 

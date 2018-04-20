@@ -1,8 +1,11 @@
 package com.ab.worldcup.team;
 
 import com.ab.worldcup.match.KnockoutMatchCode;
+import com.google.common.collect.ImmutableSet;
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 public enum KnockoutTeamCode {
     WINNER_GROUP_A,
@@ -60,7 +63,7 @@ public enum KnockoutTeamCode {
             case RUNNER_UP_GROUP_H:
                 return KnockoutTeamCodeType.GROUP_QUALIFIER;
             default:
-                return KnockoutTeamCodeType.KNOCKOUT_MATCH_QULIFIER;
+                return KnockoutTeamCodeType.KNOCKOUT_MATCH_QUALIFIER;
         }
     }
 
@@ -102,6 +105,84 @@ public enum KnockoutTeamCode {
                 return Optional.empty();
         }
     }
+
+    public static Set<KnockoutTeamCode> getNextEffectedStage(Group group) {
+        if (group == null) {
+            throw new IllegalArgumentException("group cannot be null");
+        }
+        switch (group) {
+            case A:
+                return ImmutableSet.of(WINNER_GROUP_A, RUNNER_UP_GROUP_A);
+            case B:
+                return ImmutableSet.of(WINNER_GROUP_B, RUNNER_UP_GROUP_B);
+            case C:
+                return ImmutableSet.of(WINNER_GROUP_C, RUNNER_UP_GROUP_C);
+            case D:
+                return ImmutableSet.of(WINNER_GROUP_D, RUNNER_UP_GROUP_D);
+            case E:
+                return ImmutableSet.of(WINNER_GROUP_E, RUNNER_UP_GROUP_E);
+            case F:
+                return ImmutableSet.of(WINNER_GROUP_F, RUNNER_UP_GROUP_F);
+            case G:
+                return ImmutableSet.of(WINNER_GROUP_G, RUNNER_UP_GROUP_G);
+            case H:
+                return ImmutableSet.of(WINNER_GROUP_H, RUNNER_UP_GROUP_H);
+            default:
+                return new HashSet<>();
+        }
+    }
+
+    public static KnockoutTeamCode getNextEffectedStage(KnockoutTeamCode code) {
+        if (code == null) {
+            throw new IllegalArgumentException("code cannot be null");
+        }
+        // Round of 16
+        if (code == WINNER_GROUP_C || code == RUNNER_UP_GROUP_D) {
+            return WINNER_ROS1;
+        } else if (code == WINNER_GROUP_A || code == RUNNER_UP_GROUP_B) {
+            return WINNER_ROS2;
+        } else if (code == WINNER_GROUP_E || code == RUNNER_UP_GROUP_F) {
+            return WINNER_ROS5;
+        } else if (code == WINNER_GROUP_G || code == RUNNER_UP_GROUP_H) {
+            return WINNER_ROS6;
+        } else if (code == WINNER_GROUP_B || code == RUNNER_UP_GROUP_A) {
+            return WINNER_ROS3;
+        } else if (code == WINNER_GROUP_D || code == RUNNER_UP_GROUP_C) {
+            return WINNER_ROS4;
+        } else if (code == WINNER_GROUP_F || code == RUNNER_UP_GROUP_E) {
+            return WINNER_ROS7;
+        } else if (code == WINNER_GROUP_H || code == RUNNER_UP_GROUP_G) {
+            return WINNER_ROS8;
+
+            // Quarter finals
+        } else if (code == WINNER_ROS1 || code == WINNER_ROS2) {
+            return WINNER_QF1;
+        } else if (code == WINNER_ROS5 || code == WINNER_ROS6) {
+            return WINNER_QF2;
+        } else if (code == WINNER_ROS3 || code == WINNER_ROS4) {
+            return WINNER_QF3;
+        } else if (code == WINNER_ROS7 || code == WINNER_ROS8) {
+            return WINNER_QF4;
+
+            // semi finals
+        } else if (code == WINNER_QF1 || code == WINNER_QF2) {
+            return WINNER_SF1;
+        } else if (code == WINNER_QF3 || code == WINNER_QF4) {
+            return WINNER_SF2;
+        }
+
+        // third place
+//        } else if (code == LOSER_SF1 || code == LOSER_SF2) {
+//            return WINNER_THIRD_PLACE;
+//
+//            // finals
+//        } else if (code == WINNER_SF1 || code == WINNER_SF2) {
+//            return WINNER_FINAL;
+//        }
+
+        return null;
+    }
+
 
     public Optional<Group> getRelevantGroup() {
         switch (this) {

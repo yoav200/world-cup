@@ -71,7 +71,6 @@ public class BetService {
         return MatchesData.builder().firstStage(groupMatches).secondStage(allKnockoutMatch).qualifiers(qualifiersMap).build();
     }
 
-
     private <T extends Match> List<T> addUserBetsToMatches(List<T> matches, List<UserBet> userBets) {
         Map<Long, UserBet> resultMap = userBets.stream().collect(Collectors.toMap(UserBet::getMatchId, Function.identity()));
         matches.forEach(match -> match.setResult(resultMap.get(match.getMatchId())));
@@ -81,12 +80,10 @@ public class BetService {
     @SuppressWarnings("unchecked")
     private Set<KnockoutTeam> calculateKnockoutTeams(List<? extends Match> matches, List<UserBet> results) {
         Set<KnockoutTeam> knockoutTeams = new HashSet<>();
-
         matches.forEach(match -> {
             List<KnockoutTeam> knockoutTeamUpdatedByMatch = knockoutService.getKnockoutTeamUpdatedByMatch(match, results);
             knockoutTeams.addAll(knockoutTeamUpdatedByMatch);
         });
-
         return knockoutTeams;
     }
 
@@ -123,9 +120,18 @@ public class BetService {
 
     // **************************  User Bet ***********************************
 
-
-    public List<UserBet> findByStageId(Stage stage) {
-        return userBetRepository.findByUserBetIdBetStageId(stage);
+    public void deleteUserBet(Long accountId, Long betId) {
+        UserBet userBer = userBetRepository.findByUserBetIdAccountIdAndUserBetIdBetId(accountId, betId);
+        if (userBer == null) {
+            throw new IllegalArgumentException("User bet not found");
+        }
+        // validate if changing may effect other bets
+        Match match = matchService.getMatchById(userBer.getMatchId());
+        List<UserBet> userBets = userBetRepository.findByUserBetIdAccountId(accountId);
+        if (knockoutService.isResultsEffected(match, userBets)) {
+            throw new IllegalArgumentException("Bet cannot be changed, it may effect other bets");
+        }
+        userBetRepository.delete(userBer);
     }
 
     public List<UserBet> findByUserBetIdAccountId(Long accountId) {
@@ -147,6 +153,12 @@ public class BetService {
     public UserBet updateMatchBet(Long betId, Account account, UserBetData userBetData) {
         Bet bet = getBetById(betId);
         Match match = matchService.getMatchById(bet.getMatchId());
+
+        // validate if changing may effect other bets
+        List<UserBet> userBets = userBetRepository.findByUserBetIdAccountId(account.getId());
+        if (knockoutService.isResultsEffected(match, userBets)) {
+            throw new IllegalArgumentException("Bet cannot be changed, it may effect other bets");
+        }
 
         UserBet userBet = findByUserBetIdAccountIdAndBetId(account.getId(), userBetData.getBetId());
         if (userBet == null) {

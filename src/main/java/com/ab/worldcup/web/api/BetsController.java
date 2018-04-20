@@ -12,6 +12,7 @@ import com.ab.worldcup.web.model.MatchesData;
 import com.ab.worldcup.web.model.UserBetData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.Validator;
 import org.springframework.web.bind.WebDataBinder;
@@ -76,11 +77,18 @@ public class BetsController {
         return betService.findByUserBetIdAccountId(account.getId());
     }
 
-
     @ResponseBody
     @RequestMapping(value = "/user/{betId}", method = RequestMethod.POST)
     public UserBet setUserBet(@PathVariable Long betId, @RequestBody @Valid UserBetData userBetData, Principal principal) {
         Account account = accountService.findAccountByEmail(principal.getName());
         return betService.updateMatchBet(betId, account, userBetData);
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/user/{betId}", method = RequestMethod.DELETE)
+    public ResponseEntity deleteUserBet(@PathVariable Long betId, Principal principal) {
+        Account account = accountService.findAccountByEmail(principal.getName());
+        betService.deleteUserBet(account.getId(), betId);
+        return ResponseEntity.ok().build();
     }
 }

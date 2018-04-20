@@ -2,13 +2,11 @@
 
 angular.module('worldcup').factory('Bets', function($http) {
 
-
     var getGroupsStanding = function() {
         return $http.get("api/bets/groups/").then(function(response) {
             return  response.data;
         });
     };
-
 
     var getMatchesData = function() {
         return $http.get("api/bets/data").then(function(response) {
@@ -28,11 +26,18 @@ angular.module('worldcup').factory('Bets', function($http) {
         });
     };
 
+    var deleteUserBet = function(betId) {
+        return $http.delete("api/bets/user/" + betId).then(function(response) {
+            return  response.data;
+        });
+    };
+
     return {
         getGroupsStanding : getGroupsStanding,
         getMatchesData : getMatchesData,
         getAllBets : getAllBets,
-        updateBet: updateBet
+        updateBet: updateBet,
+        deleteUserBet : deleteUserBet
     };
 
 });
