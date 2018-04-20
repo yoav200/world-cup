@@ -50,7 +50,7 @@ public class BetService {
         // all user bets
         List<UserBet> userBets = userBetRepository.findByUserBetIdAccountId(accountId);
         // all matches with results added
-        List<? extends Match> allMatches = addUserBetsToMatches( matchService.getAllMatches(), userBets);
+        List<? extends Match> allMatches = addUserBetsToMatches(matchService.getAllMatches(), userBets);
         // filter group stage matches
         List<GroupMatch> groupMatches = allMatches.stream()
                 .filter(m -> m.getStageId().equals(Stage.GROUP))
@@ -61,9 +61,6 @@ public class BetService {
                 .filter(m -> !m.getStageId().equals(Stage.GROUP))
                 .map(m -> (KnockoutMatch) m)
                 .collect(Collectors.toList());
-        // add results to matches
-        //List<GroupMatch> allGroupMatches = addUserBetsToMatches(groupMatches, userBets);
-        //List knockoutMatchList = addUserBetsToMatches(knockoutMatches, userBets);
 
         Set<KnockoutTeam> knockoutTeams = calculateKnockoutTeams(allMatches, userBets);
         List<KnockoutMatch> allKnockoutMatch = addKnockoutTeamsOnKnockoutMatch(knockoutMatches, knockoutTeams);
@@ -125,6 +122,11 @@ public class BetService {
     }
 
     // **************************  User Bet ***********************************
+
+
+    public List<UserBet> findByStageId(Stage stage) {
+        return userBetRepository.findByUserBetIdBetStageId(stage);
+    }
 
     public List<UserBet> findByUserBetIdAccountId(Long accountId) {
         return userBetRepository.findByUserBetIdAccountId(accountId);

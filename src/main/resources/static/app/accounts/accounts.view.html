@@ -7,12 +7,22 @@
     <table class="table table-hover table-striped table-condensed">
         <tbody>
         <tr ng-repeat="account in accounts">
-            <td class="col-md-1"><img ng-src="{{account.profileImageUrl}}" style="max-height: 50px;"/></td>
-            <td class="col-md-1 text-center">{{account.fullName}}</td>
+            <td class="col-md-1">
+                <img ng-src="{{account.profileImageUrl}}" style="max-height: 50px;"/>
+                {{account.fullName}}
+                <span ng-show="account.status=='ACTIVE'" class="glyphicon glyphicon-usd" aria-hidden="true"></span>
+            </td>
             <td ng-show="false" class="col-md-1">{{account.accountId}}</td>
             <td class="col-md-1">{{account.email}}</td>
             <td class="col-md-1">{{account.providerId}}</td>
-            <td class="col-md-1">{{account.status}}</td>
+            <td class="col-md-1">
+                <a href="#"
+                   editable-select="account.status" e-ng-options="s.value as s.text for s in statuses"
+                   onbeforesave="updateUser($data, account.accountId)">
+                    {{ showStatus(account.status) }}
+                </a>
+            </td>
+
         </tr>
         </tbody>
     </table>

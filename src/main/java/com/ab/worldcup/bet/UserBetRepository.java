@@ -1,5 +1,6 @@
 package com.ab.worldcup.bet;
 
+import com.ab.worldcup.match.Stage;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -9,9 +10,7 @@ public interface UserBetRepository extends JpaRepository<UserBet, UserBetId> {
 
     UserBet findByUserBetIdAccountIdAndUserBetIdBetId(Long accountId, Long betId);
 
-    //List<UserBet> findByUserBetIdBet(Bet bet);
-
-    //List<UserBet> findByUserBetIdBetAndQualifier(Bet bet, Team qualifier);
+    List<UserBet> findByUserBetIdBetStageId(Stage stage);
 
     List<UserBet> findByUserBetIdAccountId(Long accountId);
 

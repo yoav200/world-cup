@@ -3,7 +3,7 @@
 /**
  * Main AngularJS Web Application
  */
-var app = angular.module('worldcup', ['ui.router', 'ui.router.stateHelper', 'ui.bootstrap', 'ui.select', 'ngResource', 'ngAnimate', 'ngSanitize', 'angular-loading-bar', 'angular-growl']);
+var app = angular.module('worldcup', ['ui.router', 'ui.router.stateHelper', 'ui.bootstrap', 'xeditable', 'ngResource', 'ngAnimate', 'ngSanitize', 'angular-loading-bar', 'angular-growl']);
 
 
 /**
@@ -178,7 +178,7 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider, growlPro
     return function (input) {
         return input.replace(/_/g, ' ');
     };
-}).run(function ($rootScope, $state, $location, $anchorScroll, Auth) {
+}).run(function ($rootScope, $state, $location, $anchorScroll, Auth, editableOptions) {
 
     Auth.init();
 
@@ -194,6 +194,8 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider, growlPro
         $anchorScroll.yOffset = 60;
         $anchorScroll();
     };
+
+    editableOptions.theme = 'bs3'; // bootstrap3 theme. Can be also 'bs2', 'default'
 });
 
 

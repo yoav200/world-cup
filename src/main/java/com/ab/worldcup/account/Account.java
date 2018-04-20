@@ -21,10 +21,6 @@ import java.util.Set;
 @EqualsAndHashCode
 public class Account {
 
-    public enum AccountStatus {
-        REGISTER, ACTIVE
-    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @JsonIgnore

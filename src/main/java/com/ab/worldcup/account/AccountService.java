@@ -67,7 +67,7 @@ public class AccountService implements UserDetailsService {
                 .profileImageUrl(userProfile.getProfileImageURL())
                 .providerId(userProfile.getProviderId())
                 .country(userProfile.getCountry())
-                .status(Account.AccountStatus.REGISTER)
+                .status(AccountStatus.REGISTER)
                 .language(userProfile.getLanguage()).build();
         return accountRepository.save(account);
     }
@@ -102,7 +102,7 @@ public class AccountService implements UserDetailsService {
         return authorities;
     }
 
-    public Account updateAccountStatus(Long id, Account.AccountStatus status) {
+    public Account updateAccountStatus(Long id, AccountStatus status) {
         Account account = accountRepository.findOne(id);
         account.setStatus(status);
         return accountRepository.save(account);

@@ -2,9 +2,6 @@ package com.ab.worldcup.team;
 
 import com.ab.worldcup.match.KnockoutMatchCode;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.Optional;
 
 public enum KnockoutTeamCode {
@@ -43,27 +40,24 @@ public enum KnockoutTeamCode {
     WINNER_THIRD_PLACE,
     WINNER_FINAL;
 
-
-    private final static Logger logger = LoggerFactory.getLogger(KnockoutTeamCode.class);
-
-    public KnockoutTeamCodeType getType(){
-        switch (this){
-            case     WINNER_GROUP_A:
-            case     WINNER_GROUP_B:
-            case     WINNER_GROUP_C:
-            case     WINNER_GROUP_D:
-            case     WINNER_GROUP_E:
-            case     WINNER_GROUP_F:
-            case     WINNER_GROUP_G:
-            case     WINNER_GROUP_H:
-            case     RUNNER_UP_GROUP_A:
-            case     RUNNER_UP_GROUP_B:
-            case     RUNNER_UP_GROUP_C:
-            case     RUNNER_UP_GROUP_D:
-            case     RUNNER_UP_GROUP_E:
-            case     RUNNER_UP_GROUP_F:
-            case     RUNNER_UP_GROUP_G:
-            case     RUNNER_UP_GROUP_H:
+    public KnockoutTeamCodeType getType() {
+        switch (this) {
+            case WINNER_GROUP_A:
+            case WINNER_GROUP_B:
+            case WINNER_GROUP_C:
+            case WINNER_GROUP_D:
+            case WINNER_GROUP_E:
+            case WINNER_GROUP_F:
+            case WINNER_GROUP_G:
+            case WINNER_GROUP_H:
+            case RUNNER_UP_GROUP_A:
+            case RUNNER_UP_GROUP_B:
+            case RUNNER_UP_GROUP_C:
+            case RUNNER_UP_GROUP_D:
+            case RUNNER_UP_GROUP_E:
+            case RUNNER_UP_GROUP_F:
+            case RUNNER_UP_GROUP_G:
+            case RUNNER_UP_GROUP_H:
                 return KnockoutTeamCodeType.GROUP_QUALIFIER;
             default:
                 return KnockoutTeamCodeType.KNOCKOUT_MATCH_QULIFIER;
@@ -140,7 +134,7 @@ public enum KnockoutTeamCode {
         }
     }
 
-    public boolean isGroupWinner(){
+    public boolean isGroupWinner() {
         switch (this) {
             case WINNER_GROUP_A:
             case WINNER_GROUP_B:

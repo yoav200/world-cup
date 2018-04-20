@@ -47,11 +47,8 @@ public class KnockoutService<T extends ResultInterface> {
 
         if (homeTeam.isPresent() || awayTeam.isPresent()) {
             knockoutTeamRecord = new KnockoutTeam();
-
             knockoutTeamRecord.setMatchId(match.getMatchId());
-
             homeTeam.ifPresent(knockoutTeamRecord::setHomeTeam);
-
             awayTeam.ifPresent(knockoutTeamRecord::setAwayTeam);
         }
         return Optional.ofNullable(knockoutTeamRecord);
