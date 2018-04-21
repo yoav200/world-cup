@@ -24,19 +24,19 @@ import java.util.List;
 public class ResultsService {
 
     @Autowired
-    MatchResultRepository matchResultRepository;
+    private MatchResultRepository matchResultRepository;
 
     @Autowired
-    QualifierRepository qualifierRepository;
+    private QualifierRepository qualifierRepository;
 
     @Autowired
-    KnockoutTeamRepository knockoutTeamRepository;
+    private KnockoutTeamRepository knockoutTeamRepository;
 
     @Autowired
     private AccountRepository accountRepository;
 
     @Autowired
-    BetService betService;
+    private BetService betService;
 
     public List<RankingData> getLeaderboard() {
         List<RankingData> leaderboardList = new ArrayList<>();
@@ -65,12 +65,11 @@ public class ResultsService {
             if (BetType.MATCH.equals(bet.getType())) {
                 MatchResult matchResult = matchResultRepository.findOne(bet.getMatchId());
                 // if match finished, calculate the points
-                if(matchResult != null) {
+                if (matchResult != null) {
                     correctWinnerPoints = getPointsForMatchResultCorrectness(userBet, matchResult);
                     exactScorePoints = getPointsForExactScoreCorrectness(userBet, matchResult);
                 }
-            } // else, qualifier bet
-            else {
+            } else {
                 correctQualifierPoints = getPointsForQualifierCorrectness(userBet, bet.getStageId());
             }
             CalculatedUserBet calculatedUserBet = CalculatedUserBet.builder().
@@ -120,7 +119,7 @@ public class ResultsService {
         return userBet.winnerEquals(matchResult);
     }
 
-    @CacheEvict(value="matchResults", allEntries=true)
+    @CacheEvict(value = "matchResults", allEntries = true)
     public MatchResult save(MatchResult result) {
         return matchResultRepository.save(result);
     }

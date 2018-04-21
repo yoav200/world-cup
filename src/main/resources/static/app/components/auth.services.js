@@ -1,14 +1,29 @@
 'use strict';
 
-angular.module('worldcup').factory('Auth', function ($rootScope, $state, $http) {
+angular.module('worldcup').factory('Auth', function ($rootScope, $state, $http, $timeout, $log) {
+
+    var TIMEOUT_MILLIS = 1000 * 60 * 5; // 5 minutes
 
     var auth = {};
 
     var Account = {};
 
-    var getAccount = function() {
-        return $http.get("api/account/identity").then(function(response) {
-            return  response.data;
+    /**
+     * make heartbeat request to the server, every request
+     */
+    var heartBeat = function () {
+        $http.post('api/heartbeat', Account).then(function (response) {
+            if (!response.data.valid) {
+                auth.logout();
+            }
+            $timeout(heartBeat, TIMEOUT_MILLIS);
+        });
+    };
+
+
+    var getAccount = function () {
+        return $http.get("api/account/identity").then(function (response) {
+            return response.data;
         });
     };
 
@@ -17,7 +32,10 @@ angular.module('worldcup').factory('Auth', function ($rootScope, $state, $http) 
      *  Call this in the app run() method
      */
     auth.init = function () {
-        getAccount().then(function(response) {
+
+        $log.info("Initiate authentication");
+
+        getAccount().then(function (response) {
             Account = {
                 authenticate: true,
                 roles: response.roles,
@@ -30,6 +48,8 @@ angular.module('worldcup').factory('Auth', function ($rootScope, $state, $http) 
                 $rootScope.Account = Account;
             }
         });
+        // start polling
+        heartBeat();
     };
 
     auth.checkPermissionForView = function (view) {

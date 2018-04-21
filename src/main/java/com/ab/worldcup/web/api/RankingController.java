@@ -10,10 +10,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/ranking")
-public class LeaderboardController {
+public class RankingController {
 
     @Autowired
-    ResultsService resultsService;
+    private ResultsService resultsService;
 
     @RequestMapping("/")
     public List<RankingData> getLeaderboard() {

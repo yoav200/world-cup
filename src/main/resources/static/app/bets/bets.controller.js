@@ -115,7 +115,7 @@ angular.module('worldcup').controller('betsCtrl', function ($rootScope, $scope, 
             }
         });
     };
-    
+
     var init = function() {
         $log.info("controller init");
         getMatchData();
