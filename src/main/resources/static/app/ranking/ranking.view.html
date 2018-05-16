@@ -1,8 +1,8 @@
 <section id="ranking">
 
     <div class="jumbotron">
-        <h1>Ranking</h1>
-        <p>Welcome to FIFA Russia 2018 Betting, Here are the leading Gamblers:</p>
+        <h2>Ranking</h2>
+        <p>Welcome to world cup 2018 betting competition:</p>
 
         <table class="table table-hover table-condensed">
             <thead>
@@ -17,13 +17,69 @@
                 <td>{{$index}}</td>
                 <td>
                     <img ng-src="{{userRankingData.account.profileImageUrl}}" style="max-height: 50px;"/>
-                    <span >{{userRankingData.account.fullName}}</span>
-                    <span ng-show="userRankingData.account.status=='ACTIVE'" class="glyphicon glyphicon-usd" aria-hidden="true"></span>
+                    <span>{{userRankingData.account.fullName}}</span>
+                    <span ng-show="userRankingData.account.status=='ACTIVE'" class="glyphicon glyphicon-usd"
+                          aria-hidden="true"></span>
                 </td>
                 <td>{{userRankingData.totalPoints}}</td>
             </tr>
             </tbody>
         </table>
+
+        <p><a class="btn btn-primary btn-sm" role="button" ng-click="scrollTo('rules-j')" >Rules</a></p>
+
     </div>
+
+    <div id="rules-j" class="jumbotron">
+        <h4>
+            You are more than invited to join in, but before you do, please take few minutes to read the rules:
+        </h4>
+
+        Your main goal is to gain as much points as possible<br>
+        At the end of the tournament, top 3 users will win the pot<br>
+        First place - 50% of the pot<br>
+        Second place - 30% of the pot<br>
+        Third place - 20% of the pot<br>
+        pot size depends on how many users will join in<br>
+        (our hosting costs will be taken from the pot (~50$))<br><br>
+
+        <ins>Points calculation method:</ins><br><br>
+
+        Match Points (can be updated during the tournament, each match until it's kickoff time)<br>
+        <ul>
+            <li>Correct match result (1X2) worth 1 point</li>
+            <li>Guessing exact match score worth another 2 points</li>
+        </ul>
+
+        e.g:<br>
+        Argentina-Iceland<br>
+        You guessed Argentina wins 3-1<br>
+        If Iceland wins or the match ends up with a draw - you get no points<br>
+        If Argentina wins in every score except 3-1 - you get 1 point<br>
+        If Argentina wins exactly 3-1 - you get 3 points<br><br>
+
+        This is relevant to all tournament matches (from group stage till the final)<br><br>
+
+        Qualifier Points (can be changed until the tournament starts)<br>
+        For every correct qualifier you get:
+        <ul>
+            <li>Round of 16 - 2 points</li>
+            <li> Quarter final - 4 points</li>
+            <li>Semi-final - 8 points</li>
+            <li>Final - 16 points</li>
+            <li>Guessing the correct winner - 32 points</li>
+        </ul>
+
+
+        <ins>Participation Method and Costs</ins><br><br>
+
+        Joining can be done via your Facebook/Google account,<br>
+        Payment cannot be done using our website - so it's in the good old fashioned way..<br>
+        Once you pay we will update your user and you'll see a "$" sign next to your name in the ranking table.<br>
+        Participation costs 100 Shekels/30 USD/20 GBP
+    </div>
+
+
+
 
 </section>
