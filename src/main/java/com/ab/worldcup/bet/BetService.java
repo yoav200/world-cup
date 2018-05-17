@@ -94,7 +94,7 @@ public class BetService {
             if (teamUpdatedByMatch.getHomeTeam() != null) {
                 Qualifier qualifier = Qualifier.builder()
                         .team(teamUpdatedByMatch.getHomeTeam())
-                        .stageId(knockoutMatch.getStageId().getNextStage())
+                        .stageId(knockoutMatch.getStageId())
                         .knockoutTeamCode(knockoutMatch.getHomeTeamCode())
                         .build();
                 qualifiers.add(qualifier);
@@ -102,7 +102,7 @@ public class BetService {
             if (teamUpdatedByMatch.getAwayTeam() != null) {
                 Qualifier qualifier = Qualifier.builder()
                         .team(teamUpdatedByMatch.getAwayTeam())
-                        .stageId(knockoutMatch.getStageId().getNextStage())
+                        .stageId(knockoutMatch.getStageId())
                         .knockoutTeamCode(knockoutMatch.getAwayTeamCode())
                         .build();
                 qualifiers.add(qualifier);
