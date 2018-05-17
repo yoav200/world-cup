@@ -133,12 +133,15 @@ public class KnockoutService<T extends ResultInterface> {
         }
 
         if (groupFinished || !Stage.GROUP.equals(currentStage)) {
-            Stage nextStage = currentStage.getNextStage();
-            List<KnockoutMatch> knockoutMatchesInNextStage = getAllByStageId(nextStage);
-            for (KnockoutMatch knockoutMatch : knockoutMatchesInNextStage) {
-                Optional<KnockoutTeam> knockoutTeam = getKnockoutTeamForKnockoutMatch(knockoutMatch, results);
-                knockoutTeam.ifPresent(knockoutTeamList::add);
+            List<Stage> nextStages = currentStage.getNextStage();
+            for (Stage nextStage : nextStages) {
+                List<KnockoutMatch> knockoutMatchesInNextStage = getAllByStageId(nextStage);
+                for (KnockoutMatch knockoutMatch : knockoutMatchesInNextStage) {
+                    Optional<KnockoutTeam> knockoutTeam = getKnockoutTeamForKnockoutMatch(knockoutMatch, results);
+                    knockoutTeam.ifPresent(knockoutTeamList::add);
+                }
             }
+
         }
         return knockoutTeamList;
     }
