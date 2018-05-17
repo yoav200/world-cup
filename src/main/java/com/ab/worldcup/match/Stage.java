@@ -1,13 +1,13 @@
 package com.ab.worldcup.match;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 public enum Stage {
     GROUP,ROUND_OF_16,QUARTER_FINAL,SEMI_FINAL,THIRD_PLACE,FINAL,WINNER;
 
     public List<Stage> getNextStage(){
-        List<Stage> next = Arrays.asList(this);
+        ArrayList<Stage> next = new ArrayList<>();
         switch(this){
             case GROUP:
                 next.add(ROUND_OF_16);
