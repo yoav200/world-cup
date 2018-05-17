@@ -94,8 +94,10 @@ public enum KnockoutTeamCode {
             case WINNER_QF4:
                 return Optional.of(KnockoutMatchCode.QF4);
             case WINNER_SF1:
+            case LOSER_SF1:
                 return Optional.of(KnockoutMatchCode.SF1);
             case WINNER_SF2:
+            case LOSER_SF2:
                 return Optional.of(KnockoutMatchCode.SF2);
             case WINNER_THIRD_PLACE:
                 return Optional.of(KnockoutMatchCode.TP);
