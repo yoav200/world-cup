@@ -172,13 +172,13 @@ public enum KnockoutTeamCode {
         }
 
         // third place
-//        } else if (code == LOSER_SF1 || code == LOSER_SF2) {
-//            return WINNER_THIRD_PLACE;
-//
-//            // finals
-//        } else if (code == WINNER_SF1 || code == WINNER_SF2) {
-//            return WINNER_FINAL;
-//        }
+        } else if (code == LOSER_SF1 || code == LOSER_SF2) {
+            return WINNER_THIRD_PLACE;
+
+         // finals
+        } else if (code == WINNER_SF1 || code == WINNER_SF2) {
+            return WINNER_FINAL;
+        }
 
         return null;
     }
