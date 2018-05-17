@@ -172,7 +172,7 @@ public enum KnockoutTeamCode {
         }
 
         // third place
-        } else if (code == LOSER_SF1 || code == LOSER_SF2) {
+        else if (code == LOSER_SF1 || code == LOSER_SF2) {
             return WINNER_THIRD_PLACE;
 
          // finals

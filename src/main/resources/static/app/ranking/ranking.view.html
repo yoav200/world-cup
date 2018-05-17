@@ -14,7 +14,7 @@
             </thead>
             <tbody>
             <tr ng-repeat="userRankingData in rankingData">
-                <td>{{$index}}</td>
+                <td>{{$index+1}}</td>
                 <td>
                     <img ng-src="{{userRankingData.account.profileImageUrl}}" style="max-height: 50px;"/>
                     <span>{{userRankingData.account.fullName}}</span>
