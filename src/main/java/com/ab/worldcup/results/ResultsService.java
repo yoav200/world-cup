@@ -44,8 +44,10 @@ public class ResultsService {
 
         for (Account account : accounts) {
             List<CalculatedUserBet> calculatedUserBets = calculateBetsForUser(account);
+            Integer userBetProgressPercentage = calculatedUserBets.size() * 100 / betService.getAllBets().size();
             Integer totalPointsForAccount = calculatedUserBets.stream().mapToInt(CalculatedUserBet::getTotalPoints).sum();
-            leaderboardList.add(RankingData.builder().account(account).totalPoints(totalPointsForAccount).userBets(calculatedUserBets).build());
+            leaderboardList.add(RankingData.builder().account(account).totalPoints(totalPointsForAccount).userBets(calculatedUserBets)
+                    .betCompletionPercentage(userBetProgressPercentage).build());
         }
         leaderboardList.sort((o1, o2) -> o1.getTotalPoints() > o2.getTotalPoints() ? -1 : 1);
         return leaderboardList;

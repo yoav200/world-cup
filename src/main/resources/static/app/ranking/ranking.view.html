@@ -9,6 +9,7 @@
             <tr>
                 <th>Rank</th>
                 <th scope="col">Username</th>
+                <th scope="col">Bet Completion</th>
                 <th scope="col">Points</th>
             </tr>
             </thead>
@@ -21,6 +22,7 @@
                     <span ng-show="userRankingData.account.status=='ACTIVE'" class="glyphicon glyphicon-usd"
                           aria-hidden="true"></span>
                 </td>
+                <td>{{userRankingData.betCompletionPercentage}}% Completed</td>
                 <td>{{userRankingData.totalPoints}}</td>
             </tr>
             </tbody>
