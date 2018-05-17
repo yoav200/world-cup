@@ -71,14 +71,14 @@ public class KnockoutService<T extends ResultInterface> {
         KnockoutMatch match = knockoutMatchRepository.findByMatchCode(teamCode.getKnockoutMatchCode().get());
         Long matchId = match.getMatchId();
         Optional<T> matchResult = results.stream().filter(t -> t.getMatchId().equals(matchId)).findFirst();
-        KnockoutTeam knockoutMatchTeams = knockoutTeamRepository.findOne(matchId);
+
         if (!matchResult.isPresent()) {
             log.log(Level.FINE, "trying to calculate knockout match team for match ID " + matchId + " but match hasn't finished yet");
             return Optional.empty();
         } else {
             if (LOSER_SF1.equals(teamCode) || LOSER_SF2.equals(teamCode)) {
                 // return match loser
-                return Optional.of(getKnockMatchLoser(knockoutMatchTeams, matchResult.get()));
+                return Optional.of(getKnockMatchLoser(matchResult.get()));
             } else {
                 // return match winner
                 return Optional.of(matchResult.get().getKnockoutQualifier());
@@ -102,8 +102,8 @@ public class KnockoutService<T extends ResultInterface> {
         }
     }
 
-    private Team getKnockMatchLoser(KnockoutTeam matchTeams, ResultInterface result) {
-        return result.getHomeTeam().equals(result.getKnockoutQualifier()) ? matchTeams.getAwayTeam() : matchTeams.getHomeTeam();
+    private Team getKnockMatchLoser(ResultInterface result) {
+        return result.getHomeTeam().equals(result.getKnockoutQualifier()) ? result.getAwayTeam() : result.getHomeTeam();
     }
 
     @Cacheable("knockoutMatches")
