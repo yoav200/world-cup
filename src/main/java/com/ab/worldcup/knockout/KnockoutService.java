@@ -103,7 +103,7 @@ public class KnockoutService<T extends ResultInterface> {
     }
 
     private Team getKnockMatchLoser(KnockoutTeam matchTeams, ResultInterface result) {
-        return matchTeams.getHomeTeam().equals(result.getKnockoutQualifier()) ? matchTeams.getHomeTeam() : matchTeams.getAwayTeam();
+        return result.getHomeTeam().equals(result.getKnockoutQualifier()) ? matchTeams.getAwayTeam() : matchTeams.getHomeTeam();
     }
 
     @Cacheable("knockoutMatches")
