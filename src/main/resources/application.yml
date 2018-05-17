@@ -36,7 +36,7 @@ worldcup:
     base-callback-url: "http://localhost:8080"
     success-page-url: "#/welcome"
     access-denied-page-url: "#/access-denied"
-  admin-emails: "yoav200@gmail.com,ibadichi@gmail.com"
+  admin-emails: "yoav200@gmail.com,ibadichi@gmail.com,itay.badichi@gmail.com"
   tiebreaking:
     group-a:
     group-b:
