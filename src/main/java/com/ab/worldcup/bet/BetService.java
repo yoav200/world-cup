@@ -6,8 +6,12 @@ import com.ab.worldcup.knockout.KnockoutMatchQualifier;
 import com.ab.worldcup.knockout.KnockoutService;
 import com.ab.worldcup.knockout.KnockoutTeam;
 import com.ab.worldcup.match.*;
+import com.ab.worldcup.results.CalculatedUserBet;
 import com.ab.worldcup.results.Qualifier;
+import com.ab.worldcup.results.ResultsService;
 import com.ab.worldcup.team.Group;
+import com.ab.worldcup.web.model.BetData;
+import com.ab.worldcup.web.model.BetOverviewData;
 import com.ab.worldcup.web.model.MatchesData;
 import com.ab.worldcup.web.model.UserBetData;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +39,9 @@ public class BetService {
 
     @Autowired
     private KnockoutService knockoutService;
+
+    @Autowired
+    private ResultsService resultsService;
 
     @Cacheable("allBets")
     public List<Bet> getAllBets() {
@@ -181,5 +188,31 @@ public class BetService {
             userBet.setAwayTeam(match.getAwayTeam());
         }
         return saveUserBet(userBet);
+    }
+
+    public List<BetOverviewData> getOverview(Account account) {
+        List<BetOverviewData> betOverviewData = new ArrayList<>();
+        List<Bet> bets = betRepository.findAll();
+        List<CalculatedUserBet> calculatedUserBets = resultsService.calculateBetsForUser(account);
+
+        Map<Long, CalculatedUserBet> betMap = calculatedUserBets.stream()
+                .collect(Collectors.toMap(b -> b.getUserBet().getUserBetId().getBet().getId(), Function.identity()));
+
+        bets.forEach(bet->{
+            BetData betData = BetData.builder()
+                    .description(bet.getDescription())
+                    .lockTime(bet.getLockTime())
+                    //.match(bet.)
+                    .stageId(bet.getStageId())
+                    .type(bet.getType())
+                    .build();
+
+            betOverviewData.add(BetOverviewData.builder()
+                     .betData(betData)
+                     //.userBetData()
+                     .calculatedUserBet(betMap.get(bet.getId())).build());
+        });
+
+        return betOverviewData;
     }
 }

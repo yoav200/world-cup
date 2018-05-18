@@ -132,7 +132,6 @@ app.config(function ($urlRouterProvider, $httpProvider, growlProvider) {
         templateUrl: 'app/games/view/games.secondstage.html',
         controller: 'betsGamesCtrl'
     }).state('bets.groups', {
-        //parent: 'site',
         permissions: ['ROLE_USER'],
         url: '/groups',
         views: {
@@ -142,13 +141,21 @@ app.config(function ($urlRouterProvider, $httpProvider, growlProvider) {
             }
         }
     }).state('bets.manage', {
-        //parent: 'site',
         permissions: ['ROLE_USER'],
-        url: "/manage",
+        url: "/manage?matchId",
         views: {
             'content@': {
-                templateUrl: 'app/bets/view/bets.view.html',
-                controller: 'betsCtrl'
+                templateUrl: 'app/bets/view/bets.manage.html',
+                controller: 'betsManageCtrl'
+            }
+        }
+    }).state('bets.overview', {
+        permissions: ['ROLE_USER'],
+        url: "/overview",
+        views: {
+            'content@': {
+                templateUrl: 'app/bets/view/bets.overview.html',
+                controller: 'betsOverviewCtrl'
             }
         }
     });

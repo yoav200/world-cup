@@ -33,7 +33,6 @@ public class HomeController {
     public ResponseEntity<HeartBeatData> heartbeat(HttpSession session, @RequestBody Account account) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Boolean valid = true;
-
         //check session timeout
         Object attribute = session.getAttribute(SessionManager.LAST_REQUEST_TIME);
         if (attribute != null) {

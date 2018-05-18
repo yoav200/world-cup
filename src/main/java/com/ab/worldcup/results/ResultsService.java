@@ -53,7 +53,7 @@ public class ResultsService {
         return leaderboardList;
     }
 
-    @CachePut(cacheNames = "CalculatedUserBets", key = "account.id")
+    //@CachePut(cacheNames = "CalculatedUserBets", key = "account.id")
     public List<CalculatedUserBet> calculateBetsForUser(Account account) {
         List<CalculatedUserBet> calculatedUserBets = new ArrayList<>();
         List<UserBet> betForAccount = betService.findByUserBetIdAccountId(account.getId());

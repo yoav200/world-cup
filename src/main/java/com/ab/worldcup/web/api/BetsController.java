@@ -8,6 +8,7 @@ import com.ab.worldcup.bet.UserBet;
 import com.ab.worldcup.group.GroupService;
 import com.ab.worldcup.group.GroupStanding;
 import com.ab.worldcup.team.Group;
+import com.ab.worldcup.web.model.BetOverviewData;
 import com.ab.worldcup.web.model.MatchesData;
 import com.ab.worldcup.web.model.UserBetData;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,5 +91,12 @@ public class BetsController {
         Account account = accountService.findAccountByEmail(principal.getName());
         betService.deleteUserBet(account.getId(), betId);
         return ResponseEntity.ok().build();
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/user/overview", method = RequestMethod.GET)
+    public List<BetOverviewData> overview( Principal principal) {
+        Account account = accountService.findAccountByEmail(principal.getName());
+        return betService.getOverview(account);
     }
 }

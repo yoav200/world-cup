@@ -32,12 +32,19 @@ angular.module('worldcup').factory('Bets', function($http) {
         });
     };
 
+    var getOverview = function() {
+        return $http.get("api/bets/user/overview").then(function(response) {
+            return  response.data;
+        });
+    };
+
     return {
         getGroupsStanding : getGroupsStanding,
         getMatchesData : getMatchesData,
         getAllBets : getAllBets,
         updateBet: updateBet,
-        deleteUserBet : deleteUserBet
+        deleteUserBet : deleteUserBet,
+        getOverview : getOverview
     };
 
 });

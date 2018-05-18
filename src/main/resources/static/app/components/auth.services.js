@@ -2,7 +2,7 @@
 
 angular.module('worldcup').factory('Auth', function ($rootScope, $state, $http, $timeout, $log) {
 
-    var TIMEOUT_MILLIS = 1000 * 60 * 5; // 5 minutes
+    var TIMEOUT_MILLIS = 1000 * 60 * 10; // 10 minutes
 
     var auth = {};
 
