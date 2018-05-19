@@ -12,25 +12,27 @@
                 <th scope="col">Description</th>
                 <th scope="col">Stage Id</th>
                 <th scope="col">Lock Timed</th>
-                <th scope="col">total points</th>
-                <th scope="col">matchResultCorrect</th>
-                <th scope="col">exactScoreCorrect</th>
+                <th scope="col">Correct Match Result</th>
+                <th scope="col">Correct Score</th>
+                <th scope="col">Points</th>
+                <th scope="col">&nbsp;</th>
             </tr>
             </thead>
             <tbody>
             <tr ng-repeat="data in overviewData.match">
-                <td>{{$index+1}}</td>
+                <td>{{data.betData.id}}</td>
                 <td>{{data.betData.description}}</td>
                 <td>{{data.betData.stageId}}</td>
                 <td>{{data.betData.lockTime | date : 'MMM d, h:mm a'}}</td>
-                <td>{{data.calculatedUserBet.totalPoints}}</td>
                 <td>{{data.calculatedUserBet.matchResultCorrect}}</td>
                 <td>{{data.calculatedUserBet.exactScoreCorrect}}</td>
+                <td>{{data.calculatedUserBet.totalPoints}}</td>
+                <td><a ui-sref="bets.manage({matchId: data.betData.matchId})">Go to bet</a></td>
             </tr>
             </tbody>
         </table>
 
-        <h2>Match Qualifiers</h2>
+        <h2>Qualifiers Bets</h2>
         <table class="table table-hover table-condensed">
             <thead>
             <tr>
@@ -38,18 +40,18 @@
                 <th scope="col">Description</th>
                 <th scope="col">Stage Id</th>
                 <th scope="col">Lock Timed</th>
-                <th scope="col">total points</th>
-                <th scope="col">correctQualifier</th>
+                <th scope="col">Correct Qualifier</th>
+                <th scope="col">Points</th>
             </tr>
             </thead>
             <tbody>
             <tr ng-repeat="data in overviewData.qualifier">
-                <td>{{$index+1}}</td>
+                <td>{{data.betData.id}}</td>
                 <td>{{data.betData.description}}</td>
                 <td>{{data.betData.stageId}}</td>
                 <td>{{data.betData.lockTime | date : 'MMM d, h:mm a'}}</td>
-                <td>{{data.calculatedUserBet.totalPoints}}</td>
                 <td>{{data.calculatedUserBet.correctQualifier}}</td>
+                <td>{{data.calculatedUserBet.totalPoints}}</td>
             </tr>
             </tbody>
         </table>

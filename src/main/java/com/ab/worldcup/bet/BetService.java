@@ -149,25 +149,16 @@ public class BetService {
         return userBetRepository.findUserBetByGroup(group.toString(), accountId);
     }
 
-    private UserBet saveUserBet(UserBet userBet) {
-        return userBetRepository.save(userBet);
-    }
-
-    private UserBet findByUserBetIdAccountIdAndBetId(Long accountId, Long betId) {
-        return userBetRepository.findByUserBetIdAccountIdAndUserBetIdBetId(accountId, betId);
-    }
-
-    public UserBet updateMatchBet(Long betId, Account account, UserBetData userBetData) {
-        Bet bet = getBetById(betId);
+    public UserBet updateMatchBet(Account account, UserBetData userBetData) {
+        Bet bet = getBetById(userBetData.getBetId());
         Match match = matchService.getMatchById(bet.getMatchId());
-
         // validate if changing may effect other bets
         List<UserBet> userBets = userBetRepository.findByUserBetIdAccountId(account.getId());
         if (knockoutService.isResultsEffected(match, userBets)) {
             throw new IllegalArgumentException("Bet cannot be changed, it may effect other bets");
         }
 
-        UserBet userBet = findByUserBetIdAccountIdAndBetId(account.getId(), userBetData.getBetId());
+        UserBet userBet = userBetRepository.findByUserBetIdAccountIdAndUserBetIdBetId(account.getId(), userBetData.getBetId());
         if (userBet == null) {
             userBet = new UserBet(new UserBetId(account, bet));
         }
@@ -187,7 +178,7 @@ public class BetService {
             userBet.setHomeTeam(match.getHomeTeam());
             userBet.setAwayTeam(match.getAwayTeam());
         }
-        return saveUserBet(userBet);
+        return userBetRepository.save(userBet);
     }
 
     public List<BetOverviewData> getOverview(Account account) {
@@ -200,6 +191,8 @@ public class BetService {
 
         bets.forEach(bet->{
             BetData betData = BetData.builder()
+                    .id(bet.getId())
+                    .matchId(bet.getMatchId())
                     .description(bet.getDescription())
                     .lockTime(bet.getLockTime())
                     //.match(bet.)

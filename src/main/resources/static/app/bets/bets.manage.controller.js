@@ -31,9 +31,34 @@ angular.module('worldcup').controller('betsManageCtrl', function ($rootScope, $s
         matchQualifier: undefined
     };
 
+    var selectByMatchId = function(matches, matchId) {
+        return  matches.find(function(match) {
+            return match.matchId === parseInt(matchId) && match.ready;
+        });
+    };
+
     var getMatchData = function() {
         Bets.getMatchesData().then(function (response) {
             $scope.matchesData = response;
+            // set from parameter
+            if($stateParams.matchId) {
+                var match;
+                var stage;
+                if($stateParams.matchId < 49) {
+                    match = selectByMatchId(response.firstStage, $stateParams.matchId);
+                    stage = 'first';
+                } else {
+                    match = selectByMatchId(response.secondStage, $stateParams.matchId);
+                    stage = 'second';
+                }
+
+                if(match) {
+                    $scope.selected.match = match;
+                    $scope.onMatchSelected(stage);
+                } else {
+                    growl.info('Match in second stage and not set yet or wrong match id',{title: 'Match not found!'});
+                }
+            }
         });
     };
 
@@ -46,7 +71,7 @@ angular.module('worldcup').controller('betsManageCtrl', function ($rootScope, $s
         });
     };
 
-
+    // ~ =============== START delete bet dialog ================
     $scope.confirmDeleteBet = function() {
         $scope.modalInstance =  $uibModal.open({
             animation: true,
@@ -66,7 +91,6 @@ angular.module('worldcup').controller('betsManageCtrl', function ($rootScope, $s
 
     $scope.deleteBet = function () {
         $scope.modalInstance.close();
-
         Bets.deleteUserBet($scope.userBet.betId).then(function() {
             getMatchData();
             growl.info('You\'re bet deleted successfully.',{title: 'Deleted!'});
@@ -76,6 +100,7 @@ angular.module('worldcup').controller('betsManageCtrl', function ($rootScope, $s
     $scope.cancel = function () {
         $scope.modalInstance.dismiss('cancel');
     };
+    // ~ =============== END delete bet dialog ================
 
     $scope.postUserBet = function () {
         Bets.updateBet($scope.userBet.betId, $scope.userBet).then(function (response) {

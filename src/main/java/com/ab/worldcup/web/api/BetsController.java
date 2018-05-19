@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.util.Assert;
 import org.springframework.validation.Validator;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
@@ -82,7 +83,8 @@ public class BetsController {
     @RequestMapping(value = "/user/{betId}", method = RequestMethod.POST)
     public UserBet setUserBet(@PathVariable Long betId, @RequestBody @Valid UserBetData userBetData, Principal principal) {
         Account account = accountService.findAccountByEmail(principal.getName());
-        return betService.updateMatchBet(betId, account, userBetData);
+        Assert.isTrue(betId.equals(userBetData.getBetId()), "betId mismatch");
+        return betService.updateMatchBet(account, userBetData);
     }
 
     @ResponseBody
@@ -95,7 +97,7 @@ public class BetsController {
 
     @ResponseBody
     @RequestMapping(value = "/user/overview", method = RequestMethod.GET)
-    public List<BetOverviewData> overview( Principal principal) {
+    public List<BetOverviewData> overview(Principal principal) {
         Account account = accountService.findAccountByEmail(principal.getName());
         return betService.getOverview(account);
     }

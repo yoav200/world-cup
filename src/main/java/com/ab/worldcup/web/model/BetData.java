@@ -14,6 +14,8 @@ public class BetData {
 
     private Long id;
 
+    private Long matchId;
+
     private BetType type;
 
     private String description;

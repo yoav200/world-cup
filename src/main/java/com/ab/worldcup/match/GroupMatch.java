@@ -41,5 +41,9 @@ public class GroupMatch extends Match {
                 // + (getResult() != null ? " &#10004;" : "");
     }
 
+    // used for the UI
+    public boolean isReady() {
+        return true;
+    }
 
 }

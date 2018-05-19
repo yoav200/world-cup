@@ -60,6 +60,7 @@ public class KnockoutMatch extends Match implements Serializable {
         this.knockoutTeam = knockoutTeam;
     }
 
+    // used for the UI
     public boolean isReady() {
         return (getHomeTeam() != null) && (getAwayTeam() != null);
     }
