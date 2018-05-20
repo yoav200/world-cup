@@ -99,22 +99,20 @@ public class BetService {
         for (KnockoutTeam teamUpdatedByMatch : knockoutTeams) {
             KnockoutMatch knockoutMatch = knockoutService.findKnockoutMatch(teamUpdatedByMatch.getMatchId());
             if (teamUpdatedByMatch.getHomeTeam() != null) {
-                Qualifier qualifier = Qualifier.builder()
+                qualifiers.add(Qualifier.builder()
                         .team(teamUpdatedByMatch.getHomeTeam())
                         .stageId(knockoutMatch.getStageId())
                         .knockoutTeamCode(knockoutMatch.getHomeTeamCode())
-                        .build();
-                qualifiers.add(qualifier);
+                        .build());
             }
             if (teamUpdatedByMatch.getAwayTeam() != null) {
-                Qualifier qualifier = Qualifier.builder()
+                qualifiers.add(Qualifier.builder()
                         .team(teamUpdatedByMatch.getAwayTeam())
                         .stageId(knockoutMatch.getStageId())
                         .knockoutTeamCode(knockoutMatch.getAwayTeamCode())
-                        .build();
-                qualifiers.add(qualifier);
+                        .build());
             }
-            knockoutTeams.add(teamUpdatedByMatch);
+            //knockoutTeams.add(teamUpdatedByMatch);
         }
         return qualifiers;
     }
@@ -195,7 +193,7 @@ public class BetService {
                     .matchId(bet.getMatchId())
                     .description(bet.getDescription())
                     .lockTime(bet.getLockTime())
-                    //.match(bet.)
+                    //.match()
                     .stageId(bet.getStageId())
                     .type(bet.getType())
                     .build();
