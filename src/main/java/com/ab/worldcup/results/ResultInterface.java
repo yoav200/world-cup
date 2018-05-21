@@ -18,10 +18,12 @@ public interface ResultInterface {
 
     default MatchResultType getWinner() {
         MatchResultType winner = MatchResultType.DRAW;
-        if (getHomeTeamGoals() > getAwayTeamGoals()) {
-            winner = MatchResultType.HOME_TEAM_WON;
-        } else if (getHomeTeamGoals() < getAwayTeamGoals()) {
-            winner = MatchResultType.AWAY_TEAM_WON;
+        if(getMatchId() != null) {
+            if (getHomeTeamGoals() > getAwayTeamGoals()) {
+                winner = MatchResultType.HOME_TEAM_WON;
+            } else if (getHomeTeamGoals() < getAwayTeamGoals()) {
+                winner = MatchResultType.AWAY_TEAM_WON;
+            }
         }
         return winner;
     }
