@@ -2,7 +2,6 @@ package com.ab.worldcup.web.validators;
 
 import com.ab.worldcup.bet.Bet;
 import com.ab.worldcup.bet.BetService;
-import com.ab.worldcup.match.Match;
 import com.ab.worldcup.match.MatchService;
 import com.ab.worldcup.web.model.UserBetData;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +23,7 @@ public class UserBetDataValidator implements Validator {
         this.betService = betService;
         this.matchService = matchService;
     }
-    
+
     @Override
     public boolean supports(Class<?> clazz) {
         return UserBetData.class.isAssignableFrom(clazz);
@@ -39,14 +38,11 @@ public class UserBetDataValidator implements Validator {
         if (bet == null) {
             errors.rejectValue("betId", "", "Bet not found");
         } else {
-            // validate data
-            userBetData.validate(errors, bet.getStageId());
-            // validate match
-            Match match = matchService.getMatchById(bet.getMatchId());
-
-            if (LocalDateTime.now().isAfter(match.getKickoff().toLocalDateTime())) {
+            if (LocalDateTime.now().isAfter(bet.getLockTime().toLocalDateTime())) {
                 errors.rejectValue("betId", "", "Cannot bet on match that already started");
             }
+            // validate data
+            userBetData.validate(errors, bet.getStageId());
         }
     }
 }

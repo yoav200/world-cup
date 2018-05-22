@@ -91,11 +91,10 @@ public class BetsController {
         Account account = accountService.findAccountByEmail(principal.getName());
         Assert.isTrue(betId.equals(userBetData.getBetId()), "betId mismatch");
         UserBet updatedUserBet = betService.updateMatchBet(account, userBetData);
+        // save qualifiers
         betService.setQualifiersBets(account);
         return updatedUserBet;
     }
-
-
 
     @ResponseBody
     @RequestMapping(value = "/user/{betId}", method = RequestMethod.DELETE)

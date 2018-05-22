@@ -44,7 +44,7 @@ public class GroupService {
         return teamRepository.findByCode(code);
     }
 
-    @Cacheable("groupMatches")
+    @Cacheable("allGroupMatchesCache")
     public List<GroupMatch> getAllGroupMatches() {
         return groupMatchRepository.findAll();
     }

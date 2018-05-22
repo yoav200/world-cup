@@ -7,6 +7,7 @@ import com.ab.worldcup.knockout.KnockoutService;
 import com.ab.worldcup.knockout.KnockoutTeam;
 import com.ab.worldcup.match.*;
 import com.ab.worldcup.results.CalculatedUserBet;
+import com.ab.worldcup.results.MatchResult;
 import com.ab.worldcup.results.Qualifier;
 import com.ab.worldcup.results.ResultsService;
 import com.ab.worldcup.team.Group;
@@ -49,10 +50,6 @@ public class BetService {
         return betRepository.findAll();
     }
 
-    public List<Bet> getQualifierBetsByStage(Stage stage){
-        return betRepository.findAllByStageIdAndType(stage,BetType.QUALIFIER);
-    }
-
     public Bet getBetById(Long id) {
         return betRepository.findOne(id);
     }
@@ -62,8 +59,8 @@ public class BetService {
         // all user bets
         List<UserBet> userBets = userBetRepository.findByUserBetIdAccountId(accountId);
         // all matches with results added
-        List<UserBet> userMatachTypeBets = userBets.stream().filter(t -> t.getMatchId() != null).collect(Collectors.toList());
-        List<? extends Match> allMatches = addUserBetsToMatches(matchService.getAllMatches(), userMatachTypeBets);
+        List<UserBet> userMatchTypeBets = userBets.stream().filter(t -> t.getMatchId() != null).collect(Collectors.toList());
+        List<? extends Match> allMatches = addUserBetsToMatches(matchService.getAllMatches(), userMatchTypeBets);
         // filter group stage matches
         List<GroupMatch> groupMatches = allMatches.stream()
                 .filter(m -> m.getStageId().equals(Stage.GROUP))
@@ -75,7 +72,7 @@ public class BetService {
                 .map(m -> (KnockoutMatch) m)
                 .collect(Collectors.toList());
 
-        Set<KnockoutTeam> knockoutTeams = calculateKnockoutTeams(allMatches, userMatachTypeBets);
+        Set<KnockoutTeam> knockoutTeams = calculateKnockoutTeams(allMatches, userMatchTypeBets);
         List<KnockoutMatch> allKnockoutMatch = addKnockoutTeamsOnKnockoutMatch(knockoutMatches, knockoutTeams);
 
         List<Qualifier> allQualifiers = getQualifiers(allKnockoutMatch);
@@ -103,7 +100,6 @@ public class BetService {
     private List<Qualifier> getQualifiers(List<KnockoutMatch> knockoutMatches) {
         List<Qualifier> qualifiers = new ArrayList<>();
         for (KnockoutMatch knockoutMatch : knockoutMatches) {
-//            KnockoutMatch knockoutMatch = knockoutService.findKnockoutMatch(teamUpdatedByMatch.getMatchId());
             if (knockoutMatch.getHomeTeam() != null) {
                 qualifiers.add(Qualifier.builder()
                         .team(knockoutMatch.getHomeTeam())
@@ -119,16 +115,15 @@ public class BetService {
                         .build());
             }
 
-            if(knockoutMatch.getResult() != null){
-                if(knockoutMatch.getStageId().equals(Stage.FINAL) || knockoutMatch.getStageId().equals(Stage.THIRD_PLACE)){
-                        qualifiers.add(Qualifier.builder()
-                                .team(knockoutMatch.getResult().getKnockoutQualifier())
-                                .stageId(knockoutMatch.getStageId().getNextStage().get(0))
-                                .knockoutTeamCode(knockoutMatch.getStageId().equals(Stage.FINAL) ? KnockoutTeamCode.WINNER_FINAL : KnockoutTeamCode.WINNER_THIRD_PLACE)
-                                .build());
-                    }
+            if (knockoutMatch.getResult() != null) {
+                if (knockoutMatch.getStageId().equals(Stage.FINAL) || knockoutMatch.getStageId().equals(Stage.THIRD_PLACE)) {
+                    qualifiers.add(Qualifier.builder()
+                            .team(knockoutMatch.getResult().getKnockoutQualifier())
+                            .stageId(knockoutMatch.getStageId().getNextStage().get(0))
+                            .knockoutTeamCode(knockoutMatch.getStageId().equals(Stage.FINAL) ? KnockoutTeamCode.WINNER_FINAL : KnockoutTeamCode.WINNER_THIRD_PLACE)
+                            .build());
+                }
             }
-            //knockoutTeams.add(teamUpdatedByMatch);
         }
         return qualifiers;
     }
@@ -149,8 +144,8 @@ public class BetService {
         // validate if changing may effect other bets
         Match match = matchService.getMatchById(userBer.getMatchId());
         List<UserBet> userBets = userBetRepository.findByUserBetIdAccountId(accountId);
-        List<UserBet> userMatachTypeBets = userBets.stream().filter(t -> t.getMatchId() != null).collect(Collectors.toList());
-        if (knockoutService.isResultsEffected(match, userMatachTypeBets)) {
+        List<UserBet> userMatchTypeBets = userBets.stream().filter(t -> t.getMatchId() != null).collect(Collectors.toList());
+        if (knockoutService.isResultsEffected(match, userMatchTypeBets)) {
             throw new IllegalArgumentException("Bet cannot be changed, it may effect other bets");
         }
         userBetRepository.delete(userBer);
@@ -169,8 +164,8 @@ public class BetService {
         Match match = matchService.getMatchById(bet.getMatchId());
         // validate if changing may effect other bets
         List<UserBet> userBets = userBetRepository.findByUserBetIdAccountId(account.getId());
-        List<UserBet> userMatachTypeBets = userBets.stream().filter(t -> t.getMatchId() != null).collect(Collectors.toList());
-        if (knockoutService.isResultsEffected(match, userMatachTypeBets)) {
+        List<UserBet> userMatchTypeBets = userBets.stream().filter(t -> t.getMatchId() != null).collect(Collectors.toList());
+        if (knockoutService.isResultsEffected(match, userMatchTypeBets)) {
             throw new IllegalArgumentException("Bet cannot be changed, it may effect other bets");
         }
 
@@ -199,27 +194,51 @@ public class BetService {
 
     public List<BetOverviewData> getOverview(Account account) {
         List<BetOverviewData> betOverviewData = new ArrayList<>();
-        List<Bet> bets = betRepository.findAll();
-        List<CalculatedUserBet> calculatedUserBets = resultsService.calculateBetsForUser(account);
 
-        Map<Long, CalculatedUserBet> betMap = calculatedUserBets.stream()
+        List<Bet> bets = betRepository.findAll();
+        List<Qualifier> allQualifiers = resultsService.getAllQualifiers();
+        List<UserBet> betForAccount = findByUserBetIdAccountId(account.getId());
+
+        // matches map by match id
+        Map<Long, ? extends Match> matchesMap = matchService.getAllMatches().stream()
+                .collect(Collectors.toMap(Match::getMatchId, Function.identity()));
+        // match results by match id
+        Map<Long, MatchResult> resultMap = resultsService.getAllMatchResults().stream()
+                .collect(Collectors.toMap(MatchResult::getMatchId, Function.identity()));
+        // user bets by match id
+        Map<Long, UserBet> userBetMap = betForAccount.stream().filter(b->b.getUserBetId().getBet().getType().equals(BetType.MATCH))
+                .collect(Collectors.toMap(b -> b.getUserBetId().getBet().getMatchId(), Function.identity()));
+        // calculated results by bet id
+        Map<Long, CalculatedUserBet> betMap = resultsService.calculateBetsForUser(betForAccount).stream()
                 .collect(Collectors.toMap(b -> b.getUserBet().getUserBetId().getBet().getId(), Function.identity()));
 
-        bets.forEach(bet->{
+
+        bets.forEach(bet -> {
+
             BetData betData = BetData.builder()
                     .id(bet.getId())
                     .matchId(bet.getMatchId())
                     .description(bet.getDescription())
                     .lockTime(bet.getLockTime())
-                    //.match()
                     .stageId(bet.getStageId())
                     .type(bet.getType())
                     .build();
 
-            betOverviewData.add(BetOverviewData.builder()
-                     .betData(betData)
-                     //.userBetData()
-                     .calculatedUserBet(betMap.get(bet.getId())).build());
+
+            if (bet.getType().equals(BetType.MATCH)) {
+                betOverviewData.add(BetOverviewData.builder()
+                        .betData(betData)
+                        .match(matchesMap.get(bet.getMatchId()))
+                        .matchResult(resultMap.get(bet.getMatchId()))
+                        .userBet(userBetMap.get(bet.getMatchId()))
+                        .calculatedUserBet(betMap.get(bet.getId())).build());
+            } else /*if (bet.getType().equals(BetType.QUALIFIER)) */ {
+
+                betOverviewData.add(BetOverviewData.builder()
+                        .betData(betData)
+                        .calculatedUserBet(betMap.get(bet.getId())).build());
+
+            }
         });
 
         return betOverviewData;
@@ -228,27 +247,26 @@ public class BetService {
 
     public void setQualifiersBets(Account account) {
         Map<Stage, List<Qualifier>> userQualifiersByStageMap = getMatchesData(account.getId()).getQualifiers();
+        List<Bet> qualifierBets = betRepository.findAllByType(BetType.QUALIFIER);
+        Map<Stage, List<Bet>> stageListMap = qualifierBets.stream().collect(Collectors.groupingBy(Bet::getStageId));
 
-        for (Stage stage : userQualifiersByStageMap.keySet()) {
-            List<Qualifier> userQualifierList = userQualifiersByStageMap.get(stage);
-
-            if(userQualifierList != null && !userQualifierList.isEmpty()) {
-                List<Bet> qualifierBetsByStage = getQualifierBetsByStage(stage);
-                int qualifierBetsByStageSize = qualifierBetsByStage.size();
-                int qualifierIndex = 0;
-                for (Qualifier userQualifier : userQualifierList) {
-                    if (qualifierBetsByStageSize > qualifierIndex) {
-                        Bet bet = qualifierBetsByStage.get(qualifierIndex++);
-                        UserBet userBet = userBetRepository.findByUserBetIdAccountIdAndUserBetIdBetId(account.getId(), bet.getId());
-
-                        if (userBet == null) {
-                            userBet = new UserBet(new UserBetId(account, bet));
-                        }
-                        userBet.setQualifier(userQualifier.getTeam());
-                        userBetRepository.save(userBet);
+        userQualifiersByStageMap.forEach((stage, userQualifierList) -> {
+            //if (userQualifierList != null && !userQualifierList.isEmpty()) {
+            List<Bet> qualifierBetsByStage = stageListMap.get(stage);
+            int qualifierBetsByStageSize = qualifierBetsByStage.size();
+            int qualifierIndex = 0;
+            for (Qualifier userQualifier : userQualifierList) {
+                if (qualifierBetsByStageSize > qualifierIndex) {
+                    Bet bet = qualifierBetsByStage.get(qualifierIndex++);
+                    UserBet userBet = userBetRepository.findByUserBetIdAccountIdAndUserBetIdBetId(account.getId(), bet.getId());
+                    if (userBet == null) {
+                        userBet = new UserBet(new UserBetId(account, bet));
                     }
+                    userBet.setQualifier(userQualifier.getTeam());
+                    userBetRepository.save(userBet);
                 }
             }
-        }
+            //}
+        });
     }
 }

@@ -106,7 +106,7 @@ public class KnockoutService<T extends ResultInterface> {
         return result.getHomeTeam().equals(result.getKnockoutQualifier()) ? result.getAwayTeam() : result.getHomeTeam();
     }
 
-    @Cacheable("knockoutMatches")
+    @Cacheable("allKnockoutMatchesCache")
     public List<KnockoutMatch> getAllKnockoutMatches() {
         return knockoutMatchRepository.findAll();
     }
@@ -141,7 +141,6 @@ public class KnockoutService<T extends ResultInterface> {
                     knockoutTeam.ifPresent(knockoutTeamList::add);
                 }
             }
-
         }
         return knockoutTeamList;
     }

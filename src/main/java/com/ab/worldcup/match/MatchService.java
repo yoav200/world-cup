@@ -46,7 +46,7 @@ public class MatchService {
      * 2. will add a record to qualifier table if needed
      */
     @SuppressWarnings("unchecked")
-    @CacheEvict(cacheNames = {"CalculatedUserBets", "knockoutMatches", "matchResults"}, allEntries = true)
+    @CacheEvict(cacheNames = {"allKnockoutMatchesCache", "allMatchResultsCache", "allQualifiersCache"}, allEntries = true)
     public void onMatchFinish(Match match) {
         List<MatchResult> matchResults = resultService.getAllMatchResults();
         List<KnockoutTeam> knockoutTeamUpdatedByMatch = knockoutService.getKnockoutTeamUpdatedByMatch(match, matchResults);

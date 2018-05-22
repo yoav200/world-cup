@@ -1,9 +1,7 @@
 package com.ab.worldcup.results;
 
 import com.ab.worldcup.account.Account;
-import com.ab.worldcup.account.AccountRepository;
 import com.ab.worldcup.bet.Bet;
-import com.ab.worldcup.bet.BetService;
 import com.ab.worldcup.bet.BetType;
 import com.ab.worldcup.bet.UserBet;
 import com.ab.worldcup.knockout.KnockoutTeam;
@@ -13,12 +11,14 @@ import com.ab.worldcup.team.Group;
 import com.ab.worldcup.web.model.RankingData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 public class ResultsService {
@@ -32,31 +32,22 @@ public class ResultsService {
     @Autowired
     private KnockoutTeamRepository knockoutTeamRepository;
 
-    @Autowired
-    private AccountRepository accountRepository;
-
-    @Autowired
-    private BetService betService;
-
-    public List<RankingData> getLeaderboard() {
-        List<RankingData> leaderboardList = new ArrayList<>();
-        List<Account> accounts = accountRepository.findAll();
-
-        for (Account account : accounts) {
-            List<CalculatedUserBet> calculatedUserBets = calculateBetsForUser(account);
-            Integer userBetProgressPercentage = calculatedUserBets.size() * 100 / betService.getAllBets().size();
-            Integer totalPointsForAccount = calculatedUserBets.stream().mapToInt(CalculatedUserBet::getTotalPoints).sum();
-            leaderboardList.add(RankingData.builder().account(account).totalPoints(totalPointsForAccount).userBets(calculatedUserBets)
-                    .betCompletionPercentage(userBetProgressPercentage).build());
-        }
-        leaderboardList.sort((o1, o2) -> o1.getTotalPoints() > o2.getTotalPoints() ? -1 : 1);
-        return leaderboardList;
+    public RankingData getRankingForAccount(Account account, List<UserBet> betForAccount, int betsCount) {
+        List<CalculatedUserBet> calculatedUserBets = calculateBetsForUser(betForAccount);
+        Integer userBetProgressPercentage = calculatedUserBets.size() * 100 / betsCount;
+        Integer totalPointsForAccount = calculatedUserBets.stream().mapToInt(CalculatedUserBet::getTotalPoints).sum();
+        return RankingData.builder()
+                .account(account)
+                .totalPoints(totalPointsForAccount)
+                .userBets(calculatedUserBets)
+                .betCompletionPercentage(userBetProgressPercentage)
+                .build();
     }
 
-    //@CachePut(cacheNames = "CalculatedUserBets", key = "account.id")
-    public List<CalculatedUserBet> calculateBetsForUser(Account account) {
+
+    public List<CalculatedUserBet> calculateBetsForUser(List<UserBet> betForAccount) {
         List<CalculatedUserBet> calculatedUserBets = new ArrayList<>();
-        List<UserBet> betForAccount = betService.findByUserBetIdAccountId(account.getId());
+        Map<Long, MatchResult> resultMap = getAllMatchResults().stream().collect(Collectors.toMap(MatchResult::getMatchId, Function.identity()));
 
         for (UserBet userBet : betForAccount) {
             int correctWinnerPoints = 0;
@@ -65,7 +56,7 @@ public class ResultsService {
 
             Bet bet = userBet.getUserBetId().getBet();
             if (BetType.MATCH.equals(bet.getType())) {
-                MatchResult matchResult = matchResultRepository.findOne(bet.getMatchId());
+                MatchResult matchResult = resultMap.get(bet.getMatchId());
                 // if match finished, calculate the points
                 if (matchResult != null) {
                     correctWinnerPoints = getPointsForMatchResultCorrectness(userBet, matchResult);
@@ -74,15 +65,14 @@ public class ResultsService {
             } else {
                 correctQualifierPoints = getPointsForQualifierCorrectness(userBet, bet.getStageId());
             }
-            CalculatedUserBet calculatedUserBet = CalculatedUserBet.builder().
-                    betType(bet.getType()).
-                    matchResultPoints(correctWinnerPoints).
-                    exactScorePoints(exactScorePoints).
-                    correctQualifierPoints(correctQualifierPoints).
-                    userBet(userBet).
-                    build();
 
-            calculatedUserBets.add(calculatedUserBet);
+            calculatedUserBets.add(CalculatedUserBet.builder()
+                    .betType(bet.getType())
+                    .matchResultPoints(correctWinnerPoints)
+                    .exactScorePoints(exactScorePoints)
+                    .correctQualifierPoints(correctQualifierPoints)
+                    .userBet(userBet)
+                    .build());
         }
         return calculatedUserBets;
     }
@@ -121,28 +111,30 @@ public class ResultsService {
         return userBet.winnerEquals(matchResult);
     }
 
-    @CacheEvict(value = "matchResults", allEntries = true)
+    @CacheEvict(value = "allMatchResultsCache", allEntries = true)
     public MatchResult save(MatchResult result) {
         return matchResultRepository.save(result);
     }
 
     public void saveKnockoutTeam(KnockoutTeam knockoutTeam) {
-        knockoutTeamRepository.saveAndFlush(knockoutTeam);
+        knockoutTeamRepository.save(knockoutTeam);
     }
 
+    @CacheEvict(value = "allQualifiersCache", allEntries = true)
     public void saveQualifier(Qualifier qualifier) {
-        qualifierRepository.saveAndFlush(qualifier);
+        qualifierRepository.save(qualifier);
     }
 
     public List<MatchResult> getMatchResultForGroup(Group group) {
         return matchResultRepository.findMatchResultByGroup(group.toString());
     }
 
+    @Cacheable("allQualifiersCache")
     public List<Qualifier> getAllQualifiers() {
         return qualifierRepository.findAll();
     }
 
-    @Cacheable("matchResults")
+    @Cacheable("allMatchResultsCache")
     public List<MatchResult> getAllMatchResults() {
         return matchResultRepository.findAll();
     }

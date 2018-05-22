@@ -1,6 +1,9 @@
 package com.ab.worldcup.web.model;
 
+import com.ab.worldcup.bet.UserBet;
+import com.ab.worldcup.match.Match;
 import com.ab.worldcup.results.CalculatedUserBet;
+import com.ab.worldcup.results.MatchResult;
 import lombok.Builder;
 import lombok.Data;
 
@@ -8,7 +11,10 @@ import lombok.Data;
 @Builder
 public class BetOverviewData {
     private BetData betData;
-    private UserBetData userBetData;
-    private MatchResultData matchResultData;
+
+    private Match  match;
+    private UserBet userBet;
+    private MatchResult matchResult;
+
     private CalculatedUserBet calculatedUserBet;
 }
