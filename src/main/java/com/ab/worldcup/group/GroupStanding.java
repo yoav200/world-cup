@@ -19,9 +19,10 @@ public class GroupStanding {
     @JsonProperty(value = "teamsInGroup")
     private TreeSet<TeamInGroup<? super ResultInterface>> teamsInGroup;
 
+    @SuppressWarnings("unchecked")
     <T extends ResultInterface> GroupStanding(Group group, List<GroupMatch> matches, List<T> results, List<Team> teams) {
         this.groupId = group;
-        teamsInGroup = new TreeSet<>(TeamInGroup.comparator);
+        this.teamsInGroup = new TreeSet<>(TeamInGroup.comparator);
         for (Team team : teams) {
             TeamInGroup<? super ResultInterface> teamInGroup = new TeamInGroup(team, matches).addMatchResults(results);
             teamsInGroup.add(teamInGroup);

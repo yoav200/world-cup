@@ -12,5 +12,5 @@ public interface KnockoutMatchRepository extends JpaRepository<KnockoutMatch, Lo
 
     List<KnockoutMatch> findAllByStageId(Stage stageId);
 
-    List<KnockoutMatch> findAllByHomeTeamCodeInOrAwayTeamCodeIn(Set<KnockoutTeamCode> codes1, Set<KnockoutTeamCode> codes2);
+//    List<KnockoutMatch> findAllByHomeTeamCodeInOrAwayTeamCodeIn(Set<KnockoutTeamCode> codes1, Set<KnockoutTeamCode> codes2);
 }

@@ -145,26 +145,26 @@ public class KnockoutService<T extends ResultInterface> {
         return knockoutTeamList;
     }
 
-    public KnockoutMatch findKnockoutMatch(Long matchId) {
-        return knockoutMatchRepository.findOne(matchId);
-    }
+//    public KnockoutMatch findKnockoutMatch(Long matchId) {
+//        return knockoutMatchRepository.findOne(matchId);
+//    }
 
-    private List<KnockoutMatch> findNextEffectedMatches(Match match) {
-        Set<KnockoutTeamCode> nextEffectedStage = new HashSet<>();
-        if (match.getStageId().equals(Stage.GROUP)) {
-            GroupMatch groupMatch = (GroupMatch) match;
-            nextEffectedStage.addAll(KnockoutTeamCode.getNextEffectedStage(groupMatch.getGroupId()));
-        } else {
-            KnockoutMatch knockoutMatch = (KnockoutMatch) match;
-            nextEffectedStage.add(KnockoutTeamCode.getNextEffectedStage(knockoutMatch.getHomeTeamCode()));
-        }
-        return knockoutMatchRepository.findAllByHomeTeamCodeInOrAwayTeamCodeIn(nextEffectedStage, nextEffectedStage);
-    }
+//    private List<KnockoutMatch> findNextEffectedMatches(Match match) {
+//        Set<KnockoutTeamCode> nextEffectedStage = new HashSet<>();
+//        if (match.getStageId().equals(Stage.GROUP)) {
+//            GroupMatch groupMatch = (GroupMatch) match;
+//            nextEffectedStage.addAll(KnockoutTeamCode.getNextEffectedStage(groupMatch.getGroupId()));
+//        } else {
+//            KnockoutMatch knockoutMatch = (KnockoutMatch) match;
+//            nextEffectedStage.add(KnockoutTeamCode.getNextEffectedStage(knockoutMatch.getHomeTeamCode()));
+//        }
+//        return knockoutMatchRepository.findAllByHomeTeamCodeInOrAwayTeamCodeIn(nextEffectedStage, nextEffectedStage);
+//    }
 
-    public boolean isResultsEffected(Match match, List<ResultInterface> results) {
-        Map<Long, List<ResultInterface>> resultsMap = results.stream().collect(Collectors.groupingBy(ResultInterface::getMatchId));
-        List<KnockoutMatch> nextEffectedMatches = findNextEffectedMatches(match);
-        List<Long> effectedMatchesIds = nextEffectedMatches.stream().map(Match::getMatchId).collect(Collectors.toList());
-        return resultsMap.keySet().stream().anyMatch(effectedMatchesIds::contains);
-    }
+//    public boolean isResultsEffected(Match match, List<ResultInterface> results) {
+//        Map<Long, List<ResultInterface>> resultsMap = results.stream().collect(Collectors.groupingBy(ResultInterface::getMatchId));
+//        List<KnockoutMatch> nextEffectedMatches = findNextEffectedMatches(match);
+//        List<Long> effectedMatchesIds = nextEffectedMatches.stream().map(Match::getMatchId).collect(Collectors.toList());
+//        return resultsMap.keySet().stream().anyMatch(effectedMatchesIds::contains);
+//    }
 }
