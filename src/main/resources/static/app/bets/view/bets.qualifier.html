@@ -1,0 +1,113 @@
+<section id="bets-qualifiers" permission="['ROLE_USER']">
+    <h1>Set bets For qualifiers
+        <small>Only you can see your bets</small>
+    </h1>
+    <div>
+        <p>
+            Here you set your qualifiers, this is your chance to gain points.<br>
+            Please note that Qualifiers bets are allowed before the games begin!
+        </p>
+    </div>
+    <div style="font-size: 11px;">
+
+        <table class="table table-bordered">
+            <tr>
+                <th>Round of 16</th>
+                <th>Quarter-finals</th>
+                <th>Semi-finals</th>
+                <th>final</th>
+                <th>Semi-finals</th>
+                <th>Quarter-finals</th>
+                <th>Round of 16</th>
+            </tr>
+            <tr>
+                <td class="info">WINNER_GROUP_C<select style="width: 80px;font-size: 20px;"><option data-ng-repeat="i in [1,2,3,4,5]">{{i}}</option></select></td>
+                <td class="info" rowspan="2">WINNER_ROS1<select style="width: 80px;font-size: 20px;"><option data-ng-repeat="i in [1,2,3,4,5]">{{i}}</option></select></td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td class="info" rowspan="2">WINNER_ROS3<select style="width: 80px;font-size: 20px;"><option data-ng-repeat="i in [1,2,3,4,5]">{{i}}</option></select></td>
+                <td class="info">WINNER_GROUP_B<select style="width: 80px;font-size: 20px;"><option data-ng-repeat="i in [1,2,3,4,5]">{{i}}</option></select></td>
+            </tr>
+            <tr>
+                <td class="info">RUNNER_UP_GROUP_D<select style="width: 80px;font-size: 20px;"><option data-ng-repeat="i in [1,2,3,4,5]">{{i}}</option></select></td>
+                <td class="info" rowspan="3">WINNER_QF1<select style="width: 80px;font-size: 20px;"><option data-ng-repeat="i in [1,2,3,4,5]">{{i}}</option></select></td>
+                <td>&nbsp;</td>
+                <td class="info" rowspan="3">WINNER_QF3<select style="width: 80px;font-size: 20px;"><option data-ng-repeat="i in [1,2,3,4,5]">{{i}}</option></select></td>
+                <td class="info">RUNNER_UP_GROUP_A<select style="width: 80px;font-size: 20px;"><option data-ng-repeat="i in [1,2,3,4,5]">{{i}}</option></select></td>
+            </tr>
+            <tr>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td class="info" rowspan="7">
+                    WINNER_SF1
+                    WINNER_SF2
+                    <select style="width: 80px;font-size: 20px;"><option data-ng-repeat="i in [1,2,3,4,5]">{{i}}</option></select></td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td class="info">WINNER_GROUP_A<select style="width: 80px;font-size: 20px;"><option data-ng-repeat="i in [1,2,3,4,5]">{{i}}</option></select></td>
+                <td class="info" rowspan="2">WINNER_ROS2<select style="width: 80px;font-size: 20px;"><option data-ng-repeat="i in [1,2,3,4,5]">{{i}}</option></select></td>
+                <td class="info" rowspan="2">WINNER_ROS4<select style="width: 80px;font-size: 20px;"><option data-ng-repeat="i in [1,2,3,4,5]">{{i}}</option></select></td>
+                <td class="info">WINNER_GROUP_D<select style="width: 80px;font-size: 20px;"><option data-ng-repeat="i in [1,2,3,4,5]">{{i}}</option></select></td>
+            </tr>
+            <tr>
+                <td class="info">RUNNER_UP_GROUP_B<select style="width: 80px;font-size: 20px;"><option data-ng-repeat="i in [1,2,3,4,5]">{{i}}</option></select></td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td class="info">RUNNER_UP_GROUP_C<select style="width: 80px;font-size: 20px;"><option data-ng-repeat="i in [1,2,3,4,5]">{{i}}</option></select></td>
+            </tr>
+            <tr>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td class="info">WINNER_GROUP_E<select style="width: 80px;font-size: 20px;"><option data-ng-repeat="i in [1,2,3,4,5]">{{i}}</option></select></td>
+                <td class="info" rowspan="2">WINNER_ROS5<select style="width: 80px;font-size: 20px;"><option data-ng-repeat="i in [1,2,3,4,5]">{{i}}</option></select></td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td class="info" rowspan="2">WINNER_ROS7<select style="width: 80px;font-size: 20px;"><option data-ng-repeat="i in [1,2,3,4,5]">{{i}}</option></select></td>
+                <td class="info">WINNER_GROUP_F<select style="width: 80px;font-size: 20px;"><option data-ng-repeat="i in [1,2,3,4,5]">{{i}}</option></select></td>
+            </tr>
+            <tr>
+                <td class="info">RUNNER_UP_GROUP_F<select style="width: 80px;font-size: 20px;"><option data-ng-repeat="i in [1,2,3,4,5]">{{i}}</option></select></td>
+                <td class="info" rowspan="3">WINNER_QF2<select style="width: 80px;font-size: 20px;"><option data-ng-repeat="i in [1,2,3,4,5]">{{i}}</option></select></td>
+                <td class="info" rowspan="3">WINNER_QF4<select style="width: 80px;font-size: 20px;"><option data-ng-repeat="i in [1,2,3,4,5]">{{i}}</option></select></td>
+                <td class="info">RUNNER_UP_GROUP_E<select style="width: 80px;font-size: 20px;"><option data-ng-repeat="i in [1,2,3,4,5]">{{i}}</option></select></td>
+            </tr>
+            <tr>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td class="info">WINNER_GROUP_G<select style="width: 80px;font-size: 20px;"><option data-ng-repeat="i in [1,2,3,4,5]">{{i}}</option></select></td>
+                <td class="info" rowspan="2">WINNER_ROS6<select style="width: 80px;font-size: 20px;"><option data-ng-repeat="i in [1,2,3,4,5]">{{i}}</option></select></td>
+                <td>&nbsp;</td>
+                <td class="info" rowspan="2">WINNER_ROS8<select style="width: 80px;font-size: 20px;"><option data-ng-repeat="i in [1,2,3,4,5]">{{i}}</option></select></td>
+                <td class="info">WINNER_GROUP_H<select style="width: 80px;font-size: 20px;"><option data-ng-repeat="i in [1,2,3,4,5]">{{i}}</option></select></td>
+            </tr>
+            <tr>
+                <td class="info">RUNNER_UP_GROUP_H<select style="width: 80px;font-size: 20px;"><option data-ng-repeat="i in [1,2,3,4,5]">{{i}}</option></select></td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td class="info">RUNNER_UP_GROUP_G<select style="width: 80px;font-size: 20px;"><option data-ng-repeat="i in [1,2,3,4,5]">{{i}}</option></select></td>
+            </tr>
+            <tr>
+                <th>Round of 16</th>
+                <th>Quarter-finals</th>
+                <th>Semi-finals</th>
+                <th>final</th>
+                <th>Semi-finals</th>
+                <th>Quarter-finals</th>
+                <th>Round of 16</th>
+            </tr>
+        </table>
+    </div>
+</section>

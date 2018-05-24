@@ -7,6 +7,7 @@ import com.ab.worldcup.match.KnockoutMatch;
 import com.ab.worldcup.match.Match;
 import com.ab.worldcup.match.MatchService;
 import com.ab.worldcup.results.MatchResult;
+import com.ab.worldcup.results.ResultsService;
 import com.ab.worldcup.web.model.MatchResultData;
 import com.ab.worldcup.web.model.MatchesData;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,9 @@ public class MatchController {
     private MatchService matchService;
 
     @Autowired
+    private ResultsService resultsService;
+
+    @Autowired
     private GroupService groupService;
 
     @Autowired
@@ -44,19 +48,22 @@ public class MatchController {
     @ResponseBody
     @RequestMapping(value = "/data")
     public MatchesData getMatchesData() {
-        return matchService.getMatchesData();
+        List<MatchResult> allResults = resultsService.getAllMatchResults();
+        return matchService.getMatchesData(allResults);
     }
 
     @ResponseBody
     @RequestMapping(value = "/knockout")
     public List<KnockoutMatch> getAllKnockoutMatch() {
-        return matchService.addResultsToMatches(knockoutService.getAllKnockoutMatches());
+        List<MatchResult> allResults = resultsService.getAllMatchResults();
+        return matchService.addResultsToMatches(knockoutService.getAllKnockoutMatches(), allResults);
     }
 
     @ResponseBody
     @RequestMapping(value = "/groups")
     public List<GroupMatch> getAllGroupMatches() {
-        return matchService.addResultsToMatches(groupService.getAllGroupMatches());
+        List<MatchResult> allResults = resultsService.getAllMatchResults();
+        return matchService.addResultsToMatches(groupService.getAllGroupMatches(), allResults);
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")

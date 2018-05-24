@@ -5,6 +5,7 @@ import com.ab.worldcup.knockout.KnockoutService;
 import com.ab.worldcup.knockout.KnockoutTeam;
 import com.ab.worldcup.results.MatchResult;
 import com.ab.worldcup.results.Qualifier;
+import com.ab.worldcup.results.ResultInterface;
 import com.ab.worldcup.results.ResultsService;
 import com.ab.worldcup.web.model.MatchResultData;
 import com.ab.worldcup.web.model.MatchesData;
@@ -37,7 +38,7 @@ public class MatchService {
     private KnockoutService knockoutService;
 
     @Autowired
-    private ResultsService resultService;
+    private ResultsService resultsService;
 
     /**
      * Call this method only after persisting the result of <code>match</code>
@@ -48,7 +49,7 @@ public class MatchService {
     @SuppressWarnings("unchecked")
     @CacheEvict(cacheNames = {"allKnockoutMatchesCache", "allMatchResultsCache", "allQualifiersCache"}, allEntries = true)
     public void onMatchFinish(Match match) {
-        List<MatchResult> matchResults = resultService.getAllMatchResults();
+        List<MatchResult> matchResults = resultsService.getAllMatchResults();
         List<KnockoutTeam> knockoutTeamUpdatedByMatch = knockoutService.getKnockoutTeamUpdatedByMatch(match, matchResults);
         for (KnockoutTeam teamUpdatedByMatch : knockoutTeamUpdatedByMatch) {
             KnockoutMatch knockoutMatch = knockoutMatchRepository.findOne(teamUpdatedByMatch.getMatchId());
@@ -58,7 +59,7 @@ public class MatchService {
                         .stageId(knockoutMatch.getStageId())
                         .knockoutTeamCode(knockoutMatch.getHomeTeamCode())
                         .build();
-                resultService.saveQualifier(qualifier);
+                resultsService.saveQualifier(qualifier);
             }
             if (teamUpdatedByMatch.getAwayTeam() != null) {
                 Qualifier qualifier = Qualifier.builder()
@@ -66,9 +67,9 @@ public class MatchService {
                         .stageId(knockoutMatch.getStageId())
                         .knockoutTeamCode(knockoutMatch.getAwayTeamCode())
                         .build();
-                resultService.saveQualifier(qualifier);
+                resultsService.saveQualifier(qualifier);
             }
-            resultService.saveKnockoutTeam(teamUpdatedByMatch);
+            resultsService.saveKnockoutTeam(teamUpdatedByMatch);
         }
     }
 
@@ -76,7 +77,7 @@ public class MatchService {
         // get related match
         Match match = getMatchById(matchId);
 
-        MatchResult result = resultService.findMatchResultByMatchId(match.getMatchId());
+        MatchResult result = resultsService.findMatchResultByMatchId(match.getMatchId());
         if (result == null) {
             result = new MatchResult();
             result.setMatchId(match.getMatchId());
@@ -94,7 +95,7 @@ public class MatchService {
             result.setAwayTeam(match.getAwayTeam());
         }
         // save the result
-        resultService.save(result);
+        resultsService.save(result);
 
         return getMatchById(match.getMatchId()).setResult(result);
     }
@@ -108,19 +109,18 @@ public class MatchService {
     }
 
     @SuppressWarnings("unchecked")
-    public MatchesData getMatchesData() {
-        List<GroupMatch> allGroupMatches = addResultsToMatches(groupService.getAllGroupMatches());
-        List<KnockoutMatch> allKnockoutMatch = knockoutService.addKnockoutTeamsOnKnockoutMatch(
-                addResultsToMatches(knockoutService.getAllKnockoutMatches()));
+    public MatchesData getMatchesData(List<? extends ResultInterface> allResults) {
+        List<GroupMatch> allGroupMatches = addResultsToMatches(groupService.getAllGroupMatches(), allResults);
+        List knockoutMatchList = addResultsToMatches(knockoutService.getAllKnockoutMatches(), allResults);
+        List<KnockoutMatch> allKnockoutMatch = knockoutService.addKnockoutTeamsOnKnockoutMatch(knockoutMatchList);
 
-        List<Qualifier> allQualifiers = resultService.getAllQualifiers();
+        List<Qualifier> allQualifiers = resultsService.getAllQualifiers();
         Map<Stage, List<Qualifier>> map = allQualifiers.stream().collect(Collectors.groupingBy(Qualifier::getStageId));
         return MatchesData.builder().firstStage(allGroupMatches).secondStage(allKnockoutMatch).qualifiers(map).build();
     }
 
-    public <T extends Match> List<T> addResultsToMatches(List<T> matches) {
-        List<MatchResult> allMatchResults = resultService.getAllMatchResults();
-        Map<Long, MatchResult> resultMap = allMatchResults.stream().collect(Collectors.toMap(MatchResult::getMatchId, Function.identity()));
+    public <T extends Match> List<T> addResultsToMatches(List<T> matches, List<? extends ResultInterface> results) {
+        Map<Long, ResultInterface> resultMap = results.stream().collect(Collectors.toMap(ResultInterface::getMatchId, Function.identity()));
         matches.forEach(match -> match.setResult(resultMap.get(match.getMatchId())));
         return matches;
     }

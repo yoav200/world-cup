@@ -10,11 +10,8 @@ import lombok.Data;
 @Data
 @Builder
 public class BetOverviewData {
-    private BetData betData;
-
     private Match  match;
-    private UserBet userBet;
     private MatchResult matchResult;
-
+    private UserBet userBet;
     private CalculatedUserBet calculatedUserBet;
 }

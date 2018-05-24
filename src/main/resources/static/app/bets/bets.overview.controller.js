@@ -4,19 +4,14 @@ angular.module('worldcup').controller('betsOverviewCtrl', function ($rootScope, 
 
 
     $scope.overviewData = {
-        match: [],
-        qualifier: []
+        match: []
     };
 
     var getOverviewData = function() {
         Bets.getOverview().then(function (response) {
 
             angular.forEach(response, function (data, index) {
-                if(data.betData.type === 'MATCH') {
-                    $scope.overviewData.match.push(data);
-                } else if(data.betData.type === 'QUALIFIER') {
-                    $scope.overviewData.qualifier.push(data);
-                }
+                $scope.overviewData.match.push(data);
             });
         });
     };

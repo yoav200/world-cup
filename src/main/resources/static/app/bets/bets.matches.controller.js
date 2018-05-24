@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('worldcup').controller('betsManageCtrl', function ($rootScope, $scope, $state, $stateParams, Bets, growl, $uibModal, $log) {
+angular.module('worldcup').controller('betsMatchesCtrl', function ($rootScope, $scope, $state, $stateParams, Bets, growl, $uibModal, $log) {
 
     var matchHomeWon = 'HOME_TEAM';
 

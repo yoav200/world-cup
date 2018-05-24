@@ -60,8 +60,9 @@ angular.module('worldcup').controller('adminCtrl', function ($rootScope, $scope,
                     awayTeamCode: $scope.selected.match.awayTeam.code,
                     homeTeamGoals: $scope.selected.match.result ? $scope.selected.match.result.homeTeamGoals : undefined,
                     awayTeamGoals: $scope.selected.match.result ? $scope.selected.match.result.awayTeamGoals : undefined,
-                    matchQualifier: $scope.selected.match.result ? $scope.selected.match.result.matchQualifier : undefined
+                    //matchQualifier: $scope.selected.match.result ? $scope.selected.match.result.matchQualifier : undefined
                 };
+                $scope.onGoalsChanged();
             }
         });
     };

@@ -113,52 +113,36 @@ app.config(function ($urlRouterProvider, $httpProvider, growlProvider) {
 
     // Bets
     $stateProvider.state('bets', {
-        parent: 'site',
-        url: "/bets",
-        views: {
-            'content@': {
-                templateUrl: 'app/bets/view/bets.games.view.html',
-                controller: 'betsGamesCtrl'
-            }
-        }
-    }).state('bets.firststage', {
-        permissions: ['ROLE_USER'],
-        url: "/first-stage",
-        templateUrl: 'app/games/view/games.firststage.html',
-        controller: 'betsGamesCtrl'
-    }).state('bets.secondstage', {
-        permissions: ['ROLE_USER'],
-        url: "/second-stage",
-        templateUrl: 'app/games/view/games.secondstage.html',
-        controller: 'betsGamesCtrl'
-    }).state('bets.groups', {
-        permissions: ['ROLE_USER'],
-        url: '/groups',
-        views: {
-            'content@': {
-                templateUrl: 'app/games/view/games.groups.html',
-                controller: 'betsGroupsCtrl'
-            }
-        }
-    }).state('bets.manage', {
-        permissions: ['ROLE_USER'],
-        url: "/manage?matchId",
-        views: {
-            'content@': {
-                templateUrl: 'app/bets/view/bets.manage.html',
-                controller: 'betsManageCtrl'
-            }
-        }
+        abstract: true,
+        parent: 'site'
     }).state('bets.overview', {
         permissions: ['ROLE_USER'],
-        url: "/overview",
+        url: "/bets/overview",
         views: {
             'content@': {
                 templateUrl: 'app/bets/view/bets.overview.html',
                 controller: 'betsOverviewCtrl'
             }
         }
-    });
+     }).state('bets.matches', {
+        permissions: ['ROLE_USER'],
+        url: "/matches?matchId",
+        views: {
+            'content@': {
+                templateUrl: 'app/bets/view/bets.matches.html',
+                controller: 'betsMatchesCtrl'
+            }
+        }
+    }).state('bets.qualifier', {
+        permissions: ['ROLE_USER'],
+        url: "/qualifier",
+        views: {
+            'content@': {
+                templateUrl: 'app/bets/view/bets.qualifier.html',
+                controller: 'betsQualifierCtrl'
+            }
+        }
+    });;
 
     // Accounts
     $stateProvider.state('accounts', {

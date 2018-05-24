@@ -15,7 +15,9 @@
             <h4><team data="match.awayTeam"/></h4>
         </td>
         <td class="col-md-2">&nbsp;</td>
-        <td class="col-md-1" id="match-{{match.matchId}}-link">&nbsp;</td>
+        <td class="col-md-1" id="match-{{match.matchId}}-link">
+            <a permission="['ROLE_USER']" ui-sref="bets.matches({matchId: match.matchId})">Go to bet</a>
+        </td>
     </tr>
     </tbody>
 </table>
