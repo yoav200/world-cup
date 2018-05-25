@@ -2,6 +2,7 @@ package com.ab.worldcup.bet;
 
 import com.ab.worldcup.knockout.KnockoutTeamInterface;
 import com.ab.worldcup.results.ResultInterface;
+import com.ab.worldcup.team.KnockoutTeamCode;
 import com.ab.worldcup.team.Team;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -36,6 +37,8 @@ public class UserBet implements ResultInterface, KnockoutTeamInterface {
     @ManyToOne
     @JoinColumn(name = "qualifier", referencedColumnName = "id")
     private Team qualifier;
+
+    private KnockoutTeamCode knockoutTeamCode;
 
     @Override
     public Long getMatchId() {

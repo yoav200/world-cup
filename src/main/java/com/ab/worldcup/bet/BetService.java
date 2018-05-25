@@ -9,8 +9,11 @@ import com.ab.worldcup.match.MatchService;
 import com.ab.worldcup.match.Stage;
 import com.ab.worldcup.results.CalculatedUserBet;
 import com.ab.worldcup.results.MatchResult;
+import com.ab.worldcup.results.Qualifier;
 import com.ab.worldcup.results.ResultsService;
 import com.ab.worldcup.team.Group;
+import com.ab.worldcup.team.KnockoutTeamCode;
+import com.ab.worldcup.team.Team;
 import com.ab.worldcup.web.model.BetOverviewData;
 import com.ab.worldcup.web.model.MatchesData;
 import com.ab.worldcup.web.model.UserBetData;
@@ -57,8 +60,8 @@ public class BetService {
     @SuppressWarnings("unchecked")
     public MatchesData getMatchesData(Long accountId) {
         // all user bets
-        List<UserBet> userBets = userBetRepository.findByUserBetIdAccountId(accountId);
-        return matchService.getMatchesData(userBets);
+        List<UserBet> allBetsForUser = userBetRepository.findByUserBetIdAccountId(accountId);
+        return matchService.getMatchesData(allBetsForUser);
     }
 
     public void deleteUserBet(Long accountId, Long betId) {
@@ -148,4 +151,46 @@ public class BetService {
         });
         return betOverviewData;
     }
+
+
+    public void setQualifiersBets(Account account,Map<Stage, List<Qualifier>> userQualifiersByStageMap) {
+        List<Bet> qualifierBets = betRepository.findAllByType(BetType.QUALIFIER);
+        Map<Stage, List<Bet>> stageListMap = qualifierBets.stream().collect(Collectors.groupingBy(Bet::getStageId));
+
+        userQualifiersByStageMap.forEach((stage, userQualifierList) -> {
+            //if (userQualifierList != null && !userQualifierList.isEmpty()) {
+            List<Bet> qualifierBetsByStage = stageListMap.get(stage);
+            int qualifierBetsByStageSize = qualifierBetsByStage.size();
+            int qualifierIndex = 0;
+            for (Qualifier userQualifier : userQualifierList) {
+                if (qualifierBetsByStageSize > qualifierIndex) {
+                    Bet bet = qualifierBetsByStage.get(qualifierIndex++);
+                    UserBet userBet = userBetRepository.findByUserBetIdAccountIdAndUserBetIdBetId(account.getId(), bet.getId());
+                    if (userBet == null) {
+                        userBet = new UserBet(new UserBetId(account, bet));
+                    }
+                    userBet.setQualifier(userQualifier.getTeam());
+                    userBet.setKnockoutTeamCode(userQualifier.getKnockoutTeamCode());
+                    userBetRepository.save(userBet);
+                }
+            }
+            //}
+        });
+    }
+
+    public QualifierBetData getQualiferBets(Account account) {
+        List<UserBet> allBetsForUser = userBetRepository.findByUserBetIdAccountId(account.getId());
+        List<Qualifier> qualifierList = allBetsForUser.stream().
+                filter(t -> t.getUserBetId().getBet().getType().equals(BetType.QUALIFIER)).
+                map(t -> buildQualifier(t.getUserBetId().getBet().getStageId(), t.getQualifier(), t.getKnockoutTeamCode())).
+                collect(Collectors.toList());
+
+        return QualifierBetData.builder().qualifiersList(qualifierList).build();
+    }
+
+
+    private Qualifier buildQualifier(Stage stage, Team team, KnockoutTeamCode teamCode){
+        return Qualifier.builder().stageId(stage).team(team).knockoutTeamCode(teamCode).build();
+    }
+
 }

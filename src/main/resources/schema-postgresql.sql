@@ -73,13 +73,14 @@ CREATE TABLE match_result(
 );
 
 CREATE TABLE user_bet(
-  accountId       INT REFERENCES account (id),
-  betId           INT REFERENCES bet (id),
-  homeTeam        INT REFERENCES team (id),
-  awayTeam        INT REFERENCES team (id),
-  homeTeamGoals   INT,
-  awayTeamGoals   INT
-  qualifier       INT REFERENCES team (id),
+  accountId         INT REFERENCES account (id),
+  betId             INT REFERENCES bet (id),
+  homeTeam          INT REFERENCES team (id),
+  awayTeam          INT REFERENCES team (id),
+  homeTeamGoals     INT,
+  awayTeamGoals     INT
+  qualifier         INT REFERENCES team (id),
+  knockoutTeamCode  VARCHAR,
   PRIMARY KEY(accountId, betId),
   CONSTRAINT no_duplicate_bet UNIQUE (accountId, betId)
 );

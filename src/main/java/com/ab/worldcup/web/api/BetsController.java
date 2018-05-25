@@ -4,9 +4,11 @@ import com.ab.worldcup.account.Account;
 import com.ab.worldcup.account.AccountService;
 import com.ab.worldcup.bet.Bet;
 import com.ab.worldcup.bet.BetService;
+import com.ab.worldcup.bet.QualifierBetData;
 import com.ab.worldcup.bet.UserBet;
 import com.ab.worldcup.group.GroupService;
 import com.ab.worldcup.group.GroupStanding;
+import com.ab.worldcup.match.Stage;
 import com.ab.worldcup.team.Group;
 import com.ab.worldcup.web.model.BetOverviewData;
 import com.ab.worldcup.web.model.MatchesData;
@@ -30,6 +32,8 @@ import javax.validation.Valid;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @PreAuthorize("hasRole('ROLE_USER')")
 @RestController
@@ -107,5 +111,22 @@ public class BetsController {
     public List<BetOverviewData> overview(Principal principal) {
         Account account = accountService.findAccountByEmail(principal.getName());
         return betService.getOverview(account);
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/user/qualifiers", method = RequestMethod.GET)
+    public QualifierBetData getQualiferBets(Principal principal) {
+        Account account = accountService.findAccountByEmail(principal.getName());
+        return betService.getQualiferBets(account);
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/user/qualifiers", method = RequestMethod.POST)
+    public QualifierBetData setQualiferBets(@RequestBody @Valid QualifierBetData qualifierBetData, Principal principal) {
+        Account account = accountService.findAccountByEmail(principal.getName());
+        Map<Stage, List<com.ab.worldcup.results.Qualifier>> qualifiersByStage = qualifierBetData.getQualifiersList().stream().collect(Collectors.groupingBy(com.ab.worldcup.results.Qualifier::getStageId));
+
+        betService.setQualifiersBets(account, qualifiersByStage);
+        return qualifierBetData;
     }
 }
