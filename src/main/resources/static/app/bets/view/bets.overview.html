@@ -41,17 +41,19 @@
                     </span>
                 </td>
                 <td>
-                    <span ng-switch="data.userBet || '_undefined_'" >
+                    <span ng-switch="data.calculatedUserBet.userBet || '_undefined_'" >
                         <span ng-switch-when="_undefined_">NA</span>
-                        <span ng-switch-default>{{data.userBet.homeTeamGoals}} : {{data.userBet.awayTeamGoals}}</span>
+                        <span ng-switch-default>{{data.calculatedUserBet.userBet.homeTeamGoals}} : {{data.calculatedUserBet.userBet.awayTeamGoals}}</span>
                     </span>
                 </td>
                 <td>{{data.calculatedUserBet.totalPoints}}</td>
-                <td><a ui-sref="bets.matches({matchId: data.match.matchId})">Go to bet</a></td>
+                <td>
+                    <match-links data="data.match"/>
+                </td>
             </tr>
             </tbody>
         </table>
-<!--
+
         <h2>Qualifiers Bets</h2>
         <table class="table table-hover table-condensed">
             <thead>
@@ -66,16 +68,16 @@
             </thead>
             <tbody>
             <tr ng-repeat="data in overviewData.qualifier">
-                <td>{{data.betData.id}}</td>
-                <td>{{data.betData.description}}</td>
-                <td>{{data.betData.stageId}}</td>
-                <td>{{data.betData.lockTime | date : 'MMM d, h:mm a'}}</td>
+                <td>{{data.bet.id}}</td>
+                <td>{{data.bet.description}}</td>
+                <td>{{data.bet.stageId}}</td>
+                <td>{{data.bet.lockTime | date : 'MMM d, h:mm a'}}</td>
                 <td>{{data.calculatedUserBet.correctQualifier}}</td>
                 <td>{{data.calculatedUserBet.totalPoints}}</td>
             </tr>
             </tbody>
         </table>
--->
+
     </div>
 
 </section>

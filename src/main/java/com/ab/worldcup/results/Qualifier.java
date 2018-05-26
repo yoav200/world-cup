@@ -23,10 +23,17 @@ public class Qualifier {
     private KnockoutTeamCode knockoutTeamCode;
 
     @ManyToOne
-    @JoinColumn(name="teamId",referencedColumnName="id")
+    @JoinColumn(name = "teamId", referencedColumnName = "id")
     private Team team;
 
     @Enumerated(EnumType.STRING)
     private Stage stageId;
 
+
+    public Stage getStageId() {
+        if (stageId == null) {
+            stageId = knockoutTeamCode.getStageId();
+        }
+        return stageId;
+    }
 }

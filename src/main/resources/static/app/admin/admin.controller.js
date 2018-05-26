@@ -26,9 +26,35 @@ angular.module('worldcup').controller('adminCtrl', function ($rootScope, $scope,
         matchQualifier: undefined
     };
 
+    var selectByMatchId = function(matches, matchId) {
+        return  matches.find(function(match) {
+            return match.matchId === parseInt(matchId) && match.ready;
+        });
+    };
+
     var getMatchData = function() {
         Matches.getMatchesData().then(function (response) {
             $scope.matchesData = response;
+            // set from parameter
+            if($stateParams.matchId) {
+                var match;
+                var stage;
+                if($stateParams.matchId < 49) {
+                    match = selectByMatchId(response.firstStage, $stateParams.matchId);
+                    stage = 'first';
+                } else {
+                    match = selectByMatchId(response.secondStage, $stateParams.matchId);
+                    stage = 'second';
+                }
+
+                if(match) {
+                    $scope.selected.match = match;
+                    $scope.onMatchSelected(stage);
+                } else {
+                    growl.info('Match in second stage and not set yet or wrong match id',{title: 'Match not found!'});
+                }
+            }
+
         });
     };
 

@@ -1,0 +1,14 @@
+<span>
+    <span permission="['ROLE_USER']">
+        <span data-ng-show="!match.started">
+            <a ui-sref="bets.matches({matchId: match.matchId})">Go to Bet</a>
+        </span>
+        <span data-ng-show="match.started">
+            Bet closed
+        </span>
+    </span>
+
+    <span permission="['ROLE_ADMIN']">
+         | <a ui-sref="games.manage({matchId: match.matchId})">Update</a>
+    </span>
+</span>

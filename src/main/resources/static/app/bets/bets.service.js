@@ -2,12 +2,6 @@
 
 angular.module('worldcup').factory('Bets', function($http) {
 
-    var getGroupsStanding = function() {
-        return $http.get("api/bets/groups/").then(function(response) {
-            return  response.data;
-        });
-    };
-
     var getMatchesData = function() {
         return $http.get("api/bets/data").then(function(response) {
             return  response.data;
@@ -38,13 +32,29 @@ angular.module('worldcup').factory('Bets', function($http) {
         });
     };
 
+
+
+
+    var getQualifiers = function() {
+        return $http.get("api/bets/user/qualifiers").then(function(response) {
+            return  response.data;
+        });
+    };
+
+    var setQualifiers = function(data) {
+        return $http.post("api/bets/user/qualifiers", data).then(function(response) {
+            return  response.data;
+        });
+    };
+
     return {
-        getGroupsStanding : getGroupsStanding,
         getMatchesData : getMatchesData,
         getAllBets : getAllBets,
         updateBet: updateBet,
         deleteUserBet : deleteUserBet,
-        getOverview : getOverview
+        getOverview : getOverview,
+        getQualifiers : getQualifiers,
+        setQualifiers : setQualifiers
     };
 
 });

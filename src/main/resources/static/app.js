@@ -102,7 +102,7 @@ app.config(function ($urlRouterProvider, $httpProvider, growlProvider) {
     }).state('games.manage', {
         //parent: 'site',
         permissions: ['ROLE_ADMIN'],
-        url: "/manage",
+        url: "/manage?matchId",
         views: {
             'content@': {
                 templateUrl: 'app/admin/admin.view.html',
@@ -126,7 +126,7 @@ app.config(function ($urlRouterProvider, $httpProvider, growlProvider) {
         }
      }).state('bets.matches', {
         permissions: ['ROLE_USER'],
-        url: "/matches?matchId",
+        url: "/bets/matches?matchId",
         views: {
             'content@': {
                 templateUrl: 'app/bets/view/bets.matches.html',
@@ -135,14 +135,14 @@ app.config(function ($urlRouterProvider, $httpProvider, growlProvider) {
         }
     }).state('bets.qualifier', {
         permissions: ['ROLE_USER'],
-        url: "/qualifier",
+        url: "/bets/qualifier",
         views: {
             'content@': {
                 templateUrl: 'app/bets/view/bets.qualifier.html',
                 controller: 'betsQualifierCtrl'
             }
         }
-    });;
+    });
 
     // Accounts
     $stateProvider.state('accounts', {

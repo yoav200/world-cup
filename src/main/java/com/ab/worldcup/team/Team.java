@@ -1,32 +1,24 @@
 package com.ab.worldcup.team;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.hibernate.annotations.Immutable;
 
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Immutable
 @Getter
 @ToString
 @NoArgsConstructor
-@EqualsAndHashCode
+@EqualsAndHashCode(of = {"name", "code"})
 @Table(name = "team")
 public class Team {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @JsonIgnore
     private Long id;
 
     private String name;

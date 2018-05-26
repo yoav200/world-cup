@@ -9,24 +9,18 @@ import com.ab.worldcup.bet.UserBet;
 import com.ab.worldcup.group.GroupService;
 import com.ab.worldcup.group.GroupStanding;
 import com.ab.worldcup.match.Stage;
+import com.ab.worldcup.results.Qualifier;
 import com.ab.worldcup.team.Group;
 import com.ab.worldcup.web.model.BetOverviewData;
 import com.ab.worldcup.web.model.MatchesData;
 import com.ab.worldcup.web.model.UserBetData;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.Assert;
 import org.springframework.validation.Validator;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.security.Principal;
@@ -50,13 +44,24 @@ public class BetsController {
     private AccountService accountService;
 
     @Autowired
-    @Qualifier("UserBetDataValidator")
-    private Validator validator;
+    @org.springframework.beans.factory.annotation.Qualifier("UserBetDataValidator")
+    private Validator userBetDataValidator;
 
-    @InitBinder
-    public void initBinder(WebDataBinder binder) {
-        binder.addValidators(validator);
+    @Autowired
+    @org.springframework.beans.factory.annotation.Qualifier("QualifiersBetValidator")
+    private Validator qualifiersBetValidator;
+
+
+    @InitBinder("userBetData")
+    protected void initUserBinder(WebDataBinder binder) {
+        binder.setValidator(userBetDataValidator);
     }
+
+    @InitBinder("qualifierBetData")
+    protected void initPaymentBinder(WebDataBinder binder) {
+        binder.setValidator(qualifiersBetValidator);
+    }
+
 
     @RequestMapping("/")
     public List<Bet> getAllBets() {
@@ -94,8 +99,7 @@ public class BetsController {
     public UserBet setUserBet(@PathVariable Long betId, @RequestBody @Valid UserBetData userBetData, Principal principal) {
         Account account = accountService.findAccountByEmail(principal.getName());
         Assert.isTrue(betId.equals(userBetData.getBetId()), "betId mismatch");
-        UserBet updatedUserBet = betService.updateMatchBet(account, userBetData);
-        return updatedUserBet;
+        return betService.updateMatchBet(account, userBetData);
     }
 
     @ResponseBody
@@ -110,21 +114,22 @@ public class BetsController {
     @RequestMapping(value = "/user/overview", method = RequestMethod.GET)
     public List<BetOverviewData> overview(Principal principal) {
         Account account = accountService.findAccountByEmail(principal.getName());
-        return betService.getOverview(account);
+        return betService.getOverview(account.getId());
     }
 
     @ResponseBody
     @RequestMapping(value = "/user/qualifiers", method = RequestMethod.GET)
-    public QualifierBetData getQualiferBets(Principal principal) {
+    public QualifierBetData getQualifierBets(Principal principal) {
         Account account = accountService.findAccountByEmail(principal.getName());
-        return betService.getQualiferBets(account);
+        return betService.getQualifierBets(account.getId());
     }
 
     @ResponseBody
     @RequestMapping(value = "/user/qualifiers", method = RequestMethod.POST)
-    public QualifierBetData setQualiferBets(@RequestBody @Valid QualifierBetData qualifierBetData, Principal principal) {
+    public QualifierBetData setQualifierBets(@RequestBody @Valid QualifierBetData qualifierBetData, Principal principal) {
         Account account = accountService.findAccountByEmail(principal.getName());
-        Map<Stage, List<com.ab.worldcup.results.Qualifier>> qualifiersByStage = qualifierBetData.getQualifiersList().stream().collect(Collectors.groupingBy(com.ab.worldcup.results.Qualifier::getStageId));
+        Map<Stage, List<Qualifier>> qualifiersByStage = qualifierBetData.getQualifiersList().stream()
+                .collect(Collectors.groupingBy(Qualifier::getStageId));
 
         betService.setQualifiersBets(account, qualifiersByStage);
         return qualifierBetData;

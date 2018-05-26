@@ -8,6 +8,7 @@ import lombok.ToString;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -37,5 +38,9 @@ public abstract class Match implements Serializable, MatchTeamsInterface {
 
     public String getLabel() {
         return this.toString();
+    }
+
+    public boolean isStarted() {
+        return LocalDateTime.now().isAfter(getKickoff().toLocalDateTime());
     }
 }

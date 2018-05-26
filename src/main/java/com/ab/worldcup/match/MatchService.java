@@ -110,8 +110,10 @@ public class MatchService {
 
     @SuppressWarnings("unchecked")
     public MatchesData getMatchesData(List<? extends ResultInterface> allResults) {
-        List<GroupMatch> allGroupMatches = addResultsToMatches(groupService.getAllGroupMatches(), allResults);
-        List knockoutMatchList = addResultsToMatches(knockoutService.getAllKnockoutMatches(), allResults);
+        // filter match results only
+        List<? extends ResultInterface> matchResults = allResults.stream().filter(r -> r.getMatchId() != null).collect(Collectors.toList());
+        List<GroupMatch> allGroupMatches = addResultsToMatches(groupService.getAllGroupMatches(), matchResults);
+        List knockoutMatchList = addResultsToMatches(knockoutService.getAllKnockoutMatches(), matchResults);
         List<KnockoutMatch> allKnockoutMatch = knockoutService.addKnockoutTeamsOnKnockoutMatch(knockoutMatchList);
 
         List<Qualifier> allQualifiers = resultsService.getAllQualifiers();
