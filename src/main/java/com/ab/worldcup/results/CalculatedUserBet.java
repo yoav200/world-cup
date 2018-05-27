@@ -20,12 +20,10 @@ public class CalculatedUserBet {
 
     int correctQualifierPoints;
 
+    BetCorrectnessTypeEnum isCorrectQualifier = BetCorrectnessTypeEnum.Not_Yet_Determined;
+
     public boolean isMatchResultCorrect(){
         return matchResultPoints > 0;
-    }
-
-    public boolean isCorrectQualifier(){
-        return correctQualifierPoints > 0;
     }
 
     public boolean isExactScoreCorrect(){

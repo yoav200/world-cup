@@ -2,6 +2,7 @@ package com.ab.worldcup.team;
 
 import com.ab.worldcup.match.KnockoutMatchCode;
 import com.ab.worldcup.match.Stage;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.Optional;
 
@@ -116,46 +117,46 @@ public enum KnockoutTeamCode {
         }
     }
 
-//    public Optional<Pair<KnockoutTeamCode, KnockoutTeamCode>> getPrevStageTeams() {
-//        switch (this) {
-//            case WINNER_ROS1:
-//                return Optional.of(Pair.of(KnockoutTeamCode.WINNER_GROUP_C, RUNNER_UP_GROUP_D));
-//            case WINNER_ROS2:
-//                return Optional.of(Pair.of(KnockoutTeamCode.WINNER_GROUP_A, RUNNER_UP_GROUP_B));
-//            case WINNER_ROS3:
-//                return Optional.of(Pair.of(KnockoutTeamCode.WINNER_GROUP_B, RUNNER_UP_GROUP_A));
-//            case WINNER_ROS4:
-//                return Optional.of(Pair.of(KnockoutTeamCode.WINNER_GROUP_D, RUNNER_UP_GROUP_C));
-//            case WINNER_ROS5:
-//                return Optional.of(Pair.of(KnockoutTeamCode.WINNER_GROUP_E, RUNNER_UP_GROUP_F));
-//            case WINNER_ROS6:
-//                return Optional.of(Pair.of(KnockoutTeamCode.WINNER_GROUP_G, RUNNER_UP_GROUP_H));
-//            case WINNER_ROS7:
-//                return Optional.of(Pair.of(KnockoutTeamCode.WINNER_GROUP_F, RUNNER_UP_GROUP_E));
-//            case WINNER_ROS8:
-//                return Optional.of(Pair.of(KnockoutTeamCode.WINNER_GROUP_H, RUNNER_UP_GROUP_G));
-//            case WINNER_QF1:
-//                return Optional.of(Pair.of(KnockoutTeamCode.WINNER_ROS1, WINNER_ROS2));
-//            case WINNER_QF2:
-//                return Optional.of(Pair.of(KnockoutTeamCode.WINNER_ROS5, WINNER_ROS6));
-//            case WINNER_QF3:
-//                return Optional.of(Pair.of(KnockoutTeamCode.WINNER_ROS3, WINNER_ROS4));
-//            case WINNER_QF4:
-//                return Optional.of(Pair.of(KnockoutTeamCode.WINNER_ROS7, WINNER_ROS8));
-//            case WINNER_SF1:
-//            case LOSER_SF1:
-//                return Optional.of(Pair.of(KnockoutTeamCode.WINNER_QF1, WINNER_QF2));
-//            case WINNER_SF2:
-//            case LOSER_SF2:
-//                return Optional.of(Pair.of(KnockoutTeamCode.WINNER_QF3, WINNER_QF4));
-//            case WINNER_THIRD_PLACE:
-//                return Optional.of(Pair.of(KnockoutTeamCode.LOSER_SF1, LOSER_SF2));
-//            case WINNER_FINAL:
-//                return Optional.of(Pair.of(KnockoutTeamCode.WINNER_SF1, WINNER_SF2));
-//            default:
-//                return Optional.empty();
-//        }
-//    }
+    public Optional<Pair<KnockoutTeamCode, KnockoutTeamCode>> getPrevStageTeams() {
+        switch (this) {
+            case WINNER_ROS1:
+                return Optional.of(Pair.of(KnockoutTeamCode.WINNER_GROUP_C, RUNNER_UP_GROUP_D));
+            case WINNER_ROS2:
+                return Optional.of(Pair.of(KnockoutTeamCode.WINNER_GROUP_A, RUNNER_UP_GROUP_B));
+            case WINNER_ROS3:
+                return Optional.of(Pair.of(KnockoutTeamCode.WINNER_GROUP_B, RUNNER_UP_GROUP_A));
+            case WINNER_ROS4:
+                return Optional.of(Pair.of(KnockoutTeamCode.WINNER_GROUP_D, RUNNER_UP_GROUP_C));
+            case WINNER_ROS5:
+                return Optional.of(Pair.of(KnockoutTeamCode.WINNER_GROUP_E, RUNNER_UP_GROUP_F));
+            case WINNER_ROS6:
+                return Optional.of(Pair.of(KnockoutTeamCode.WINNER_GROUP_G, RUNNER_UP_GROUP_H));
+            case WINNER_ROS7:
+                return Optional.of(Pair.of(KnockoutTeamCode.WINNER_GROUP_F, RUNNER_UP_GROUP_E));
+            case WINNER_ROS8:
+                return Optional.of(Pair.of(KnockoutTeamCode.WINNER_GROUP_H, RUNNER_UP_GROUP_G));
+            case WINNER_QF1:
+                return Optional.of(Pair.of(KnockoutTeamCode.WINNER_ROS1, WINNER_ROS2));
+            case WINNER_QF2:
+                return Optional.of(Pair.of(KnockoutTeamCode.WINNER_ROS5, WINNER_ROS6));
+            case WINNER_QF3:
+                return Optional.of(Pair.of(KnockoutTeamCode.WINNER_ROS3, WINNER_ROS4));
+            case WINNER_QF4:
+                return Optional.of(Pair.of(KnockoutTeamCode.WINNER_ROS7, WINNER_ROS8));
+            case WINNER_SF1:
+            case LOSER_SF1:
+                return Optional.of(Pair.of(KnockoutTeamCode.WINNER_QF1, WINNER_QF2));
+            case WINNER_SF2:
+            case LOSER_SF2:
+                return Optional.of(Pair.of(KnockoutTeamCode.WINNER_QF3, WINNER_QF4));
+            case WINNER_THIRD_PLACE:
+                return Optional.of(Pair.of(KnockoutTeamCode.LOSER_SF1, LOSER_SF2));
+            case WINNER_FINAL:
+                return Optional.of(Pair.of(KnockoutTeamCode.WINNER_SF1, WINNER_SF2));
+            default:
+                return Optional.empty();
+        }
+    }
 //
 //    public static Set<KnockoutTeamCode> getNextEffectedStage(Group group) {
 //        if (group == null) {

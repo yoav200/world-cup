@@ -29,4 +29,24 @@ public enum Stage {
         }
         return next;
     }
+
+    public int getNumberOfQualifiersForStage(){
+        switch (this) {
+            case GROUP:
+                return 48;
+            case ROUND_OF_16:
+                return 16;
+            case QUARTER_FINAL:
+                return 8;
+            case SEMI_FINAL:
+                return 4;
+            case FINAL:
+            case THIRD_PLACE:
+                return 2;
+            case WINNER:
+            case THIRD_PLACE_WINNER:
+                return 1;
+        }
+        return 0;
+    }
 }

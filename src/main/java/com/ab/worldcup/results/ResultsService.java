@@ -53,7 +53,7 @@ public class ResultsService {
             int correctWinnerPoints = 0;
             int exactScorePoints = 0;
             int correctQualifierPoints = 0;
-
+            BetCorrectnessTypeEnum isQualifierDetermined = BetCorrectnessTypeEnum.Not_Yet_Determined;
             Bet bet = userBet.getUserBetId().getBet();
             if (BetType.MATCH.equals(bet.getType())) {
                 MatchResult matchResult = resultMap.get(bet.getMatchId());
@@ -64,6 +64,7 @@ public class ResultsService {
                 }
             } else {
                 correctQualifierPoints = getPointsForQualifierCorrectness(userBet, bet.getStageId());
+                isQualifierDetermined = isQualifierDetermined(userBet, bet.getStageId());
             }
 
             calculatedUserBets.add(CalculatedUserBet.builder()
@@ -71,10 +72,26 @@ public class ResultsService {
                     .matchResultPoints(correctWinnerPoints)
                     .exactScorePoints(exactScorePoints)
                     .correctQualifierPoints(correctQualifierPoints)
+                    .isCorrectQualifier(isQualifierDetermined)
                     .userBet(userBet)
                     .build());
         }
         return calculatedUserBets;
+    }
+
+    private BetCorrectnessTypeEnum isQualifierDetermined(UserBet userBet, Stage stage) {
+
+        Qualifier qualifier = qualifierRepository.findByTeamAndStageId(userBet.getQualifier(), stage);
+        if (qualifier != null) {
+            return BetCorrectnessTypeEnum.True;
+        }else{
+            List<Qualifier> qualifierForStage = qualifierRepository.findByStageId(stage);
+
+            if (qualifierForStage != null && qualifierForStage.size() == stage.getNumberOfQualifiersForStage()) {
+                return BetCorrectnessTypeEnum.False;
+            }
+            return BetCorrectnessTypeEnum.Not_Yet_Determined;
+        }
     }
 
     /**

@@ -59,8 +59,8 @@
             <thead>
             <tr>
                 <th>#</th>
-                <th scope="col">Description</th>
-                <th scope="col">Stage Id</th>
+                <th scope="col">Qualifier</th>
+                <th scope="col">Stage</th>
                 <th scope="col">Lock Timed</th>
                 <th scope="col">Correct Qualifier</th>
                 <th scope="col">Points</th>
@@ -69,10 +69,15 @@
             <tbody>
             <tr ng-repeat="data in overviewData.qualifier">
                 <td>{{data.bet.id}}</td>
-                <td>{{data.bet.description}}</td>
+                <td>
+                    <span ng-switch="data.calculatedUserBet.userBet.qualifier || '_undefined_'" >
+                        <span ng-switch-when="_undefined_">{{data.bet.description}}</span>
+                        <span ng-switch-default><team data="data.calculatedUserBet.userBet.qualifier"/></span>
+                    </span>
+                </td>
                 <td>{{data.bet.stageId}}</td>
                 <td>{{data.bet.lockTime | date : 'MMM d, h:mm a'}}</td>
-                <td>{{data.calculatedUserBet.correctQualifier}}</td>
+                <td>{{data.calculatedUserBet.isCorrectQualifier}}</td>
                 <td>{{data.calculatedUserBet.totalPoints}}</td>
             </tr>
             </tbody>
