@@ -49,7 +49,6 @@ public class Account {
 
     private String profileImageUrl;
 
-    //@JsonIgnore
     private String providerId;
 
     private String country;

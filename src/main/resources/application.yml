@@ -31,6 +31,7 @@ spring:
       enabled: always
 
 worldcup:
+  start-date-time: '2018-06-14 15:00:00+00'
   socialauth:
     base-callback-url: "http://localhost:8080"
     success-page-url: "#/welcome"

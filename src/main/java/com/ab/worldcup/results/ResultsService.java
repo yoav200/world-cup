@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -64,7 +65,7 @@ public class ResultsService {
                 }
             } else {
                 correctQualifierPoints = getPointsForQualifierCorrectness(userBet, bet.getStageId());
-                isQualifierDetermined = isQualifierDetermined(userBet, bet.getStageId());
+                isQualifierDetermined = isQualifierDetermined((correctQualifierPoints != 0), bet.getStageId());
             }
 
             calculatedUserBets.add(CalculatedUserBet.builder()
@@ -79,14 +80,11 @@ public class ResultsService {
         return calculatedUserBets;
     }
 
-    private BetCorrectnessTypeEnum isQualifierDetermined(UserBet userBet, Stage stage) {
-
-        Qualifier qualifier = qualifierRepository.findByTeamAndStageId(userBet.getQualifier(), stage);
-        if (qualifier != null) {
+    private BetCorrectnessTypeEnum isQualifierDetermined(boolean correctQualifier, Stage stage) {
+        if (correctQualifier) {
             return BetCorrectnessTypeEnum.True;
-        }else{
+        } else {
             List<Qualifier> qualifierForStage = qualifierRepository.findByStageId(stage);
-
             if (qualifierForStage != null && qualifierForStage.size() == stage.getNumberOfQualifiersForStage()) {
                 return BetCorrectnessTypeEnum.False;
             }
@@ -98,26 +96,23 @@ public class ResultsService {
      * @return number of points gained in can user bet is correct,otherwise 0
      */
     private int getPointsForMatchResultCorrectness(UserBet userBet, MatchResult matchResult) {
-        if (isSameWinner(userBet, matchResult)) {
-            return PointsConfig.getCorrectWinnerPoints();
-        }
-        return 0;
+        return isSameWinner(userBet, matchResult) ? PointsConfig.getCorrectWinnerPoints() : 0;
     }
 
     private int getPointsForExactScoreCorrectness(UserBet userBet, MatchResult matchResult) {
-        if (isExactScore(userBet, matchResult)) {
-            return PointsConfig.getExactScorePoints();
-        }
-        return 0;
+        return isExactScore(userBet, matchResult) ? PointsConfig.getExactScorePoints() : 0;
     }
 
+    /**
+     * check if qualifier according to user bet exists
+     *
+     * @param userBet user bet
+     * @param stage   the stage
+     * @return point gain for correct bet according to stage or 0 if bet is wrong
+     */
     private int getPointsForQualifierCorrectness(UserBet userBet, Stage stage) {
-        // check if qualifier according to user bet exists
         Qualifier qualifier = qualifierRepository.findByTeamAndStageId(userBet.getQualifier(), stage);
-        if (qualifier != null) {
-            return PointsConfig.getQualifierPoints(stage);
-        }
-        return 0;
+        return Optional.ofNullable(qualifier).map(q -> PointsConfig.getQualifierPoints(stage)).orElse(0);
     }
 
     private boolean isExactScore(ResultInterface userBet, ResultInterface matchResult) {

@@ -43,9 +43,6 @@ public class BetService {
     private MatchService matchService;
 
     @Autowired
-    private KnockoutService knockoutService;
-
-    @Autowired
     private ResultsService resultsService;
 
     @Cacheable("allBets")
@@ -69,13 +66,6 @@ public class BetService {
         if (userBer == null) {
             throw new IllegalArgumentException("User bet not found");
         }
-//        // validate if changing may effect other bets
-//        Match match = matchService.getMatchById(userBer.getMatchId());
-//        List<UserBet> userBets = userBetRepository.findByUserBetIdAccountId(accountId);
-//        List<UserBet> userMatchTypeBets = userBets.stream().filter(t -> t.getMatchId() != null).collect(Collectors.toList());
-//        if (knockoutService.isResultsEffected(match, userMatchTypeBets)) {
-//            throw new IllegalArgumentException("Bet cannot be changed, it may effect other bets");
-//        }
         userBetRepository.delete(userBer);
     }
 
@@ -90,13 +80,6 @@ public class BetService {
     public UserBet updateMatchBet(Account account, UserBetData userBetData) {
         Bet bet = getBetById(userBetData.getBetId());
         Match match = matchService.getMatchById(bet.getMatchId());
-//        // validate if changing may effect other bets
-//        List<UserBet> userBets = userBetRepository.findByUserBetIdAccountId(account.getId());
-//        List<UserBet> userMatchTypeBets = userBets.stream().filter(t -> t.getMatchId() != null).collect(Collectors.toList());
-//        if (knockoutService.isResultsEffected(match, userMatchTypeBets)) {
-//            throw new IllegalArgumentException("Bet cannot be changed, it may effect other bets");
-//        }
-
         UserBet userBet = userBetRepository.findByUserBetIdAccountIdAndUserBetIdBetId(account.getId(), userBetData.getBetId());
         if (userBet == null) {
             userBet = new UserBet(new UserBetId(account, bet));

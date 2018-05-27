@@ -28,7 +28,7 @@
                 <td>&nbsp;</td>
                 <td class="success">
                     Winner<br>
-                    <select ng-options="team as team.name for team in teamsForStage('FINAL')"
+                    <select ng-options="team as team.name for team in teamsForStage('FINAL') track by team.name"
                             ng-model="qualifiers.WINNER_FINAL"
                             style="width: 80px;font-size: 20px;">
                     </select>

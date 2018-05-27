@@ -20,7 +20,7 @@ public class CalculatedUserBet {
 
     int correctQualifierPoints;
 
-    BetCorrectnessTypeEnum isCorrectQualifier = BetCorrectnessTypeEnum.Not_Yet_Determined;
+    BetCorrectnessTypeEnum isCorrectQualifier;
 
     public boolean isMatchResultCorrect(){
         return matchResultPoints > 0;
