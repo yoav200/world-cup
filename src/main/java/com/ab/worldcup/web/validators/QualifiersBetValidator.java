@@ -16,6 +16,7 @@ import org.springframework.validation.Validator;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Component("QualifiersBetValidator")
 public class QualifiersBetValidator implements Validator {
@@ -41,6 +42,14 @@ public class QualifiersBetValidator implements Validator {
 
         if (LocalDateTime.now().isAfter(startDateTime)) {
             errors.rejectValue("qualifiersList", "", "Cannot update qualifier bets after tournament has started");
+        }
+
+        boolean sameTeamAppearTwiceInOneStage = qualifierBetData.getQualifiersList().stream().
+                collect(Collectors.groupingBy(t -> Pair.of(t.getTeam(), t.getStageId()))).
+                entrySet().stream().anyMatch(t -> t.getValue().size() > 1);
+
+        if(sameTeamAppearTwiceInOneStage) {
+            errors.rejectValue("qualifiersList", "", "invalid bet - some teams appears twice in the same stage");
         }
 
         for (Qualifier qualifier : qualifierBetData.getQualifiersList()) {

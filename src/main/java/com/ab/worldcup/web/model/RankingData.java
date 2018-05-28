@@ -15,7 +15,11 @@ public class RankingData {
 
     Integer totalPoints;
 
-    Integer betCompletionPercentage;
+    Integer qualifierBetCompletionPercentage;
+
+    Integer groupMatchesBetCompletionPercentage;
+
+    Integer knockoutMatchesBetCompletionPercentage;
 
     List<CalculatedUserBet> userBets;
 
