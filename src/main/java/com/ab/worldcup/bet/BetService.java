@@ -3,7 +3,6 @@ package com.ab.worldcup.bet;
 import com.ab.worldcup.account.Account;
 import com.ab.worldcup.group.GroupService;
 import com.ab.worldcup.knockout.KnockoutMatchQualifier;
-import com.ab.worldcup.knockout.KnockoutService;
 import com.ab.worldcup.match.Match;
 import com.ab.worldcup.match.MatchService;
 import com.ab.worldcup.match.Stage;
@@ -150,18 +149,20 @@ public class BetService {
 
         userQualifiersByStageMap.forEach((stage, userQualifierList) -> {
             List<Bet> qualifierBetsByStage = stageListMap.get(stage);
-            int qualifierBetsByStageSize = qualifierBetsByStage.size();
-            int qualifierIndex = 0;
-            for (Qualifier userQualifier : userQualifierList) {
-                if (qualifierBetsByStageSize > qualifierIndex) {
-                    Bet bet = qualifierBetsByStage.get(qualifierIndex++);
-                    UserBet userBet = userBetMap.get(bet.getId());
-                    if (userBet == null) {
-                        userBet = new UserBet(new UserBetId(account, bet));
+            if(qualifierBetsByStage != null) {
+                int qualifierBetsByStageSize = qualifierBetsByStage.size();
+                int qualifierIndex = 0;
+                for (Qualifier userQualifier : userQualifierList) {
+                    if (qualifierBetsByStageSize > qualifierIndex) {
+                        Bet bet = qualifierBetsByStage.get(qualifierIndex++);
+                        UserBet userBet = userBetMap.get(bet.getId());
+                        if (userBet == null) {
+                            userBet = new UserBet(new UserBetId(account, bet));
+                        }
+                        userBet.setQualifier(userQualifier.getTeam());
+                        userBet.setKnockoutTeamCode(userQualifier.getKnockoutTeamCode());
+                        userBetRepository.save(userBet);
                     }
-                    userBet.setQualifier(userQualifier.getTeam());
-                    userBet.setKnockoutTeamCode(userQualifier.getKnockoutTeamCode());
-                    userBetRepository.save(userBet);
                 }
             }
         });
