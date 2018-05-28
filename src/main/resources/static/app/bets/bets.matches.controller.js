@@ -72,6 +72,7 @@ angular.module('worldcup').controller('betsMatchesCtrl', function ($rootScope, $
     };
 
     // ~ =============== START delete bet dialog ================
+
     $scope.confirmDeleteBet = function() {
         $scope.modalInstance =  $uibModal.open({
             animation: true,
@@ -100,24 +101,23 @@ angular.module('worldcup').controller('betsMatchesCtrl', function ($rootScope, $
     $scope.cancel = function () {
         $scope.modalInstance.dismiss('cancel');
     };
+
     // ~ =============== END delete bet dialog ================
 
     $scope.postUserBet = function () {
+        // set matchQualifier according to goals
+        // in case of equals matchQualifier=HomeWon
+        if($scope.userBet.homeTeamGoals >= $scope.userBet.awayTeamGoals) {
+            $scope.userBet.matchQualifier = matchHomeWon;
+        } else if($scope.userBet.homeTeamGoals < $scope.userBet.awayTeamGoals) {
+            $scope.userBet.matchQualifier = matchAwayWon;
+        }
         Bets.updateBet($scope.userBet.betId, $scope.userBet).then(function (response) {
             getMatchData();
             growl.success('You\'re bet saved successfully.',{title: 'Success!'});
         });
     };
 
-    $scope.onGoalsChanged = function() {
-        var q = undefined;
-        if($scope.userBet.homeTeamGoals > $scope.userBet.awayTeamGoals) {
-            q = matchHomeWon;
-        } else if($scope.userBet.homeTeamGoals < $scope.userBet.awayTeamGoals) {
-            q = matchAwayWon;
-        }
-        $scope.userBet.matchQualifier = q;
-    };
 
     $scope.onMatchSelected = function (stage) {
 

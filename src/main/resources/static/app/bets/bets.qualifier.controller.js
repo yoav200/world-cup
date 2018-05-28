@@ -76,22 +76,20 @@ angular.module('worldcup').controller('betsQualifierCtrl', function ($rootScope,
     };
 
 
-    var getQualifiers = function() {
+    var getQualifiers = function () {
         Bets.getQualifiers().then(function (response) {
             var qualifiersList = response.qualifiersList;
             angular.forEach(qualifiersList, function (qualifiers, index) {
                 $scope.qualifiers[qualifiers.knockoutTeamCode] = qualifiers.team;
                 $scope.selectionChanged(qualifiers.knockoutTeamCode);
             });
-            console.log("qualifiers:", $scope.qualifiers);
+            //console.log("qualifiers:", $scope.qualifiers);
         });
 
     };
 
     $scope.saveQualifiers = function () {
-
         var qualifiersData = [];
-
         for (var key in $scope.qualifiers) {
             if ($scope.qualifiers.hasOwnProperty(key) && $scope.qualifiers[key]) {
                 var qualifier = {
@@ -104,36 +102,49 @@ angular.module('worldcup').controller('betsQualifierCtrl', function ($rootScope,
         }
 
         var qualifiersList = {
-            qualifiersList:qualifiersData
+            qualifiersList: qualifiersData
         };
 
         Bets.setQualifiers(qualifiersList).then(function (response) {
             getQualifiers();
-            growl.success('You\'re bet saved successfully.',{title: 'Success!'});
+            growl.success('You\'re bet saved successfully.', {title: 'Success!'});
         });
     };
 
 
-    $scope.teamsForStage = function(code) {
+    $scope.teamsForStage = function (code) {
         return $scope.teamsForSelect[code];
     };
 
+    function setFlagToSelect(code) {
+        if ($scope.qualifiers[code]) {
+            var team = $scope.qualifiers[code];
+            var flag = "/images/teams/" + team.confederation + "/" + team.code + ".png";
+            var css = 'transparent url(' + flag + ') no-repeat right top';
+            angular.element(('#' + code)).css({'background': css});
+        } else {
+            angular.element(('#' + code)).css({'background': ''});
+        }
+    }
+
     function checkAndUpdateForSelect(codes, codeToUpdate) {
+        setFlagToSelect(codes[0]);
+        setFlagToSelect(codes[1]);
         if ($scope.qualifiers[codes[0]] && $scope.qualifiers[codes[1]]) {
             $scope.teamsForSelect[codeToUpdate] = [$scope.qualifiers[codes[0]], $scope.qualifiers[codes[1]]];
         }
 
-        if(codes.includes('WINNER_SF2') || codes.includes('WINNER_SF1')) {
+        if (codes.includes('WINNER_SF2') || codes.includes('WINNER_SF1')) {
             var loser1, loser2;
             $scope.teamsForSelect.THIRD_PLACE = [];
-            if($scope.qualifiers.WINNER_SF1) {
+            if ($scope.qualifiers.WINNER_SF1) {
                 loser1 = $scope.teamsForSelect.WINNER_SF1.filter(function (team) {
                     return team.name !== $scope.qualifiers.WINNER_SF1.name;
                 });
                 $scope.qualifiers.LOSER_SF1 = loser1[0];
                 $scope.teamsForSelect.THIRD_PLACE.push(loser1[0]);
             }
-            if($scope.qualifiers.WINNER_SF2) {
+            if ($scope.qualifiers.WINNER_SF2) {
                 loser2 = $scope.teamsForSelect.WINNER_SF2.filter(function (team) {
                     return team.name !== $scope.qualifiers.WINNER_SF2.name;
                 });
@@ -182,7 +193,7 @@ angular.module('worldcup').controller('betsQualifierCtrl', function ($rootScope,
 
     var getAllBets = function () {
         Bets.getAllBets().then(function (response) {
-
+            //
         });
     };
 
@@ -194,7 +205,6 @@ angular.module('worldcup').controller('betsQualifierCtrl', function ($rootScope,
                 $scope.teamsForSelect[winner].push(team);
                 $scope.teamsForSelect[runnerUp].push(team);
             });
-            //console.log($scope.teamsForSelect);
         });
     };
 

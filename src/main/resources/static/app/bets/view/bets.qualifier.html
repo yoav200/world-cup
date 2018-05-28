@@ -10,7 +10,7 @@
                 page</strong>
         </p>
     </div>
-    <div style="font-size: 11px;">
+    <div id="qualifiers-container">
 
         <table class="table table-bordered">
             <tr>
@@ -28,9 +28,9 @@
                 <td>&nbsp;</td>
                 <td class="success">
                     Winner<br>
-                    <select ng-options="team as team.name for team in teamsForStage('FINAL') track by team.name"
-                            ng-model="qualifiers.WINNER_FINAL"
-                            style="width: 80px;font-size: 20px;">
+                    <select id="WINNER_FINAL"
+                            ng-options="team as team.name for team in teamsForStage('FINAL') track by team.name"
+                            ng-model="qualifiers.WINNER_FINAL">
                     </select>
                 </td>
                 <td>&nbsp;</td>
@@ -39,74 +39,74 @@
             </tr>
             <tr>
                 <td class="info">WINNER_GROUP_C<br>
-                    <select ng-options="team as team.name for team in teamsForStage('WINNER_GROUP_C') track by team.name"
+                    <select id="WINNER_GROUP_C"
+                            ng-options="team as team.name for team in teamsForStage('WINNER_GROUP_C') track by team.name"
                             ng-model="qualifiers.WINNER_GROUP_C"
-                            ng-change="selectionChanged('WINNER_GROUP_C')"
-                            style="width: 80px;font-size: 20px;">
+                            ng-change="selectionChanged('WINNER_GROUP_C')">
                     </select></td>
                 <td class="info" rowspan="2">WINNER_ROS1<br>
-                    <select ng-options="team as team.name for team in teamsForStage('WINNER_ROS1') track by team.name"
+                    <select id="WINNER_ROS1"
+                            ng-options="team as team.name for team in teamsForStage('WINNER_ROS1') track by team.name"
                             ng-model="qualifiers.WINNER_ROS1"
-                            ng-change="selectionChanged('WINNER_ROS1')"
-                            style="width: 80px;font-size: 20px;"></select>
+                            ng-change="selectionChanged('WINNER_ROS1')"></select>
                 </td>
                 <td>&nbsp;</td>
                 <td>&nbsp;</td>
                 <td>&nbsp;</td>
                 <td class="info" rowspan="2">WINNER_ROS3<br>
-                    <select ng-options="team as team.name for team in teamsForStage('WINNER_ROS3') track by team.name"
+                    <select id="WINNER_ROS3"
+                            ng-options="team as team.name for team in teamsForStage('WINNER_ROS3') track by team.name"
                             ng-model="qualifiers.WINNER_ROS3"
-                            ng-change="selectionChanged('WINNER_ROS3')"
-                            style="width: 80px;font-size: 20px;">
+                            ng-change="selectionChanged('WINNER_ROS3')">
                     </select></td>
                 <td class="info">WINNER_GROUP_B<br>
-                    <select ng-options="team as team.name for team in teamsForStage('WINNER_GROUP_B') track by team.name"
+                    <select id="WINNER_GROUP_B"
+                            ng-options="team as team.name for team in teamsForStage('WINNER_GROUP_B') track by team.name"
                             ng-model="qualifiers.WINNER_GROUP_B"
-                            ng-change="selectionChanged('WINNER_GROUP_B')"
-                            style="width: 80px;font-size: 20px;">
+                            ng-change="selectionChanged('WINNER_GROUP_B')">
                     </select></td>
             </tr>
             <tr>
                 <td class="info">RUNNER_UP_GROUP_D<br>
-                    <select ng-options="team as team.name for team in teamsForStage('RUNNER_UP_GROUP_D') track by team.name"
+                    <select id="RUNNER_UP_GROUP_D"
+                            ng-options="team as team.name for team in teamsForStage('RUNNER_UP_GROUP_D') track by team.name"
                             ng-model="qualifiers.RUNNER_UP_GROUP_D"
-                            ng-change="selectionChanged('RUNNER_UP_GROUP_D')"
-                            style="width: 80px;font-size: 20px;">
+                            ng-change="selectionChanged('RUNNER_UP_GROUP_D')">
                     </select></td>
                 <td class="info" rowspan="3">WINNER_QF1<br>
-                    <select ng-options="team as team.name for team in teamsForStage('WINNER_QF1') track by team.name"
+                    <select id="WINNER_QF1"
+                            ng-options="team as team.name for team in teamsForStage('WINNER_QF1') track by team.name"
                             ng-model="qualifiers.WINNER_QF1"
-                            ng-change="selectionChanged('WINNER_QF1')"
-                            style="width: 80px;font-size: 20px;">
+                            ng-change="selectionChanged('WINNER_QF1')">
                     </select></td>
                 <td>&nbsp;</td>
                 <td class="info" rowspan="3">WINNER_QF3<br>
-                    <select ng-options="team as team.name for team in teamsForStage('WINNER_QF3') track by team.name"
+                    <select id="WINNER_QF3"
+                            ng-options="team as team.name for team in teamsForStage('WINNER_QF3') track by team.name"
                             ng-model="qualifiers.WINNER_QF3"
-                            ng-change="selectionChanged('WINNER_QF3')"
-                            style="width: 80px;font-size: 20px;">
+                            ng-change="selectionChanged('WINNER_QF3')">
                     </select></td>
                 <td class="info">RUNNER_UP_GROUP_A<br>
-                    <select ng-options="team as team.name for team in teamsForStage('RUNNER_UP_GROUP_A') track by team.name"
+                    <select id="RUNNER_UP_GROUP_A"
+                            ng-options="team as team.name for team in teamsForStage('RUNNER_UP_GROUP_A') track by team.name"
                             ng-model="qualifiers.RUNNER_UP_GROUP_A"
-                            ng-change="selectionChanged('RUNNER_UP_GROUP_A')"
-                            style="width: 80px;font-size: 20px;">
+                            ng-change="selectionChanged('RUNNER_UP_GROUP_A')">
                     </select></td>
             </tr>
             <tr>
                 <td>&nbsp;</td>
                 <td>&nbsp;</td>
                 <td class="info" rowspan="7">WINNER_SF1<br>
-                    <select ng-options="team as team.name for team in teamsForStage('WINNER_SF1') track by team.name"
+                    <select id="WINNER_SF1"
+                            ng-options="team as team.name for team in teamsForStage('WINNER_SF1') track by team.name"
                             ng-model="qualifiers.WINNER_SF1"
-                            ng-change="selectionChanged('WINNER_SF1')"
-                            style="width: 80px;font-size: 20px;">
+                            ng-change="selectionChanged('WINNER_SF1')">
                     </select>
                     <br>WINNER_SF2<br>
-                    <select ng-options="team as team.name for team in teamsForStage('WINNER_SF2') track by team.name"
+                    <select id="WINNER_SF2"
+                            ng-options="team as team.name for team in teamsForStage('WINNER_SF2') track by team.name"
                             ng-model="qualifiers.WINNER_SF2"
-                            ng-change="selectionChanged('WINNER_SF2')"
-                            style="width: 80px;font-size: 20px;">
+                            ng-change="selectionChanged('WINNER_SF2')">
                     </select>
                 </td>
                 <td>&nbsp;</td>
@@ -114,44 +114,44 @@
             </tr>
             <tr>
                 <td class="info">WINNER_GROUP_A<br>
-                    <select ng-options="team as team.name for team in teamsForStage('WINNER_GROUP_A') track by team.name"
+                    <select id="WINNER_GROUP_A"
+                            ng-options="team as team.name for team in teamsForStage('WINNER_GROUP_A') track by team.name"
                             ng-model="qualifiers.WINNER_GROUP_A"
-                            ng-change="selectionChanged('WINNER_GROUP_A')"
-                            style="width: 80px;font-size: 20px;">
+                            ng-change="selectionChanged('WINNER_GROUP_A')">
                     </select></td>
                 <td class="info" rowspan="2">WINNER_ROS2<br>
-                    <select ng-options="team as team.name for team in teamsForStage('WINNER_ROS2') track by team.name"
+                    <select id="WINNER_ROS2"
+                            ng-options="team as team.name for team in teamsForStage('WINNER_ROS2') track by team.name"
                             ng-model="qualifiers.WINNER_ROS2"
-                            ng-change="selectionChanged('WINNER_ROS2')"
-                            style="width: 80px;font-size: 20px;">
+                            ng-change="selectionChanged('WINNER_ROS2')">
                     </select></td>
                 <td class="info" rowspan="2">WINNER_ROS4<br>
-                    <select ng-options="team as team.name for team in teamsForStage('WINNER_ROS4') track by team.name"
+                    <select id="WINNER_ROS4"
+                            ng-options="team as team.name for team in teamsForStage('WINNER_ROS4') track by team.name"
                             ng-model="qualifiers.WINNER_ROS4"
-                            ng-change="selectionChanged('WINNER_ROS4')"
-                            style="width: 80px;font-size: 20px;">
+                            ng-change="selectionChanged('WINNER_ROS4')">
                     </select></td>
                 <td class="info">WINNER_GROUP_D<br>
-                    <select ng-options="team as team.name for team in teamsForStage('WINNER_GROUP_D') track by team.name"
+                    <select id="WINNER_GROUP_D"
+                            ng-options="team as team.name for team in teamsForStage('WINNER_GROUP_D') track by team.name"
                             ng-model="qualifiers.WINNER_GROUP_D"
-                            ng-change="selectionChanged('WINNER_GROUP_D')"
-                            style="width: 80px;font-size: 20px;">
+                            ng-change="selectionChanged('WINNER_GROUP_D')">
                     </select></td>
             </tr>
             <tr>
                 <td class="info">RUNNER_UP_GROUP_B<br>
-                    <select ng-options="team as team.name for team in teamsForStage('RUNNER_UP_GROUP_B') track by team.name"
+                    <select id="RUNNER_UP_GROUP_B"
+                            ng-options="team as team.name for team in teamsForStage('RUNNER_UP_GROUP_B') track by team.name"
                             ng-model="qualifiers.RUNNER_UP_GROUP_B"
-                            ng-change="selectionChanged('RUNNER_UP_GROUP_B')"
-                            style="width: 80px;font-size: 20px;">
+                            ng-change="selectionChanged('RUNNER_UP_GROUP_B')">
                     </select></td>
                 <td>&nbsp;</td>
                 <td>&nbsp;</td>
                 <td class="info">RUNNER_UP_GROUP_C<br>
-                    <select ng-options="team as team.name for team in teamsForStage('RUNNER_UP_GROUP_C') track by team.name"
+                    <select id="RUNNER_UP_GROUP_C"
+                            ng-options="team as team.name for team in teamsForStage('RUNNER_UP_GROUP_C') track by team.name"
                             ng-model="qualifiers.RUNNER_UP_GROUP_C"
-                            ng-change="selectionChanged('RUNNER_UP_GROUP_C')"
-                            style="width: 80px;font-size: 20px;">
+                            ng-change="selectionChanged('RUNNER_UP_GROUP_C')">
                     </select></td>
             </tr>
             <tr>
@@ -163,56 +163,56 @@
             </tr>
             <tr>
                 <td class="info">WINNER_GROUP_E<br>
-                    <select ng-options="team as team.name for team in teamsForStage('WINNER_GROUP_E') track by team.name"
+                    <select id="WINNER_GROUP_E"
+                            ng-options="team as team.name for team in teamsForStage('WINNER_GROUP_E') track by team.name"
                             ng-model="qualifiers.WINNER_GROUP_E"
-                            ng-change="selectionChanged('WINNER_GROUP_E')"
-                            style="width: 80px;font-size: 20px;">
+                            ng-change="selectionChanged('WINNER_GROUP_E')">
                     </select></td>
                 <td class="info" rowspan="2">WINNER_ROS5<br>
-                    <select ng-options="team as team.name for team in teamsForStage('WINNER_ROS5') track by team.name"
+                    <select id="WINNER_ROS5"
+                            ng-options="team as team.name for team in teamsForStage('WINNER_ROS5') track by team.name"
                             ng-model="qualifiers.WINNER_ROS5"
-                            ng-change="selectionChanged('WINNER_ROS5')"
-                            style="width: 80px;font-size: 20px;">
+                            ng-change="selectionChanged('WINNER_ROS5')">
                     </select></td>
                 <td>&nbsp;</td>
                 <td>&nbsp;</td>
                 <td class="info" rowspan="2">WINNER_ROS7<br>
-                    <select ng-options="team as team.name for team in teamsForStage('WINNER_ROS7') track by team.name"
+                    <select id="WINNER_ROS7"
+                            ng-options="team as team.name for team in teamsForStage('WINNER_ROS7') track by team.name"
                             ng-model="qualifiers.WINNER_ROS7"
-                            ng-change="selectionChanged('WINNER_ROS7')"
-                            style="width: 80px;font-size: 20px;">
+                            ng-change="selectionChanged('WINNER_ROS7')">
                     </select></td>
                 <td class="info">WINNER_GROUP_F<br>
-                    <select ng-options="team as team.name for team in teamsForStage('WINNER_GROUP_F') track by team.name"
+                    <select id="WINNER_GROUP_F"
+                            ng-options="team as team.name for team in teamsForStage('WINNER_GROUP_F') track by team.name"
                             ng-model="qualifiers.WINNER_GROUP_F"
-                            ng-change="selectionChanged('WINNER_GROUP_F')"
-                            style="width: 80px;font-size: 20px;">
+                            ng-change="selectionChanged('WINNER_GROUP_F')">
                     </select></td>
             </tr>
             <tr>
                 <td class="info">RUNNER_UP_GROUP_F<br>
-                    <select ng-options="team as team.name for team in teamsForStage('RUNNER_UP_GROUP_F') track by team.name"
+                    <select id="RUNNER_UP_GROUP_F"
+                            ng-options="team as team.name for team in teamsForStage('RUNNER_UP_GROUP_F') track by team.name"
                             ng-model="qualifiers.RUNNER_UP_GROUP_F"
-                            ng-change="selectionChanged('RUNNER_UP_GROUP_F')"
-                            style="width: 80px;font-size: 20px;">
+                            ng-change="selectionChanged('RUNNER_UP_GROUP_F')">
                     </select></td>
                 <td class="info" rowspan="3">WINNER_QF2<br>
-                    <select ng-options="team as team.name for team in teamsForStage('WINNER_QF2') track by team.name"
+                    <select id="WINNER_QF2"
+                            ng-options="team as team.name for team in teamsForStage('WINNER_QF2') track by team.name"
                             ng-model="qualifiers.WINNER_QF2"
-                            ng-change="selectionChanged('WINNER_QF2')"
-                            style="width: 80px;font-size: 20px;">
+                            ng-change="selectionChanged('WINNER_QF2')">
                     </select></td>
                 <td class="info" rowspan="3">WINNER_QF4<br>
-                    <select ng-options="team as team.name for team in teamsForStage('WINNER_QF4') track by team.name"
+                    <select id="WINNER_QF4"
+                            ng-options="team as team.name for team in teamsForStage('WINNER_QF4') track by team.name"
                             ng-model="qualifiers.WINNER_QF4"
-                            ng-change="selectionChanged('WINNER_QF4')"
-                            style="width: 80px;font-size: 20px;">
+                            ng-change="selectionChanged('WINNER_QF4')">
                     </select></td>
                 <td class="info">RUNNER_UP_GROUP_E<br>
-                    <select ng-options="team as team.name for team in teamsForStage('RUNNER_UP_GROUP_E') track by team.name"
+                    <select id="RUNNER_UP_GROUP_E"
+                            ng-options="team as team.name for team in teamsForStage('RUNNER_UP_GROUP_E') track by team.name"
                             ng-model="qualifiers.RUNNER_UP_GROUP_E"
-                            ng-change="selectionChanged('RUNNER_UP_GROUP_E')"
-                            style="width: 80px;font-size: 20px;">
+                            ng-change="selectionChanged('RUNNER_UP_GROUP_E')">
                     </select></td>
             </tr>
             <tr>
@@ -223,46 +223,46 @@
             </tr>
             <tr>
                 <td class="info">WINNER_GROUP_G<br>
-                    <select ng-options="team as team.name for team in teamsForStage('WINNER_GROUP_G') track by team.name"
+                    <select id="WINNER_GROUP_G"
+                            ng-options="team as team.name for team in teamsForStage('WINNER_GROUP_G') track by team.name"
                             ng-model="qualifiers.WINNER_GROUP_G"
-                            ng-change="selectionChanged('WINNER_GROUP_G')"
-                            style="width: 80px;font-size: 20px;">
+                            ng-change="selectionChanged('WINNER_GROUP_G')">
                     </select></td>
                 <td class="info" rowspan="2">WINNER_ROS6<br>
-                    <select ng-options="team as team.name for team in teamsForStage('WINNER_ROS6') track by team.name"
+                    <select id="WINNER_ROS6"
+                            ng-options="team as team.name for team in teamsForStage('WINNER_ROS6') track by team.name"
                             ng-model="qualifiers.WINNER_ROS6"
-                            ng-change="selectionChanged('WINNER_ROS6')"
-                            style="width: 80px;font-size: 20px;">
+                            ng-change="selectionChanged('WINNER_ROS6')">
                     </select></td>
                 <td>&nbsp;</td>
                 <td class="info" rowspan="2">WINNER_ROS8<br>
-                    <select ng-options="team as team.name for team in teamsForStage('WINNER_ROS8') track by team.name"
+                    <select id="WINNER_ROS8"
+                            ng-options="team as team.name for team in teamsForStage('WINNER_ROS8') track by team.name"
                             ng-model="qualifiers.WINNER_ROS8"
-                            ng-change="selectionChanged('WINNER_ROS8')"
-                            style="width: 80px;font-size: 20px;">
+                            ng-change="selectionChanged('WINNER_ROS8')">
                     </select></td>
                 <td class="info">WINNER_GROUP_H<br>
-                    <select ng-options="team as team.name for team in teamsForStage('WINNER_GROUP_H') track by team.name"
+                    <select id="WINNER_GROUP_H"
+                            ng-options="team as team.name for team in teamsForStage('WINNER_GROUP_H') track by team.name"
                             ng-model="qualifiers.WINNER_GROUP_H"
-                            ng-change="selectionChanged('WINNER_GROUP_H')"
-                            style="width: 80px;font-size: 20px;">
+                            ng-change="selectionChanged('WINNER_GROUP_H')">
                     </select></td>
             </tr>
             <tr>
                 <td class="info">RUNNER_UP_GROUP_H<br>
-                    <select ng-options="team as team.name for team in teamsForStage('RUNNER_UP_GROUP_H') track by team.name"
+                    <select id="RUNNER_UP_GROUP_H"
+                            ng-options="team as team.name for team in teamsForStage('RUNNER_UP_GROUP_H') track by team.name"
                             ng-model="qualifiers.RUNNER_UP_GROUP_H"
-                            ng-change="selectionChanged('RUNNER_UP_GROUP_H')"
-                            style="width: 80px;font-size: 20px;">
+                            ng-change="selectionChanged('RUNNER_UP_GROUP_H')">
                     </select></td>
                 <td>&nbsp;</td>
                 <td>&nbsp;</td>
                 <td>&nbsp;</td>
                 <td class="info">RUNNER_UP_GROUP_G<br>
-                    <select ng-options="team as team.name for team in teamsForStage('RUNNER_UP_GROUP_G') track by team.name"
+                    <select id="RUNNER_UP_GROUP_G"
+                            ng-options="team as team.name for team in teamsForStage('RUNNER_UP_GROUP_G') track by team.name"
                             ng-model="qualifiers.RUNNER_UP_GROUP_G"
-                            ng-change="selectionChanged('RUNNER_UP_GROUP_G')"
-                            style="width: 80px;font-size: 20px;">
+                            ng-change="selectionChanged('RUNNER_UP_GROUP_G')">
                     </select></td>
             </tr>
             <tr>
@@ -271,9 +271,9 @@
                 <td>&nbsp;</td>
                 <td class="success">
                     Third Place<br>
-                    <select ng-options="team as team.name for team in teamsForStage('THIRD_PLACE') track by team.name"
-                            ng-model="qualifiers.WINNER_THIRD_PLACE"
-                            style="width: 80px;font-size: 20px;">
+                    <select id="WINNER_THIRD_PLACE"
+                            ng-options="team as team.name for team in teamsForStage('THIRD_PLACE') track by team.name"
+                            ng-model="qualifiers.WINNER_THIRD_PLACE">
                     </select></td>
                 <td>&nbsp;</td>
                 <td>&nbsp;</td>
@@ -290,7 +290,7 @@
             </tr>
         </table>
 
-        <div >
+        <div>
             <button type="submit" class="btn btn-primary" data-ng-click="saveQualifiers()">Save</button>
         </div>
 

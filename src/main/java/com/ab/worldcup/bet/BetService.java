@@ -90,7 +90,7 @@ public class BetService {
         if (!Stage.GROUP.equals(match.getStageId())) {
             userBet.setHomeTeam(groupService.findTeamByCode(userBetData.getHomeTeamCode()));
             userBet.setAwayTeam(groupService.findTeamByCode(userBetData.getAwayTeamCode()));
-            if (userBetData.getMatchQualifier().equals(KnockoutMatchQualifier.HOME_TEAM)) {
+            if (KnockoutMatchQualifier.HOME_TEAM.equals(userBetData.getMatchQualifier())) {
                 userBet.setQualifier(userBet.getHomeTeam());
             } else {
                 userBet.setQualifier(userBet.getAwayTeam());

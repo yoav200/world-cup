@@ -29,10 +29,12 @@ public class MatchResultData {
             errors.rejectValue("awayTeamGoals", "", "Away team goals must be set (0 or more)");
         }
 
+        /*
         if (!Stage.GROUP.equals(stage)) {
             if (getMatchQualifier() == null) {
                 errors.rejectValue("matchQualifier", "", "Missing qualifier for knockout match");
             }
         }
+        */
     }
 }

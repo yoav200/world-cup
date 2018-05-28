@@ -19,8 +19,25 @@ app.config(function ($urlRouterProvider, $httpProvider, growlProvider) {
     $httpProvider.defaults.headers.common["Content-Type"] = "application/json";
     $httpProvider.interceptors.push(growlProvider.serverMessagesInterceptor);
 
+    growlProvider.globalDisableCountDown(true);
     growlProvider.globalPosition('top-center');
     growlProvider.globalTimeToLive({success: 10000, error: 10000, warning: 10000, info: 10000});
+
+    // alternatively, register the interceptor via an anonymous factory
+    $httpProvider.interceptors.push(function($q, $timeout) {
+        return {
+            'responseError': function(errorResponse) {
+                switch (errorResponse.status) {
+                    case 403:
+                        $timeout(function () {
+                            $window.location = '/#';
+                        }, 500);
+                        break;
+                }
+                return $q.reject(errorResponse);
+            }
+        };
+    });
 
 }).config(function ($stateProvider) {
     // Now set up the states
