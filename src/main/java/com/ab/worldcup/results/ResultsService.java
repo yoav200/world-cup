@@ -33,15 +33,20 @@ public class ResultsService {
     @Autowired
     private KnockoutTeamRepository knockoutTeamRepository;
 
-    public RankingData getRankingForAccount(Account account, List<UserBet> betForAccount, int betsCount) {
+    public RankingData getRankingForAccount(Account account, List<UserBet> betForAccount, int qualifierBetsCount, int groupMatchesCount, int knockoutMatchesCount) {
         List<CalculatedUserBet> calculatedUserBets = calculateBetsForUser(betForAccount);
-        Integer userBetProgressPercentage = calculatedUserBets.size() * 100 / betsCount;
+        int qualifierBetProgressPercentage = (int)calculatedUserBets.stream().filter(t -> t.getBetType().equals(BetType.QUALIFIER)).count() * 100 / qualifierBetsCount;
+        int groupMatchesBetProgressPercentage = (int)calculatedUserBets.stream().filter(t -> t.getBetType().equals(BetType.MATCH) && t.getUserBet().getUserBetId().getBet().getStageId().equals(Stage.GROUP)).count() * 100 / groupMatchesCount;
+        int knockoutMatchesBetProgressPercentage = (int)calculatedUserBets.stream().filter(t -> t.getBetType().equals(BetType.MATCH) && !t.getUserBet().getUserBetId().getBet().getStageId().equals(Stage.GROUP)).count() * 100 / knockoutMatchesCount;
+
         Integer totalPointsForAccount = calculatedUserBets.stream().mapToInt(CalculatedUserBet::getTotalPoints).sum();
         return RankingData.builder()
                 .account(account)
                 .totalPoints(totalPointsForAccount)
                 .userBets(calculatedUserBets)
-                .betCompletionPercentage(userBetProgressPercentage)
+                .qualifierBetCompletionPercentage(qualifierBetProgressPercentage)
+                .groupMatchesBetCompletionPercentage(groupMatchesBetProgressPercentage)
+                .knockoutMatchesBetCompletionPercentage(knockoutMatchesBetProgressPercentage)
                 .build();
     }
 
