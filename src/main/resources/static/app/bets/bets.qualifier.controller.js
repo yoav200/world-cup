@@ -119,7 +119,7 @@ angular.module('worldcup').controller('betsQualifierCtrl', function ($rootScope,
     function setFlagToSelect(code) {
         if ($scope.qualifiers[code]) {
             var team = $scope.qualifiers[code];
-            var flag = "/images/teams/" + team.confederation + "/" + team.code + ".png";
+            var flag = "/images/teams/" + team.confederation.toLowerCase() + "/" + team.code + ".png";
             var css = 'transparent url(' + flag + ') no-repeat right top';
             angular.element(('#' + code)).css({'background': css});
         } else {
