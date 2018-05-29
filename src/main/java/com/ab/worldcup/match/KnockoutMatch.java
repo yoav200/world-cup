@@ -39,7 +39,7 @@ public class KnockoutMatch extends Match implements Serializable {
 
     @Override
     public String toString() {
-        return this.kickoff + ",  " + matchCode + ", "
+        return matchCode + ", "
                 + ((getHomeTeam() == null) ? homeTeamCode : getHomeTeam().getName())
                 + " : "
                 + ((getAwayTeam() == null) ? awayTeamCode : getAwayTeam().getName())

@@ -22,7 +22,6 @@ body {
     background: #fff url(/images/header_bg.png) repeat-x center 0;
 }
 
-
 .navbar-fixed-top {
     min-height: 60px;
 }
@@ -31,10 +30,16 @@ body {
     padding-top: 0px;
     padding-bottom: 0px;
     line-height: 60px;
+}
+
+.navbar-default .navbar-nav>li>a, .navbar-default .navbar-nav>li>a {
+    color: white;
+}
+
+.navbar-default .navbar-nav>li>a:focus, .navbar-default .navbar-nav>li>a:hover {
     color: white;
     font-weight: bold;
 }
-
 
 .navbar-brand {
     line-height: 33px;
@@ -88,17 +93,16 @@ body {
     color: #fff;
 }
 
-.qualifiers-container {
+#qualifiers-container {
     font-size: 11px;
 }
 
 #qualifiers-container select {
-    width: 120px;
+    width: 125px;
     height: 34px;
     padding: 5px 5px 5px 5px;
-    font-size: 14px;
+    font-size: 12px;
     border: 1px solid #ccc;
     -webkit-appearance: none;
     -moz-appearance: none;
-    /*background: no-repeat 96% / 15%;*/
 }

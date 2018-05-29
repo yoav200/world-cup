@@ -30,7 +30,8 @@
                     Winner<br>
                     <select id="WINNER_FINAL"
                             ng-options="team as team.name for team in teamsForStage('FINAL') track by team.name"
-                            ng-model="qualifiers.WINNER_FINAL">
+                            ng-model="qualifiers.WINNER_FINAL"
+                            ng-change="selectionChanged('WINNER_FINAL')">
                     </select>
                 </td>
                 <td>&nbsp;</td>
@@ -273,7 +274,8 @@
                     Third Place<br>
                     <select id="WINNER_THIRD_PLACE"
                             ng-options="team as team.name for team in teamsForStage('THIRD_PLACE') track by team.name"
-                            ng-model="qualifiers.WINNER_THIRD_PLACE">
+                            ng-model="qualifiers.WINNER_THIRD_PLACE"
+                            ng-change="selectionChanged('WINNER_THIRD_PLACE')">
                     </select></td>
                 <td>&nbsp;</td>
                 <td>&nbsp;</td>

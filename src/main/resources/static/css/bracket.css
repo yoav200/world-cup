@@ -1,28 +1,10 @@
 
-/*
-html {
-    box-sizing: border-box;
-    background-color: #f0f0f0
-}
-
-body {
-    padding: 0;
-    margin: 0
-}
-
-*, *:before, *:after {
-    box-sizing: inherit;
-    outline: 0;
-    border: 0
-}
-*/
-
 .brackets_container {
     padding: 10px;
     font-family: tahoma;
     min-width: 550px;
-    background-color: slateblue;
     color: #000;
+    background: #fff url(/images/header_bg.png) repeat center 0;
 }
 
 .brackets_container a {
