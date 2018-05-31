@@ -33,7 +33,7 @@ public class GroupMatch extends Match {
 
     @Override
     public String toString() {
-        return this.kickoff + ", Group " + groupId.name() + ",  "
+        return "Group " + groupId.name() + ",  "
                 + homeTeam.getName()
                 + " : "
                 + awayTeam.getName()

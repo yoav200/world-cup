@@ -83,9 +83,7 @@ angular.module('worldcup').controller('betsQualifierCtrl', function ($rootScope,
                 $scope.qualifiers[qualifiers.knockoutTeamCode] = qualifiers.team;
                 $scope.selectionChanged(qualifiers.knockoutTeamCode);
             });
-            //console.log("qualifiers:", $scope.qualifiers);
         });
-
     };
 
     $scope.saveQualifiers = function () {
@@ -120,7 +118,7 @@ angular.module('worldcup').controller('betsQualifierCtrl', function ($rootScope,
         if ($scope.qualifiers[code]) {
             var team = $scope.qualifiers[code];
             var flag = "/images/teams/" + team.confederation.toLowerCase() + "/" + team.code + ".png";
-            var css = 'transparent url(' + flag + ') no-repeat right top';
+            var css = '#fff url(' + flag + ') no-repeat 78px 2px';
             angular.element(('#' + code)).css({'background': css});
         } else {
             angular.element(('#' + code)).css({'background': ''});
@@ -133,7 +131,7 @@ angular.module('worldcup').controller('betsQualifierCtrl', function ($rootScope,
         if ($scope.qualifiers[codes[0]] && $scope.qualifiers[codes[1]]) {
             $scope.teamsForSelect[codeToUpdate] = [$scope.qualifiers[codes[0]], $scope.qualifiers[codes[1]]];
         }
-
+        // set THIRD_PLACE list and LOSER_SF1 and LOSER_SF2
         if (codes.includes('WINNER_SF2') || codes.includes('WINNER_SF1')) {
             var loser1, loser2;
             $scope.teamsForSelect.THIRD_PLACE = [];
@@ -185,6 +183,11 @@ angular.module('worldcup').controller('betsQualifierCtrl', function ($rootScope,
             checkAndUpdateForSelect(['WINNER_QF3', 'WINNER_QF4'], 'WINNER_SF2');
         } else if (['WINNER_SF1', 'WINNER_SF2'].includes(code)) {
             checkAndUpdateForSelect(['WINNER_SF1', 'WINNER_SF2'], 'FINAL');
+        } else if (['LOSER_SF1', 'LOSER_SF2'].includes(code)) {
+            checkAndUpdateForSelect(['LOSER_SF1', 'LOSER_SF2'], 'THIRD_PLACE');
+        } else if (['WINNER_THIRD_PLACE', 'WINNER_FINAL'].includes(code)) {
+            setFlagToSelect('WINNER_THIRD_PLACE');
+            setFlagToSelect('WINNER_FINAL');
         } else {
             console.log("no case for me", code)
         }
