@@ -133,6 +133,8 @@ public class BetService {
                         .calculatedUserBet(betMap.get(bet.getId())).build());
             }
         });
+
+        betOverviewData.sort((o1, o2) -> (int)(o1.getBet().getId() - o2.getBet().getId()));
         return betOverviewData;
     }
 
