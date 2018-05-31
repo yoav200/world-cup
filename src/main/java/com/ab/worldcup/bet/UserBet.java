@@ -4,6 +4,7 @@ import com.ab.worldcup.knockout.KnockoutTeamInterface;
 import com.ab.worldcup.results.ResultInterface;
 import com.ab.worldcup.team.KnockoutTeamCode;
 import com.ab.worldcup.team.Team;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,6 +21,7 @@ import javax.persistence.*;
 public class UserBet implements ResultInterface, KnockoutTeamInterface {
 
     @EmbeddedId
+    @JsonIgnore
     private UserBetId userBetId;
 
     @ManyToOne

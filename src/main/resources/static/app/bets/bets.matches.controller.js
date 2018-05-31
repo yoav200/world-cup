@@ -2,24 +2,18 @@
 
 angular.module('worldcup').controller('betsMatchesCtrl', function ($rootScope, $scope, $state, $stateParams, Bets, growl, $uibModal, $log) {
 
-    var matchHomeWon = 'HOME_TEAM';
-
-    var matchAwayWon = 'AWAY_TEAM';
-
-    $scope.options = {
-        matchQualifier : [matchHomeWon, matchAwayWon],
-        bets : undefined
+    $scope.data = {
+        // all matches data
+        matches : {},
+        // holds a map of matchId to map
+        bets: {}
     };
-
-    $scope.matchesData = {};
-
-    $scope.betsMap = {};
-
+    // selected data by user
     $scope.selected = {
         match: undefined,
         bet: undefined
     };
-
+    // model that holds data
     $scope.userBet = {
         matchId: undefined,
         betId: undefined,
@@ -30,6 +24,14 @@ angular.module('worldcup').controller('betsMatchesCtrl', function ($rootScope, $
         awayTeamGoals: undefined,
         matchQualifier: undefined
     };
+    // statistics popover
+    $scope.infoPopover = {
+        templateUrl: 'infoPopoverTemplate.html',
+        title: 'Bet Statistics',
+        betsOnHomeTeamPercent : undefined,
+        betsOnDrawPercent : undefined,
+        betsOnAwayTeamPercent : undefined
+    };
 
     var selectByMatchId = function(matches, matchId) {
         return  matches.find(function(match) {
@@ -37,18 +39,17 @@ angular.module('worldcup').controller('betsMatchesCtrl', function ($rootScope, $
         });
     };
 
-    var getMatchData = function() {
+    var getMatchData = function(matchId) {
         Bets.getMatchesData().then(function (response) {
-            $scope.matchesData = response;
-            // set from parameter
-            if($stateParams.matchId) {
-                var match;
-                var stage;
-                if($stateParams.matchId < 49) {
-                    match = selectByMatchId(response.firstStage, $stateParams.matchId);
+            $scope.data.matches = response;
+
+            if(matchId) {
+                var match, stage;
+                if(matchId < 49) {
+                    match = selectByMatchId(response.firstStage, matchId);
                     stage = 'first';
                 } else {
-                    match = selectByMatchId(response.secondStage, $stateParams.matchId);
+                    match = selectByMatchId(response.secondStage, matchId);
                     stage = 'second';
                 }
 
@@ -64,9 +65,9 @@ angular.module('worldcup').controller('betsMatchesCtrl', function ($rootScope, $
 
     var getAllBets = function() {
         Bets.getAllBets().then(function (response) {
-            $scope.options.bets = response;
+            //$scope.options.bets = response;
             angular.forEach(response, function (bet, index) {
-                $scope.betsMap[bet.matchId] = bet;
+                $scope.data.bets[bet.matchId] = bet;
             });
         });
     };
@@ -108,12 +109,12 @@ angular.module('worldcup').controller('betsMatchesCtrl', function ($rootScope, $
         // set matchQualifier according to goals
         // in case of equals matchQualifier=HomeWon
         if($scope.userBet.homeTeamGoals >= $scope.userBet.awayTeamGoals) {
-            $scope.userBet.matchQualifier = matchHomeWon;
+            $scope.userBet.matchQualifier = 'HOME_TEAM';
         } else if($scope.userBet.homeTeamGoals < $scope.userBet.awayTeamGoals) {
-            $scope.userBet.matchQualifier = matchAwayWon;
+            $scope.userBet.matchQualifier = 'AWAY_TEAM';
         }
         Bets.updateBet($scope.userBet.betId, $scope.userBet).then(function (response) {
-            getMatchData();
+            getMatchData($scope.selected.match.matchId);
             growl.success('You\'re bet saved successfully.',{title: 'Success!'});
         });
     };
@@ -121,13 +122,13 @@ angular.module('worldcup').controller('betsMatchesCtrl', function ($rootScope, $
 
     $scope.onMatchSelected = function (stage) {
 
-        var list = stage === 'first' ? $scope.matchesData.firstStage : $scope.matchesData.secondStage;
+        var list = (stage === 'first') ? $scope.data.matches.firstStage : $scope.data.matches.secondStage;
 
         angular.forEach(list, function (match, index) {
             if ($scope.selected.match.matchId === match.matchId) {
-
-                $scope.selected.bet = $scope.betsMap[match.matchId];
-
+                // set selected bet
+                $scope.selected.bet = $scope.data.bets[match.matchId];
+                // set model
                 $scope.userBet = {
                     betId: $scope.selected.bet.id,
                     matchId: $scope.selected.match.matchId,
@@ -139,11 +140,20 @@ angular.module('worldcup').controller('betsMatchesCtrl', function ($rootScope, $
                 };
             }
         });
+
+        Bets.getBetStatistics($scope.selected.bet.id).then(function (response) {
+            $scope.infoPopover = {
+                templateUrl: 'infoPopoverTemplate.html',
+                title: 'Bet Statistics',
+                betsOnHomeTeamPercent: response.betsOnHomeTeamPercent,
+                betsOnDrawPercent : response.betsOnDrawPercent,
+                betsOnAwayTeamPercent : response.betsOnAwayTeamPercent
+            };
+        });
     };
 
     var init = function() {
-        $log.info("controller init");
-        getMatchData();
+        getMatchData($stateParams.matchId);
         getAllBets();
     };
 

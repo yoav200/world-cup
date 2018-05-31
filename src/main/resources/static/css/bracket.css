@@ -1,9 +1,10 @@
 
 .brackets_container {
     padding: 10px;
-    font-family: tahoma;
     min-width: 550px;
     color: #000;
+    font-size: 13px;
+    font-family: tahoma;
     background: #fff url(/images/header_bg.png) repeat center 0;
 }
 
@@ -21,7 +22,6 @@
 }
 
 .brackets_container th {
-    font-size: 13px;
     padding: 10px 0;
     width: 10%;
     font-weight: normal;
@@ -141,12 +141,10 @@
     right: 0;
     display: block;
     background: #fff;
-    font-size: 12px;
     z-index: 1;
     height: 37px;
-    line-height: 29px;
+    line-height: 30px;
     padding: 0 2px;
-    cursor: default
 }
 
 .match_unit .m_segment.highlight > span {
@@ -175,9 +173,7 @@
 
 .match_unit .m_segment > span strong {
     float: right;
-    color: #c00;
-    font-size: 13px;
-    padding: 0 4px
+    padding: 2px 0 0 1px;
 }
 
 .match_unit .m_segment.highlight > span strong {
@@ -203,7 +199,9 @@
     left: 0;
     bottom: 0;
     overflow: hidden;
-    padding: 0 5px
+    padding: 0 5px;
+    color: white;
+    font-weight: bold;
 }
 
 .m_dtls span {
@@ -211,7 +209,6 @@
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    //color: #777;
     display: block;
     visibility: hidden;
     width: 93%;
@@ -245,7 +242,8 @@
 .final .match_unit .m_segment > span strong {
     display: block;
     padding: 5px;
-    float: none
+    float: none;
+    margin: -20px 0 0 0;
 }
 
 .final .m_segment span a {
@@ -275,37 +273,37 @@
 .winner_team {
     position: absolute;
     top: 25px;
+    color: white;
     text-align: center;
     right: 0;
     left: 0
 }
 
 .winner_team > span {
-    font-size: 11px;
-    //color: #777;
+    color: #000;
     display: block
 }
 
 .focus .winner_team > span {
-    color: #c00
+    font-weight: bold;
 }
 
-.winner_team > span a {
+.winner_team > span {
     display: block;
-    padding: 10px;
+    padding: 15px 0 0 0;
     margin: 10px auto;
-    width: 60px;
-    height: 60px;
+    width: 90px;
+    height: 90px;
     border-radius: 50px;
     background-color: #fff;
     box-shadow: 0 0 0 1px rgba(0, 0, 0, .1)
 }
 
-.focus .winner_team > span a {
+.focus .winner_team > span {
     box-shadow: 0 0 0 2px #c00
 }
 
-.winner_team > span a img {
+.winner_team > span img {
     display: block;
     margin: auto
 }
@@ -327,7 +325,6 @@
     position: absolute;
     top: -30px;
     padding: 5px;
-    font-size: 11px;
     color: #fff;
     background-color: #bbb;
     left: 0;
@@ -426,13 +423,13 @@
     }
 
     .brackets_container th {
-        font-size: 12px
+
     }
 }
 
 @media (max-width: 900px) {
     .match_unit .m_segment > span {
-        font-size: 11px
+
     }
 
     .match_unit .m_dtls span {

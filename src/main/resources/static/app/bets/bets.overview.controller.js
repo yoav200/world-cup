@@ -1,7 +1,6 @@
 'use strict';
 
-angular.module('worldcup').controller('betsOverviewCtrl', function ($rootScope, $scope, $state, $stateParams, $log, Matches, Bets) {
-
+angular.module('worldcup').controller('betsOverviewCtrl', function ($rootScope, $scope, $state, $stateParams, Matches, Bets) {
 
     $scope.overviewData = {
         match: [],
@@ -21,7 +20,6 @@ angular.module('worldcup').controller('betsOverviewCtrl', function ($rootScope, 
     };
 
     var init = function () {
-        $log.info("betsOverviewCtrl init");
         getOverviewData();
     };
 

@@ -12,7 +12,7 @@
                     <div class="col-sm-10">
                         <select id="firstStageMatchesList"
                                 class="form-control"
-                                ng-options="match as match.label for match in matchesData.firstStage track by match.matchId"
+                                ng-options="match as match.label for match in data.matches.firstStage track by match.matchId"
                                 ng-model="selected.match"
                                 ng-change="onMatchSelected('first')"></select>
                     </div>
@@ -23,7 +23,7 @@
                     <div class="col-sm-10">
                         <select id="secondStageMatchesList"
                                 class="form-control"
-                                ng-options="match as match.label for match in matchesData.secondStage | filter:{ready:true} track by match.matchId"
+                                ng-options="match as match.label for match in data.matches.secondStage | filter:{ready:true} track by match.matchId"
                                 ng-model="selected.match"
                                 ng-change="onMatchSelected('second')"></select>
                     </div>
@@ -31,7 +31,6 @@
             </form>
         </div>
     </div>
-
 
     <div class="panel panel-primary" ng-if="selected.match">
         <div class="panel-heading">Result Form</div>
@@ -45,20 +44,26 @@
                         <p class="form-control-static" id="machtId" ng-model="userBet.matchId"></p>
                     </div>
                 </div>
-
                 <div class="form-group">
                     <label class="control-label col-sm-2">Kickoff:</label>
                     <div class="col-sm-10">{{selected.match.kickoff | date : 'MMM d, HH:mm a' }}</div>
                 </div>
-
                 <div class="form-group">
                     <label class="control-label col-sm-2">Match:</label>
                     <div class="col-sm-10">
-                        <table class="table table-condensed">
+                        <table class="table table-bordered table-striped">
                         <tbody>
                         <tr>
                             <td class="col-md-4"><team data="selected.match.homeTeam"></team></td>
                             <td class="col-md-4"><team data="selected.match.awayTeam"></team></td>
+                            <td class="col-md-1 text-center">
+                                <button type="button"
+                                        class="btn btn-default"
+                                        uib-popover-template="infoPopover.templateUrl"
+                                        popover-title="{{infoPopover.title}}">
+                                    <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+                                </button>
+                            </td>
                             <td class="col-md-1 text-center">
                                 <input type="number"
                                        min="0" max="20"
@@ -110,6 +115,19 @@
         </div>
     </script>
 
-
+    <script type="text/ng-template" id="infoPopoverTemplate.html">
+        <table class="table table-bordered table-striped">
+            <tr>
+                <th class="text-center">1</th>
+                <th class="text-center">X</th>
+                <th class="text-center">2</th>
+            </tr>
+            <tr>
+                <td>{{infoPopover.betsOnHomeTeamPercent}}%</td>
+                <td>{{infoPopover.betsOnDrawPercent}}%</td>
+                <td>{{infoPopover.betsOnAwayTeamPercent}}%</td>
+            </tr>
+        </table>
+    </script>
 
 </section>
