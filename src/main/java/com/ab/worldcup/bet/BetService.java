@@ -183,4 +183,23 @@ public class BetService {
         return Qualifier.builder().stageId(stage).team(team).knockoutTeamCode(teamCode).build();
     }
 
+    public BetStatisticsData getBetStats(Long betId){
+        List<UserBet> allUserBetsByBetId = userBetRepository.findByUserBetIdBetId(betId);
+        int betsCount = allUserBetsByBetId.size();
+        int drawBets = 0;
+        int homeTeamBets = 0;
+        int awayTeamBets = 0;
+
+        if(betsCount > 0) {
+            homeTeamBets = (int) allUserBetsByBetId.stream().filter(b -> b.getHomeTeamGoals() > b.getAwayTeamGoals()).count() * 100 / betsCount;
+            awayTeamBets = (int) allUserBetsByBetId.stream().filter(b -> b.getHomeTeamGoals() < b.getAwayTeamGoals()).count() * 100 / betsCount;
+            drawBets = (int) allUserBetsByBetId.stream().filter(b -> b.getHomeTeamGoals().equals(b.getAwayTeamGoals())).count() * 100 / betsCount;
+        }
+
+        return BetStatisticsData.builder().
+                betsOnHomeTeamPercent(homeTeamBets).
+                betsOnAwayTeamPercent(awayTeamBets).
+                betsOnDrawPercent(drawBets).
+                build();
+    }
 }

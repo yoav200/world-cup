@@ -7,6 +7,7 @@ import com.ab.worldcup.results.MatchResult;
 import com.ab.worldcup.results.Qualifier;
 import com.ab.worldcup.results.ResultInterface;
 import com.ab.worldcup.results.ResultsService;
+import com.ab.worldcup.team.KnockoutTeamCode;
 import com.ab.worldcup.web.model.MatchResultData;
 import com.ab.worldcup.web.model.MatchesData;
 import lombok.extern.java.Log;
@@ -69,8 +70,20 @@ public class MatchService {
                         .build();
                 resultsService.saveQualifier(qualifier);
             }
+
+
             resultsService.saveKnockoutTeam(teamUpdatedByMatch);
         }
+
+        if (match.getStageId().equals(Stage.FINAL) || match.getStageId().equals(Stage.THIRD_PLACE)){
+            Qualifier qualifier = Qualifier.builder()
+                    .team(match.getResult().getKnockoutQualifier())
+                    .stageId(match.getStageId().getNextStage().get(0))
+                    .knockoutTeamCode(match.getStageId().equals(Stage.FINAL) ? KnockoutTeamCode.WINNER_FINAL : KnockoutTeamCode.WINNER_THIRD_PLACE)
+                    .build();
+            resultsService.saveQualifier(qualifier);
+        }
+
     }
 
     public Match updateMatchResult(Long matchId, MatchResultData matchResult) {

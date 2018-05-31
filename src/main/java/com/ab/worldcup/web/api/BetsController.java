@@ -4,6 +4,7 @@ import com.ab.worldcup.account.Account;
 import com.ab.worldcup.account.AccountService;
 import com.ab.worldcup.bet.Bet;
 import com.ab.worldcup.bet.BetService;
+import com.ab.worldcup.bet.BetStatisticsData;
 import com.ab.worldcup.bet.QualifierBetData;
 import com.ab.worldcup.bet.UserBet;
 import com.ab.worldcup.group.GroupService;
@@ -20,7 +21,13 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.Assert;
 import org.springframework.validation.Validator;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.security.Principal;
@@ -134,4 +141,10 @@ public class BetsController {
         betService.setQualifiersBets(account, qualifiersByStage);
         return qualifierBetData;
     }
+
+    @RequestMapping("/statistics/{betId}")
+    public BetStatisticsData getBetsStatistics(@PathVariable Long betId) {
+        return betService.getBetStats(betId);
+    }
+
 }
