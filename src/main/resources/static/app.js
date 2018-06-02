@@ -3,7 +3,16 @@
 /**
  * Main AngularJS Web Application
  */
-var app = angular.module('worldcup', ['ui.router', 'ui.router.stateHelper', 'ui.bootstrap', 'xeditable', 'ngResource', 'ngAnimate', 'ngSanitize', 'angular-loading-bar', 'angular-growl']);
+var app = angular.module('worldcup', [
+    'ui.router',
+    'ui.router.stateHelper',
+    'ui.bootstrap',
+    'xeditable',
+    'ngResource',
+    'ngAnimate',
+    'ngSanitize',
+    'angular-loading-bar',
+    'angular-growl']);
 
 
 /**
@@ -30,7 +39,7 @@ app.config(function ($urlRouterProvider, $httpProvider, growlProvider) {
                 switch (errorResponse.status) {
                     case 403:
                         $timeout(function () {
-                            $window.location = '/#';
+                            $window.location = '/';
                         }, 500);
                         break;
                 }

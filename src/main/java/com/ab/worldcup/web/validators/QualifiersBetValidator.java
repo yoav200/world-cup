@@ -1,6 +1,7 @@
 package com.ab.worldcup.web.validators;
 
 import com.ab.worldcup.bet.QualifierBetData;
+import com.ab.worldcup.config.ApplicationConfig;
 import com.ab.worldcup.group.GroupService;
 import com.ab.worldcup.results.Qualifier;
 import com.ab.worldcup.team.Group;
@@ -8,13 +9,11 @@ import com.ab.worldcup.team.KnockoutTeamCode;
 import com.google.common.collect.ImmutableList;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -23,14 +22,12 @@ public class QualifiersBetValidator implements Validator {
 
     private final GroupService groupService;
 
-    private final LocalDateTime startDateTime;
-
+    private final ApplicationConfig applicationConfig;
 
     @Autowired
-    public QualifiersBetValidator(@Value("${worldcup.start-date-time}") String startDateTime, GroupService groupService) {
+    public QualifiersBetValidator(ApplicationConfig applicationConfig, GroupService groupService) {
         this.groupService = groupService;
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ssX");
-        this.startDateTime = LocalDateTime.parse(startDateTime, formatter);
+        this.applicationConfig = applicationConfig;
     }
 
     public boolean supports(Class<?> clazz) {
@@ -40,7 +37,7 @@ public class QualifiersBetValidator implements Validator {
     public void validate(Object target, Errors errors) {
         QualifierBetData qualifierBetData = (QualifierBetData) target;
 
-        if (LocalDateTime.now().isAfter(startDateTime)) {
+        if (LocalDateTime.now().isAfter(applicationConfig.getStartDateTime())) {
             errors.rejectValue("qualifiersList", "", "Cannot update qualifier bets after tournament has started");
         }
 
@@ -48,7 +45,7 @@ public class QualifiersBetValidator implements Validator {
                 collect(Collectors.groupingBy(t -> Pair.of(t.getTeam(), t.getStageId()))).
                 entrySet().stream().anyMatch(t -> t.getValue().size() > 1);
 
-        if(sameTeamAppearTwiceInOneStage) {
+        if (sameTeamAppearTwiceInOneStage) {
             errors.rejectValue("qualifiersList", "", "invalid bet - some teams appears twice in the same stage");
         }
 

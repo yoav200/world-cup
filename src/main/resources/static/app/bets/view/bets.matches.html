@@ -73,6 +73,7 @@
                                        id="homeTeamGoals"
                                        placeholder="Enter score"
                                        ng-model="userBet.homeTeamGoals"
+                                       data-ng-disabled="selected.match.started"
                                        size="3">
                             </td>
                             <td class="col-md-1 text-center">:</td>
@@ -83,6 +84,7 @@
                                        id="awayTeamGoals"
                                        placeholder="Enter score"
                                        ng-model="userBet.awayTeamGoals"
+                                       data-ng-disabled="selected.match.started"
                                        size="3">
                             </td>
                         </tr>
@@ -94,8 +96,8 @@
 
                 <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
-                        <button type="submit" class="btn btn-primary">Submit</button>
-                        <button type="button" class="btn btn-danger" data-ng-click="confirmDeleteBet()">Delete</button>
+                        <button type="submit" class="btn btn-primary" data-ng-disabled="selected.match.started">Submit</button>
+                        <button type="button" class="btn btn-danger" data-ng-disabled="selected.match.started" data-ng-click="confirmDeleteBet()">Delete</button>
                     </div>
 
                 </div>

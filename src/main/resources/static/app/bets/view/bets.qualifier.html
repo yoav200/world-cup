@@ -2,9 +2,18 @@
     <div class="jumbotron">
         <h2>Set bets For qualifiers</h2>
         <div>
-            Here you set your qualifiers, this is your chance to gain points.<br>
-            Qualifiers bets are allowed before the games begin!<br><br>
-            <strong>Note that you need to "hit" team for stages and not exact position like required in this page</strong>
+
+            <div ng-hide="locked.isLocked">
+                Here you set your qualifiers, this is your chance to gain extra points.<br>
+                You need to "hit" team for stages and not exact position like required in this page<br><br>
+                Qualifiers bets are allowed before the games begin, hurry up time is running out:
+                <strong>{{CountDown.days + ' Days ' + CountDown.hours + ' Hours ' + CountDown.minutes + ' Minutes and ' + CountDown.seconds + ' seconds'}}</strong>
+            </div>
+
+            <div ng-show="locked.isLocked">
+                <h3>Qualifiers bets are closed</h3>
+            </div>
+
         </div>
 
         <div id="qualifiers-container">
@@ -288,7 +297,7 @@
                 </tr>
             </table>
             <div>
-                <button type="submit" class="btn btn-primary" data-ng-click="saveQualifiers()">Save</button>
+                <button type="submit" class="btn btn-primary" data-ng-disabled="locked.isLocked" data-ng-click="saveQualifiers()">Save</button>
             </div>
         </div>
     </div>

@@ -1,11 +1,10 @@
 package com.ab.worldcup.account;
 
+import com.ab.worldcup.config.ApplicationConfig;
 import com.ab.worldcup.signin.Role;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import org.brickred.socialauth.Profile;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -28,14 +27,13 @@ public class AccountService implements UserDetailsService {
 
     private final AccountRepository accountRepository;
 
-    private final ImmutableSet<String> adminEmails;
+    private final ApplicationConfig applicationConfig;
 
     @Autowired
-    public AccountService(@Value("${worldcup.admin-emails}") String administrators, AccountRepository accountRepository) {
+    public AccountService(ApplicationConfig applicationConfig, AccountRepository accountRepository) {
         this.accountRepository = accountRepository;
-        this.adminEmails = ImmutableSet.copyOf(administrators.split(","));
+        this.applicationConfig = applicationConfig;
     }
-
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -96,7 +94,7 @@ public class AccountService implements UserDetailsService {
 
     private Collection<GrantedAuthority> getAuthorities(String email) {
         Set<GrantedAuthority> authorities = Sets.newHashSet(new SimpleGrantedAuthority(Role.USER.getAuthority()));
-        if (adminEmails.contains(email)) {
+        if (applicationConfig.getAdminEmails().contains(email)) {
             authorities.add(new SimpleGrantedAuthority(Role.ADMIN.getAuthority()));
         }
         return authorities;

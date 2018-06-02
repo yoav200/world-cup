@@ -1,7 +1,48 @@
 'use strict';
 
 
-angular.module('worldcup').controller('betsQualifierCtrl', function ($rootScope, $scope, Bets, Teams, growl) {
+angular.module('worldcup').controller('betsQualifierCtrl', function ($rootScope, $scope, $interval, Bets, Teams, growl) {
+
+    $scope.locked = {
+        isLocked : false,
+        lockTime: undefined
+    };
+
+    // credit to: https://stackoverflow.com/questions/38108013/getting-time-left-countdown-html-javascript-angularjs
+    $scope.CountDown = {
+        getTimeRemaining: function(endtime) {
+            var t = Date.parse(endtime) - Date.parse(new Date());
+            var seconds = Math.floor((t / 1000) % 60);
+            var minutes = Math.floor((t / 1000 / 60) % 60);
+            var hours = Math.floor((t / (1000 * 60 * 60)) % 24);
+            var days = Math.floor(t / (1000 * 60 * 60 * 24));
+            return {
+                'total': t,
+                'days': days,
+                'hours': hours,
+                'minutes': minutes,
+                'seconds': seconds
+            };
+        },
+
+        initializeClock: function(endtime) {
+            function updateClock() {
+                var t = $scope.CountDown.getTimeRemaining(endtime);
+
+                $scope.CountDown.days = t.days;
+                $scope.CountDown.hours = ('0' + t.hours).slice(-2);
+                $scope.CountDown.minutes = ('0' + t.minutes).slice(-2);
+                $scope.CountDown.seconds = ('0' + t.seconds).slice(-2);
+
+                if (t.total <= 0) {
+                    $interval.cancel(timeinterval);
+                }
+            }
+
+            updateClock();
+            var timeinterval = $interval(updateClock, 1000);
+        }
+    };
 
     $scope.qualifiers = {
         WINNER_GROUP_A: undefined,
@@ -78,6 +119,16 @@ angular.module('worldcup').controller('betsQualifierCtrl', function ($rootScope,
 
     var getQualifiers = function () {
         Bets.getQualifiers().then(function (response) {
+            var now = new Date();
+            var lockTime = new Date(response.lockTime);
+
+            $scope.locked = {
+                isLocked : (now > lockTime),
+                lockTime: lockTime
+            };
+
+            $scope.CountDown.initializeClock($scope.locked.lockTime);
+
             var qualifiersList = response.qualifiersList;
             angular.forEach(qualifiersList, function (qualifiers, index) {
                 $scope.qualifiers[qualifiers.knockoutTeamCode] = qualifiers.team;

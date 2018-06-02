@@ -5,6 +5,7 @@ import lombok.Getter;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -26,4 +27,7 @@ public class Bet {
 
     private Timestamp lockTime;
 
+    public boolean isLock() {
+        return LocalDateTime.now().isAfter(getLockTime().toLocalDateTime());
+    }
 }

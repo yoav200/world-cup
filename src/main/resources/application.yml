@@ -32,17 +32,8 @@ spring:
 
 worldcup:
   start-date-time: '2018-06-14 15:00:00+00'
+  admin-emails: "yoav200@gmail.com,ibadichi@gmail.com,itay.badichi@gmail.com"
   socialauth:
     base-callback-url: "http://localhost:8080"
     success-page-url: "#/welcome"
     access-denied-page-url: "#/access-denied"
-  admin-emails: "yoav200@gmail.com,ibadichi@gmail.com,itay.badichi@gmail.com"
-  tiebreaking:
-    group-a:
-    group-b:
-    group-c:
-    group-d:
-    group-e:
-    group-f:
-    group-g:
-    group-h:

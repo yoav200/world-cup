@@ -1,6 +1,7 @@
 package com.ab.worldcup.bet;
 
 import com.ab.worldcup.account.Account;
+import com.ab.worldcup.config.ApplicationConfig;
 import com.ab.worldcup.group.GroupService;
 import com.ab.worldcup.knockout.KnockoutMatchQualifier;
 import com.ab.worldcup.match.Match;
@@ -20,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -43,6 +45,10 @@ public class BetService {
 
     @Autowired
     private ResultsService resultsService;
+
+    @Autowired
+    private ApplicationConfig applicationConfig;
+
 
     @Cacheable("allBets")
     public List<Bet> getAllBets() {
@@ -125,16 +131,14 @@ public class BetService {
                         .match(matchesMap.get(bet.getMatchId()))
                         .matchResult(resultMap.get(bet.getMatchId()))
                         .calculatedUserBet(betMap.get(bet.getId())).build());
-            } else if (bet.getType().equals(BetType.QUALIFIER)){
+            } else if (bet.getType().equals(BetType.QUALIFIER)) {
                 betOverviewData.add(BetOverviewData.builder()
                         .bet(bet)
-                        //.match(matchesMap.get(bet.getMatchId()))
-                        //.matchResult(resultMap.get(bet.getMatchId()))
                         .calculatedUserBet(betMap.get(bet.getId())).build());
             }
         });
 
-        betOverviewData.sort((o1, o2) -> (int)(o1.getBet().getId() - o2.getBet().getId()));
+        betOverviewData.sort((o1, o2) -> (int) (o1.getBet().getId() - o2.getBet().getId()));
         return betOverviewData;
     }
 
@@ -151,7 +155,7 @@ public class BetService {
 
         userQualifiersByStageMap.forEach((stage, userQualifierList) -> {
             List<Bet> qualifierBetsByStage = stageListMap.get(stage);
-            if(qualifierBetsByStage != null) {
+            if (qualifierBetsByStage != null) {
                 int qualifierBetsByStageSize = qualifierBetsByStage.size();
                 int qualifierIndex = 0;
                 for (Qualifier userQualifier : userQualifierList) {
@@ -177,7 +181,10 @@ public class BetService {
                 map(t -> buildQualifier(t.getUserBetId().getBet().getStageId(), t.getQualifier(), t.getKnockoutTeamCode())).
                 collect(Collectors.toList());
 
-        return QualifierBetData.builder().qualifiersList(qualifierList).build();
+        return QualifierBetData.builder()
+                .qualifiersList(qualifierList)
+                .lockTime(Timestamp.valueOf(applicationConfig.getStartDateTime()))
+                .build();
     }
 
 
@@ -185,14 +192,14 @@ public class BetService {
         return Qualifier.builder().stageId(stage).team(team).knockoutTeamCode(teamCode).build();
     }
 
-    public BetStatisticsData getBetStats(Long betId){
+    public BetStatisticsData getBetStats(Long betId) {
         List<UserBet> allUserBetsByBetId = userBetRepository.findByUserBetIdBetId(betId);
         int betsCount = allUserBetsByBetId.size();
         int drawBets = 0;
         int homeTeamBets = 0;
         int awayTeamBets = 0;
 
-        if(betsCount > 0) {
+        if (betsCount > 0) {
             homeTeamBets = (int) allUserBetsByBetId.stream().filter(b -> b.getHomeTeamGoals() > b.getAwayTeamGoals()).count() * 100 / betsCount;
             awayTeamBets = (int) allUserBetsByBetId.stream().filter(b -> b.getHomeTeamGoals() < b.getAwayTeamGoals()).count() * 100 / betsCount;
             drawBets = (int) allUserBetsByBetId.stream().filter(b -> b.getHomeTeamGoals().equals(b.getAwayTeamGoals())).count() * 100 / betsCount;
