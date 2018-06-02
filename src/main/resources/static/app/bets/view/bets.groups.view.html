@@ -1,0 +1,64 @@
+<section id="groups">
+    <div class="jumbotron">
+        <h2>Groups
+            <small>
+                As groups would look according to your bets<br>
+                <a role="button" ng-click="scrollTo('group-id-'+group.groupId)" ng-repeat="group in groups"> {{group.groupId}} </a>
+            </small>
+        </h2>
+
+        <div>
+            <div id="group-id-{{group.groupId}}" class="panel panel-primary floating" ng-repeat="group in groups" ui-view>
+                <div class="panel-heading" >
+                    Group {{group.groupId}}
+                </div>
+                <table class="table table-hover table-condensed">
+                    <thead>
+                    <tr>
+                        <th scope="col"></th>
+                        <th scope="col">Played</th>
+                        <th scope="col">Won</th>
+                        <th scope="col">Draw</th>
+                        <th scope="col">Lost</th>
+                        <th scope="col">Goals for</th>
+                        <th scope="col">Goals Against</th>
+                        <th scope="col">+/-</th>
+                        <th scope="col">Points</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat-start="teamInGroup in prepareTeamsInGroup(group.teamsInGroup)">
+                        <th><h4><team data="teamInGroup.team"/></h4></th>
+                        <td>{{teamInGroup.gamesPlayed }}</td>
+                        <td>{{teamInGroup.gamesWon }}</td>
+                        <td>{{teamInGroup.gamesTied }}</td>
+                        <td>{{teamInGroup.gamesLose }}</td>
+                        <td>{{teamInGroup.goalsScored }}</td>
+                        <td>{{teamInGroup.goalsReceived }}</td>
+                        <td>{{(teamInGroup.goalsScored - teamInGroup.goalsReceived)}}</td>
+                        <td>{{teamInGroup.points | number}}</td>
+                        <td>
+                            <button type="button" class="btn btn-default btn-sm" data-toggle="collapse"
+                                    data-target="#team-{{teamInGroup.team.code}}-matches">
+                                <span aria-hidden="true"></span> Matches
+                            </button>
+                        </td>
+                    </tr>
+                    <tr ng-repeat-end>
+                        <td colspan="10">
+                            <div id="team-{{teamInGroup.team.code}}-matches" class="collapse">
+                                <matches data="teamInGroup.matches"></matches>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+
+
+

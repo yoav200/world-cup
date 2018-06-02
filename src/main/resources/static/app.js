@@ -24,7 +24,7 @@ app.config(function ($urlRouterProvider, $httpProvider, growlProvider) {
     growlProvider.globalTimeToLive({success: 10000, error: 10000, warning: 10000, info: 10000});
 
     // alternatively, register the interceptor via an anonymous factory
-    $httpProvider.interceptors.push(function($q, $timeout) {
+    $httpProvider.interceptors.push(function($q, $timeout, $window) {
         return {
             'responseError': function(errorResponse) {
                 switch (errorResponse.status) {
@@ -141,7 +141,16 @@ app.config(function ($urlRouterProvider, $httpProvider, growlProvider) {
                 controller: 'betsOverviewCtrl'
             }
         }
-     }).state('bets.matches', {
+     }).state('bets.groups', {
+        permissions: ['ROLE_USER'],
+        url: "/bets/groups",
+        views: {
+            'content@': {
+                templateUrl: 'app/bets/view/bets.groups.view.html',
+                controller: 'betsGroupsCtrl'
+            }
+        }
+    }).state('bets.matches', {
         permissions: ['ROLE_USER'],
         url: "/bets/matches?matchId",
         views: {

@@ -8,6 +8,12 @@ angular.module('worldcup').factory('Bets', function($http) {
         });
     };
 
+    var getBetsGroupStandings = function() {
+        return $http.get("api/bets/groups").then(function(response) {
+            return  response.data;
+        });
+    };
+
     var getAllBets = function() {
         return $http.get("api/bets/").then(function(response) {
             return  response.data;
@@ -52,6 +58,7 @@ angular.module('worldcup').factory('Bets', function($http) {
 
     return {
         getMatchesData : getMatchesData,
+        getBetsGroupStandings : getBetsGroupStandings,
         getAllBets : getAllBets,
         updateBet: updateBet,
         deleteUserBet : deleteUserBet,
