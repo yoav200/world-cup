@@ -66,6 +66,8 @@ public class MatchController {
         return matchService.addResultsToMatches(groupService.getAllGroupMatches(), allResults);
     }
 
+    // ~ ===============================  ADMIN ONLY ==========================
+
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @ResponseBody
     @RequestMapping(value = "/{matchId}", method = RequestMethod.POST)

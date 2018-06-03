@@ -112,8 +112,8 @@ angular.module('worldcup').controller('betsQualifierCtrl', function ($rootScope,
         WINNER_QF4: [],
         WINNER_SF1: [],
         WINNER_SF2: [],
-        THIRD_PLACE: [],
-        FINAL: []
+        WINNER_THIRD_PLACE: [],
+        WINNER_FINAL: []
     };
 
 
@@ -155,8 +155,8 @@ angular.module('worldcup').controller('betsQualifierCtrl', function ($rootScope,
         };
 
         Bets.setQualifiers(qualifiersList).then(function (response) {
-            getQualifiers();
             growl.success('You\'re bet saved successfully.', {title: 'Success!'});
+            getQualifiers();
         });
     };
 
@@ -182,23 +182,28 @@ angular.module('worldcup').controller('betsQualifierCtrl', function ($rootScope,
         if ($scope.qualifiers[codes[0]] && $scope.qualifiers[codes[1]]) {
             $scope.teamsForSelect[codeToUpdate] = [$scope.qualifiers[codes[0]], $scope.qualifiers[codes[1]]];
         }
-        // set THIRD_PLACE list and LOSER_SF1 and LOSER_SF2
+
+        // set WINNER_THIRD_PLACE list and LOSER_SF1 and LOSER_SF2
         if (codes.includes('WINNER_SF2') || codes.includes('WINNER_SF1')) {
             var loser1, loser2;
-            $scope.teamsForSelect.THIRD_PLACE = [];
+            $scope.teamsForSelect.WINNER_THIRD_PLACE = [];
             if ($scope.qualifiers.WINNER_SF1) {
                 loser1 = $scope.teamsForSelect.WINNER_SF1.filter(function (team) {
                     return team.name !== $scope.qualifiers.WINNER_SF1.name;
                 });
-                $scope.qualifiers.LOSER_SF1 = loser1[0];
-                $scope.teamsForSelect.THIRD_PLACE.push(loser1[0]);
+                if(loser1 && loser1[0]) {
+                    $scope.qualifiers.LOSER_SF1 = loser1[0];
+                    $scope.teamsForSelect.WINNER_THIRD_PLACE.push(loser1[0]);
+                }
             }
             if ($scope.qualifiers.WINNER_SF2) {
                 loser2 = $scope.teamsForSelect.WINNER_SF2.filter(function (team) {
                     return team.name !== $scope.qualifiers.WINNER_SF2.name;
                 });
-                $scope.qualifiers.LOSER_SF2 = loser2[0];
-                $scope.teamsForSelect.THIRD_PLACE.push(loser2[0]);
+                if(loser2 && loser2[0]) {
+                    $scope.qualifiers.LOSER_SF2 = loser2[0];
+                    $scope.teamsForSelect.WINNER_THIRD_PLACE.push(loser2[0]);
+                }
             }
         }
     }
@@ -233,10 +238,12 @@ angular.module('worldcup').controller('betsQualifierCtrl', function ($rootScope,
         } else if (['WINNER_QF3', 'WINNER_QF4'].includes(code)) {
             checkAndUpdateForSelect(['WINNER_QF3', 'WINNER_QF4'], 'WINNER_SF2');
         } else if (['WINNER_SF1', 'WINNER_SF2'].includes(code)) {
-            checkAndUpdateForSelect(['WINNER_SF1', 'WINNER_SF2'], 'FINAL');
-        } else if (['LOSER_SF1', 'LOSER_SF2'].includes(code)) {
-            checkAndUpdateForSelect(['LOSER_SF1', 'LOSER_SF2'], 'THIRD_PLACE');
-        } else if (['WINNER_THIRD_PLACE', 'WINNER_FINAL'].includes(code)) {
+            checkAndUpdateForSelect(['WINNER_SF1', 'WINNER_SF2'], 'WINNER_FINAL');
+        }
+        /*else if (['LOSER_SF1', 'LOSER_SF2'].includes(code)) {
+            checkAndUpdateForSelect(['LOSER_SF1', 'LOSER_SF2'], 'WINNER_`');
+        } */
+        else if (['WINNER_THIRD_PLACE', 'WINNER_FINAL'].includes(code)) {
             setFlagToSelect('WINNER_THIRD_PLACE');
             setFlagToSelect('WINNER_FINAL');
         } else {
@@ -245,14 +252,9 @@ angular.module('worldcup').controller('betsQualifierCtrl', function ($rootScope,
     };
 
 
-    var getAllBets = function () {
-        Bets.getAllBets().then(function (response) {
-            //
-        });
-    };
-
     var getTeams = function () {
         Teams.getAllTeams().then(function (response) {
+            // update Round of 16 teams
             angular.forEach(response, function (team, index) {
                 var winner = 'WINNER_GROUP_' + team.groupId;
                 var runnerUp = 'RUNNER_UP_GROUP_' + team.groupId;
@@ -263,7 +265,6 @@ angular.module('worldcup').controller('betsQualifierCtrl', function ($rootScope,
     };
 
     var init = function () {
-        getAllBets();
         getTeams();
         getQualifiers()
     };
