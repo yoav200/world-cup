@@ -182,28 +182,28 @@ angular.module('worldcup').controller('betsQualifierCtrl', function ($rootScope,
         if ($scope.qualifiers[codes[0]] && $scope.qualifiers[codes[1]]) {
             $scope.teamsForSelect[codeToUpdate] = [$scope.qualifiers[codes[0]], $scope.qualifiers[codes[1]]];
         }
+    }
 
-        // set WINNER_THIRD_PLACE list and LOSER_SF1 and LOSER_SF2
-        if (codes.includes('WINNER_SF2') || codes.includes('WINNER_SF1')) {
-            var loser1, loser2;
-            $scope.teamsForSelect.WINNER_THIRD_PLACE = [];
-            if ($scope.qualifiers.WINNER_SF1) {
-                loser1 = $scope.teamsForSelect.WINNER_SF1.filter(function (team) {
-                    return team.name !== $scope.qualifiers.WINNER_SF1.name;
-                });
-                if(loser1 && loser1[0]) {
-                    $scope.qualifiers.LOSER_SF1 = loser1[0];
-                    $scope.teamsForSelect.WINNER_THIRD_PLACE.push(loser1[0]);
-                }
+    function setThirdPlaceList() {
+        $scope.teamsForSelect.WINNER_THIRD_PLACE = [];
+
+        if($scope.qualifiers.WINNER_SF1 && $scope.teamsForSelect.WINNER_SF1.length > 0) {
+            var loser1 = $scope.teamsForSelect.WINNER_SF1.filter(function (team) {
+                return team.name !== $scope.qualifiers.WINNER_SF1.name;
+            });
+            if(loser1 && loser1[0]) {
+                $scope.qualifiers.LOSER_SF1 = loser1[0];
+                $scope.teamsForSelect.WINNER_THIRD_PLACE.push(loser1[0]);
             }
-            if ($scope.qualifiers.WINNER_SF2) {
-                loser2 = $scope.teamsForSelect.WINNER_SF2.filter(function (team) {
-                    return team.name !== $scope.qualifiers.WINNER_SF2.name;
-                });
-                if(loser2 && loser2[0]) {
-                    $scope.qualifiers.LOSER_SF2 = loser2[0];
-                    $scope.teamsForSelect.WINNER_THIRD_PLACE.push(loser2[0]);
-                }
+        }
+
+        if($scope.qualifiers.WINNER_SF2 && $scope.teamsForSelect.WINNER_SF2.length > 0) {
+            var loser2 = $scope.teamsForSelect.WINNER_SF2.filter(function (team) {
+                return team.name !== $scope.qualifiers.WINNER_SF2.name;
+            });
+            if(loser2 && loser2[0]) {
+                $scope.qualifiers.LOSER_SF2 = loser2[0];
+                $scope.teamsForSelect.WINNER_THIRD_PLACE.push(loser2[0]);
             }
         }
     }
@@ -249,6 +249,8 @@ angular.module('worldcup').controller('betsQualifierCtrl', function ($rootScope,
         } else {
             console.log("no case for me", code)
         }
+        // set third place
+        setThirdPlaceList();
     };
 
 
