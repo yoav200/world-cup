@@ -68,6 +68,14 @@ app.config(function ($urlRouterProvider, $httpProvider, growlProvider) {
                 controller: 'rankingCtrl'
             }
         }
+    }).state('rules', {
+        parent: 'site',
+        url: '/rules',
+        views: {
+            'content@': {
+                templateUrl: 'app/rules/rules.view.html'
+            }
+        }
     }).state('join', {
         parent: 'site',
         url: "/join",
