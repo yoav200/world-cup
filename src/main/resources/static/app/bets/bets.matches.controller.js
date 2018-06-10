@@ -63,15 +63,6 @@ angular.module('worldcup').controller('betsMatchesCtrl', function ($rootScope, $
         });
     };
 
-    var getAllBets = function() {
-        Bets.getAllBets().then(function (response) {
-            //$scope.options.bets = response;
-            angular.forEach(response, function (bet, index) {
-                $scope.data.bets[bet.matchId] = bet;
-            });
-        });
-    };
-
     // ~ =============== START delete bet dialog ================
 
     $scope.confirmDeleteBet = function() {
@@ -153,8 +144,14 @@ angular.module('worldcup').controller('betsMatchesCtrl', function ($rootScope, $
     };
 
     var init = function() {
-        getMatchData($stateParams.matchId);
-        getAllBets();
+        // load all bets
+        Bets.getAllBets().then(function (response) {
+            angular.forEach(response, function (bet, index) {
+                $scope.data.bets[bet.matchId] = bet;
+            });
+            // load match data
+            getMatchData($stateParams.matchId);
+        });
     };
 
     init();

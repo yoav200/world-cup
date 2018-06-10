@@ -3,14 +3,16 @@
 
 angular.module('worldcup').controller('betsQualifierCtrl', function ($rootScope, $scope, $interval, Bets, Teams, growl) {
 
+    // ==============   for countdown =====================
+
     $scope.locked = {
-        isLocked : false,
+        isLocked: false,
         lockTime: undefined
     };
 
     // credit to: https://stackoverflow.com/questions/38108013/getting-time-left-countdown-html-javascript-angularjs
     $scope.CountDown = {
-        getTimeRemaining: function(endtime) {
+        getTimeRemaining: function (endtime) {
             var t = Date.parse(endtime) - Date.parse(new Date());
             var seconds = Math.floor((t / 1000) % 60);
             var minutes = Math.floor((t / 1000 / 60) % 60);
@@ -25,25 +27,28 @@ angular.module('worldcup').controller('betsQualifierCtrl', function ($rootScope,
             };
         },
 
-        initializeClock: function(endtime) {
+        initializeClock: function (endtime) {
             function updateClock() {
                 var t = $scope.CountDown.getTimeRemaining(endtime);
-
+                // expose to scope
                 $scope.CountDown.days = t.days;
                 $scope.CountDown.hours = ('0' + t.hours).slice(-2);
                 $scope.CountDown.minutes = ('0' + t.minutes).slice(-2);
                 $scope.CountDown.seconds = ('0' + t.seconds).slice(-2);
 
                 if (t.total <= 0) {
-                    $interval.cancel(timeinterval);
+                    $interval.cancel(timeInterval);
                 }
             }
 
             updateClock();
-            var timeinterval = $interval(updateClock, 1000);
+            var timeInterval = $interval(updateClock, 1000);
         }
     };
 
+    // ====================================================
+
+    // model that is passed to server
     $scope.qualifiers = {
         WINNER_GROUP_A: undefined,
         WINNER_GROUP_B: undefined,
@@ -81,6 +86,7 @@ angular.module('worldcup').controller('betsQualifierCtrl', function ($rootScope,
         WINNER_FINAL: undefined
     };
 
+    // holds the lists for each game
     $scope.teamsForSelect = {
         WINNER_GROUP_A: [],
         WINNER_GROUP_B: [],
@@ -116,27 +122,7 @@ angular.module('worldcup').controller('betsQualifierCtrl', function ($rootScope,
         WINNER_FINAL: []
     };
 
-
-    var getQualifiers = function () {
-        Bets.getQualifiers().then(function (response) {
-            var now = new Date();
-            var lockTime = new Date(response.lockTime);
-
-            $scope.locked = {
-                isLocked : (now > lockTime),
-                lockTime: lockTime
-            };
-
-            $scope.CountDown.initializeClock($scope.locked.lockTime);
-
-            var qualifiersList = response.qualifiersList;
-            angular.forEach(qualifiersList, function (qualifiers, index) {
-                $scope.qualifiers[qualifiers.knockoutTeamCode] = qualifiers.team;
-                $scope.selectionChanged(qualifiers.knockoutTeamCode);
-            });
-        });
-    };
-
+    // save qualifiers
     $scope.saveQualifiers = function () {
         var qualifiersData = [];
         for (var key in $scope.qualifiers) {
@@ -150,63 +136,15 @@ angular.module('worldcup').controller('betsQualifierCtrl', function ($rootScope,
             }
         }
 
-        var qualifiersList = {
-            qualifiersList: qualifiersData
-        };
-
-        Bets.setQualifiers(qualifiersList).then(function (response) {
+        Bets.setQualifiers({qualifiersList: qualifiersData}).then(function (response) {
             growl.success('You\'re bet saved successfully.', {title: 'Success!'});
             getQualifiers();
         });
     };
 
-
     $scope.teamsForStage = function (code) {
         return $scope.teamsForSelect[code];
     };
-
-    function setFlagToSelect(code) {
-        if ($scope.qualifiers[code]) {
-            var team = $scope.qualifiers[code];
-            var flag = "/images/teams/" + team.confederation.toLowerCase() + "/" + team.code + ".png";
-            var css = '#fff url(' + flag + ') no-repeat 78px 2px';
-            angular.element(('#' + code)).css({'background': css});
-        } else {
-            angular.element(('#' + code)).css({'background': ''});
-        }
-    }
-
-    function checkAndUpdateForSelect(codes, codeToUpdate) {
-        setFlagToSelect(codes[0]);
-        setFlagToSelect(codes[1]);
-        if ($scope.qualifiers[codes[0]] && $scope.qualifiers[codes[1]]) {
-            $scope.teamsForSelect[codeToUpdate] = [$scope.qualifiers[codes[0]], $scope.qualifiers[codes[1]]];
-        }
-    }
-
-    function setThirdPlaceList() {
-        $scope.teamsForSelect.WINNER_THIRD_PLACE = [];
-
-        if($scope.qualifiers.WINNER_SF1 && $scope.teamsForSelect.WINNER_SF1.length > 0) {
-            var loser1 = $scope.teamsForSelect.WINNER_SF1.filter(function (team) {
-                return team.name !== $scope.qualifiers.WINNER_SF1.name;
-            });
-            if(loser1 && loser1[0]) {
-                $scope.qualifiers.LOSER_SF1 = loser1[0];
-                $scope.teamsForSelect.WINNER_THIRD_PLACE.push(loser1[0]);
-            }
-        }
-
-        if($scope.qualifiers.WINNER_SF2 && $scope.teamsForSelect.WINNER_SF2.length > 0) {
-            var loser2 = $scope.teamsForSelect.WINNER_SF2.filter(function (team) {
-                return team.name !== $scope.qualifiers.WINNER_SF2.name;
-            });
-            if(loser2 && loser2[0]) {
-                $scope.qualifiers.LOSER_SF2 = loser2[0];
-                $scope.teamsForSelect.WINNER_THIRD_PLACE.push(loser2[0]);
-            }
-        }
-    }
 
     $scope.selectionChanged = function (code) {
         if (['WINNER_GROUP_C', 'RUNNER_UP_GROUP_D'].includes(code)) {
@@ -239,11 +177,7 @@ angular.module('worldcup').controller('betsQualifierCtrl', function ($rootScope,
             checkAndUpdateForSelect(['WINNER_QF3', 'WINNER_QF4'], 'WINNER_SF2');
         } else if (['WINNER_SF1', 'WINNER_SF2'].includes(code)) {
             checkAndUpdateForSelect(['WINNER_SF1', 'WINNER_SF2'], 'WINNER_FINAL');
-        }
-        /*else if (['LOSER_SF1', 'LOSER_SF2'].includes(code)) {
-            checkAndUpdateForSelect(['LOSER_SF1', 'LOSER_SF2'], 'WINNER_`');
-        } */
-        else if (['WINNER_THIRD_PLACE', 'WINNER_FINAL'].includes(code)) {
+        } else if (['WINNER_THIRD_PLACE', 'WINNER_FINAL'].includes(code)) {
             setFlagToSelect('WINNER_THIRD_PLACE');
             setFlagToSelect('WINNER_FINAL');
         } else {
@@ -253,6 +187,7 @@ angular.module('worldcup').controller('betsQualifierCtrl', function ($rootScope,
         setThirdPlaceList();
     };
 
+    // ==============  private functions ==================
 
     var getTeams = function () {
         Teams.getAllTeams().then(function (response) {
@@ -264,6 +199,69 @@ angular.module('worldcup').controller('betsQualifierCtrl', function ($rootScope,
                 $scope.teamsForSelect[runnerUp].push(team);
             });
         });
+    };
+
+    var getQualifiers = function () {
+        Bets.getQualifiers().then(function (response) {
+            var now = new Date();
+            var lockTime = new Date(response.lockTime);
+
+            $scope.locked = {
+                isLocked: (now > lockTime),
+                lockTime: lockTime
+            };
+            // initiate count down
+            $scope.CountDown.initializeClock($scope.locked.lockTime);
+
+            angular.forEach(response.qualifiersList, function (qualifiers, index) {
+                $scope.qualifiers[qualifiers.knockoutTeamCode] = qualifiers.team;
+                $scope.selectionChanged(qualifiers.knockoutTeamCode);
+            });
+        });
+    };
+
+    // nifty!
+    var setFlagToSelect = function (code) {
+        if ($scope.qualifiers[code]) {
+            var team = $scope.qualifiers[code];
+            var flag = "/images/teams/" + team.confederation.toLowerCase() + "/" + team.code + ".png";
+            var css = '#fff url(' + flag + ') no-repeat 78px 2px';
+            angular.element(('#' + code)).css({'background': css});
+        } else {
+            angular.element(('#' + code)).css({'background': ''});
+        }
+    };
+
+    var checkAndUpdateForSelect = function (codes, codeToUpdate) {
+        setFlagToSelect(codes[0]);
+        setFlagToSelect(codes[1]);
+        if ($scope.qualifiers[codes[0]] && $scope.qualifiers[codes[1]]) {
+            $scope.teamsForSelect[codeToUpdate] = [$scope.qualifiers[codes[0]], $scope.qualifiers[codes[1]]];
+        }
+    };
+
+    var setThirdPlaceList = function () {
+        $scope.teamsForSelect.WINNER_THIRD_PLACE = [];
+
+        if ($scope.qualifiers.WINNER_SF1 && $scope.teamsForSelect.WINNER_SF1.length > 0) {
+            var loser1 = $scope.teamsForSelect.WINNER_SF1.filter(function (team) {
+                return team.name !== $scope.qualifiers.WINNER_SF1.name;
+            });
+            if (loser1 && loser1[0]) {
+                $scope.qualifiers.LOSER_SF1 = loser1[0];
+                $scope.teamsForSelect.WINNER_THIRD_PLACE.push(loser1[0]);
+            }
+        }
+
+        if ($scope.qualifiers.WINNER_SF2 && $scope.teamsForSelect.WINNER_SF2.length > 0) {
+            var loser2 = $scope.teamsForSelect.WINNER_SF2.filter(function (team) {
+                return team.name !== $scope.qualifiers.WINNER_SF2.name;
+            });
+            if (loser2 && loser2[0]) {
+                $scope.qualifiers.LOSER_SF2 = loser2[0];
+                $scope.teamsForSelect.WINNER_THIRD_PLACE.push(loser2[0]);
+            }
+        }
     };
 
     var init = function () {
