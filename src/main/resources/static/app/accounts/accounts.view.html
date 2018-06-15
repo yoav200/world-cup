@@ -7,6 +7,7 @@
         <thead>
         <tr>
             <th>#</th>
+            <th>Id</th>
             <th scope="col">Nmae</th>
             <th scope="col">Email</th>
             <th scope="col">Social Provider</th>
@@ -16,6 +17,7 @@
 
         <tbody>
         <tr ng-repeat="account in accounts">
+            <td>{{$index+1}}</td>
             <td>{{account.id}}</td>
             <td>
                 <img ng-src="{{account.profileImageUrl}}" style="max-height: 50px;"/>

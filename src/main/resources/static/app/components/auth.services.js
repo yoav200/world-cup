@@ -38,6 +38,7 @@ angular.module('worldcup').factory('Auth', function ($rootScope, $state, $http, 
         getAccount().then(function (response) {
             Account = {
                 authenticate: true,
+                id : response.id,
                 roles: response.roles,
                 displayName: response.fullName,
                 imageUrl: response.profileImageUrl,

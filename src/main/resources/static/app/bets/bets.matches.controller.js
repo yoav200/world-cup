@@ -33,9 +33,9 @@ angular.module('worldcup').controller('betsMatchesCtrl', function ($rootScope, $
         betsOnAwayTeamPercent: undefined
     };
 
-    var selectByMatchId = function(matchId) {
-        var matches =  $scope.data.matches.firstStage.concat($scope.data.matches.secondStage);
-        return  matches.find(function(match) {
+    var selectByMatchId = function (matchId) {
+        var matches = $scope.data.matches.firstStage.concat($scope.data.matches.secondStage);
+        return matches.find(function (match) {
             return match.matchId === parseInt(matchId) && match.ready;
         });
     };
@@ -46,15 +46,6 @@ angular.module('worldcup').controller('betsMatchesCtrl', function ($rootScope, $
 
             if (matchId) {
                 var match = selectByMatchId(matchId);
-
-                // var match, stage;
-                // if (matchId < 49) {
-                //     match = selectByMatchId(response.firstStage, matchId);
-                //     stage = 'first';
-                // } else {
-                //     match = selectByMatchId(response.secondStage, matchId);
-                //     stage = 'second';
-                // }
 
                 if (match) {
                     $scope.selected.match = match;
@@ -131,7 +122,6 @@ angular.module('worldcup').controller('betsMatchesCtrl', function ($rootScope, $
 
 
     $scope.onMatchSelected = function (stage) {
-        //var list = (stage === 'first') ? $scope.data.matches.firstStage : $scope.data.matches.secondStage;
         var list = $scope.data.matches.firstStage.concat($scope.data.matches.secondStage);
         angular.forEach(list, function (match, index) {
             if ($scope.selected.match.matchId === match.matchId) {

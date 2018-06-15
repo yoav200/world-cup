@@ -107,3 +107,7 @@ body {
     -webkit-appearance: none;
     -moz-appearance: none;
 }
+
+.border_highlight {
+    border: 3px solid #4cae4c;
+}
