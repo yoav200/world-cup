@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('worldcup').factory('Auth', function ($rootScope, $state, $http, $timeout, $log) {
+angular.module('worldcup').factory('Auth', function ($rootScope, $state, $http, $timeout, $cookies, $log) {
 
     var TIMEOUT_MILLIS = 1000 * 60 * 10; // 10 minutes
 
@@ -47,6 +47,14 @@ angular.module('worldcup').factory('Auth', function ($rootScope, $state, $http, 
             if (auth.isLoggedIn()) {
                 $rootScope.Account = Account;
             }
+
+            var stateName = $cookies.get("state_name");
+            if(stateName) {
+                $log.info("found state to goto", stateName);
+                $cookies.remove("state_name");
+                $state.go(stateName)
+            }
+
         });
         // start polling
         heartBeat();
@@ -58,7 +66,6 @@ angular.module('worldcup').factory('Auth', function ($rootScope, $state, $http, 
         }
         return userHasPermissionForView(view);
     };
-
 
     var userHasPermissionForView = function (view) {
         if (!auth.isLoggedIn()) {
@@ -95,7 +102,7 @@ angular.module('worldcup').factory('Auth', function ($rootScope, $state, $http, 
 
     auth.socialLogin = function (provider) {
         console.log(provider);
-        $state.go('login', {'provider': provider});
+        $state.go('login', {'provider': provider, view : callbackState});
     };
 
     auth.currentAccount = function () {
@@ -106,5 +113,8 @@ angular.module('worldcup').factory('Auth', function ($rootScope, $state, $http, 
         window.location.href = '/logout';
     };
 
+    auth.setStateUrl = function(stateName) {
+        $cookies.put("state_name", stateName);
+    };
     return auth;
 });

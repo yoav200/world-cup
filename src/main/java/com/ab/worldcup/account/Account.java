@@ -1,7 +1,6 @@
 package com.ab.worldcup.account;
 
 
-import com.ab.worldcup.web.components.EncryptionUtil;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
@@ -23,7 +22,6 @@ public class Account {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @JsonIgnore
     private Long id;
 
     @JsonIgnore
@@ -63,7 +61,7 @@ public class Account {
     private final Set<String> roles = new HashSet<>();
 
 
-    public String getAccountId() {
-        return EncryptionUtil.encodeId(id);
-    }
+//    public String getAccountId() {
+//        return EncryptionUtil.encodeId(id);
+//    }
 }

@@ -3,26 +3,32 @@
         <small>Admin Only!</small>
     </h1>
 
+    <table class="table table-hover table-striped table-bordered">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th scope="col">Nmae</th>
+            <th scope="col">Email</th>
+            <th scope="col">Social Provider</th>
+            <th scope="col">Status</th>
+        </tr>
+        </thead>
 
-    <table class="table table-hover table-striped table-condensed">
         <tbody>
         <tr ng-repeat="account in accounts">
-            <td class="col-md-1">
+            <td>{{account.id}}</td>
+            <td>
                 <img ng-src="{{account.profileImageUrl}}" style="max-height: 50px;"/>
                 {{account.fullName}}
                 <span ng-show="account.status=='ACTIVE'" class="glyphicon glyphicon-usd" aria-hidden="true"></span>
             </td>
-            <td ng-show="false" class="col-md-1">{{account.accountId}}</td>
-            <td class="col-md-1">{{account.email}}</td>
-            <td class="col-md-1">{{account.providerId}}</td>
-            <td class="col-md-1">
-                <a href="#"
-                   editable-select="account.status" e-ng-options="s.value as s.text for s in statuses"
-                   onbeforesave="updateUser($data, account.accountId)">
-                    {{ showStatus(account.status) }}
-                </a>
+            <td>{{account.email}}</td>
+            <td>{{account.providerId}}</td>
+            <td>
+                <a href="#" editable-select="account.status"
+                   e-ng-options="s.value as s.text for s in statuses"
+                   onbeforesave="updateUser($data, account.id)">{{showStatus(account.status)}}</a>
             </td>
-
         </tr>
         </tbody>
     </table>

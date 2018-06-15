@@ -4,7 +4,7 @@ angular.module('worldcup').controller('betsMatchesCtrl', function ($rootScope, $
 
     $scope.data = {
         // all matches data
-        matches : {},
+        matches: {},
         // holds a map of matchId to map
         bets: {}
     };
@@ -28,36 +28,39 @@ angular.module('worldcup').controller('betsMatchesCtrl', function ($rootScope, $
     $scope.infoPopover = {
         templateUrl: 'infoPopoverTemplate.html',
         title: 'Bet Statistics',
-        betsOnHomeTeamPercent : undefined,
-        betsOnDrawPercent : undefined,
-        betsOnAwayTeamPercent : undefined
+        betsOnHomeTeamPercent: undefined,
+        betsOnDrawPercent: undefined,
+        betsOnAwayTeamPercent: undefined
     };
 
-    var selectByMatchId = function(matches, matchId) {
+    var selectByMatchId = function(matchId) {
+        var matches =  $scope.data.matches.firstStage.concat($scope.data.matches.secondStage);
         return  matches.find(function(match) {
             return match.matchId === parseInt(matchId) && match.ready;
         });
     };
 
-    var getMatchData = function(matchId) {
+    var getMatchData = function (matchId) {
         Bets.getMatchesData().then(function (response) {
             $scope.data.matches = response;
 
-            if(matchId) {
-                var match, stage;
-                if(matchId < 49) {
-                    match = selectByMatchId(response.firstStage, matchId);
-                    stage = 'first';
-                } else {
-                    match = selectByMatchId(response.secondStage, matchId);
-                    stage = 'second';
-                }
+            if (matchId) {
+                var match = selectByMatchId(matchId);
 
-                if(match) {
+                // var match, stage;
+                // if (matchId < 49) {
+                //     match = selectByMatchId(response.firstStage, matchId);
+                //     stage = 'first';
+                // } else {
+                //     match = selectByMatchId(response.secondStage, matchId);
+                //     stage = 'second';
+                // }
+
+                if (match) {
                     $scope.selected.match = match;
-                    $scope.onMatchSelected(stage);
+                    $scope.onMatchSelected('');
                 } else {
-                    growl.info('Match in second stage and not set yet or wrong match id',{title: 'Match not found!'});
+                    growl.info('Match in second stage and not set yet or wrong match id', {title: 'Match not found!'});
                 }
             }
         });
@@ -65,8 +68,8 @@ angular.module('worldcup').controller('betsMatchesCtrl', function ($rootScope, $
 
     // ~ =============== START delete bet dialog ================
 
-    $scope.confirmDeleteBet = function() {
-        $scope.modalInstance =  $uibModal.open({
+    $scope.confirmDeleteBet = function () {
+        $scope.modalInstance = $uibModal.open({
             animation: true,
             ariaLabelledBy: 'modal-title-top',
             ariaDescribedBy: 'modal-body-top',
@@ -84,9 +87,9 @@ angular.module('worldcup').controller('betsMatchesCtrl', function ($rootScope, $
 
     $scope.deleteBet = function () {
         $scope.modalInstance.close();
-        Bets.deleteUserBet($scope.userBet.betId).then(function() {
+        Bets.deleteUserBet($scope.userBet.betId).then(function () {
             getMatchData();
-            growl.info('You\'re bet deleted successfully.',{title: 'Deleted!'});
+            growl.info('You\'re bet deleted successfully.', {title: 'Deleted!'});
         });
     };
 
@@ -99,22 +102,37 @@ angular.module('worldcup').controller('betsMatchesCtrl', function ($rootScope, $
     $scope.postUserBet = function () {
         // set matchQualifier according to goals
         // in case of equals matchQualifier=HomeWon
-        if($scope.userBet.homeTeamGoals >= $scope.userBet.awayTeamGoals) {
+        if ($scope.userBet.homeTeamGoals >= $scope.userBet.awayTeamGoals) {
             $scope.userBet.matchQualifier = 'HOME_TEAM';
-        } else if($scope.userBet.homeTeamGoals < $scope.userBet.awayTeamGoals) {
+        } else if ($scope.userBet.homeTeamGoals < $scope.userBet.awayTeamGoals) {
             $scope.userBet.matchQualifier = 'AWAY_TEAM';
         }
         Bets.updateBet($scope.userBet.betId, $scope.userBet).then(function (response) {
             getMatchData($scope.selected.match.matchId);
-            growl.success('You\'re bet saved successfully.',{title: 'Success!'});
+            growl.success('You\'re bet saved successfully.', {title: 'Success!'});
         });
+    };
+
+    $scope.scrollMatches = function (prevNext) {
+        if (!$scope.selected.match) {
+            return;
+        }
+        var matchId = (prevNext === 'next') ? $scope.selected.match.matchId + 1 : $scope.selected.match.matchId - 1;
+
+        var match = selectByMatchId(matchId);
+
+        if (!match) {
+            match = selectByMatchId(1);
+        }
+
+        $scope.selected.match = match;
+        $scope.onMatchSelected('');
     };
 
 
     $scope.onMatchSelected = function (stage) {
-
-        var list = (stage === 'first') ? $scope.data.matches.firstStage : $scope.data.matches.secondStage;
-
+        //var list = (stage === 'first') ? $scope.data.matches.firstStage : $scope.data.matches.secondStage;
+        var list = $scope.data.matches.firstStage.concat($scope.data.matches.secondStage);
         angular.forEach(list, function (match, index) {
             if ($scope.selected.match.matchId === match.matchId) {
                 // set selected bet
@@ -137,13 +155,13 @@ angular.module('worldcup').controller('betsMatchesCtrl', function ($rootScope, $
                 templateUrl: 'infoPopoverTemplate.html',
                 title: 'Bet Statistics',
                 betsOnHomeTeamPercent: response.betsOnHomeTeamPercent,
-                betsOnDrawPercent : response.betsOnDrawPercent,
-                betsOnAwayTeamPercent : response.betsOnAwayTeamPercent
+                betsOnDrawPercent: response.betsOnDrawPercent,
+                betsOnAwayTeamPercent: response.betsOnAwayTeamPercent
             };
         });
     };
 
-    var init = function() {
+    var init = function () {
         // load all bets
         Bets.getAllBets().then(function (response) {
             angular.forEach(response, function (bet, index) {

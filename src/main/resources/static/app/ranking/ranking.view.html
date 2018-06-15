@@ -4,33 +4,46 @@
         <h2>Ranking <small><a class="btn btn-link" ui-sref="rules">Rules</a></small></h2>
         <p>Welcome to world cup 2018 betting competition:</p>
 
-        <table class="table table-hover table-condensed">
+        <table class="table table-hover table-striped table-bordered">
             <thead>
             <tr>
                 <th>Rank</th>
                 <th scope="col">Username</th>
-                <th scope="col"><a ui-sref="bets.qualifier">Qualifiers Bet</a></th>
-                <th scope="col"><a ui-sref="bets.matches">Group Stage Bet</a></th>
-                <th scope="col">Knockout Stage Bet</th>
                 <th scope="col">Points</th>
             </tr>
             </thead>
             <tbody>
-            <tr ng-repeat="userRankingData in rankingData">
-                <td>{{$index+1}}</td>
+            <tr ng-repeat="ranking in rankingData">
                 <td>
-                    <img ng-src="{{userRankingData.account.profileImageUrl}}" style="max-height: 50px;"/>
-                    <span>{{userRankingData.account.fullName}}</span>
-                    <span ng-show="userRankingData.account.status=='ACTIVE'" class="glyphicon glyphicon-usd" aria-hidden="true"></span>
+                    <span ng-show="ranking.rank < ranking.prevRank">
+                        <span>({{ranking.prevRank-ranking.rank}})</span>
+                        <span class="glyphicon glyphicon-arrow-up text-success"></span>
+                    </span>
+
+                    <span ng-show="ranking.rank > ranking.prevRank">
+                        <span>({{ranking.prevRank-ranking.rank}})</span>
+                        <span class="glyphicon glyphicon-arrow-down text-warning"></span>
+                    </span>
+
+                    <span><strong>{{ranking.rank}}</strong></span>
                 </td>
-                <td>{{userRankingData.qualifierBetCompletionPercentage}}% Completed</td>
-                <td>{{userRankingData.groupMatchesBetCompletionPercentage}}% Completed</td>
-                <td>{{userRankingData.knockoutMatchesBetCompletionPercentage}}% Completed</td>
-                <td>{{userRankingData.totalPoints}}</td>
+                <td>
+                    <img ng-src="{{ranking.account.profileImageUrl}}" style="max-height: 50px;"/>
+                    <span>{{ranking.account.fullName}}</span>
+                    <span ng-show="ranking.account.status=='ACTIVE'" class="glyphicon glyphicon-usd" aria-hidden="true"></span>
+                </td>
+                <td>
+                    <span ng-show="ranking.points > ranking.prevPoints">
+                        (+{{ranking.points - ranking.prevPoints}})
+                    </span>
+                    <span ng-show="ranking.points == ranking.prevPoints">
+                        (-)
+                    </span>
+                    <span><strong>{{ranking.points}}</strong></span>
+                </td>
             </tr>
             </tbody>
         </table>
     </div>
-
 
 </section>

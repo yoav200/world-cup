@@ -43,7 +43,7 @@ public class ResultsService {
         return RankingData.builder()
                 .account(account)
                 .totalPoints(totalPointsForAccount)
-                .userBets(calculatedUserBets)
+                //.userBets(calculatedUserBets)
                 .qualifierBetCompletionPercentage(qualifierBetProgressPercentage)
                 .groupMatchesBetCompletionPercentage(groupMatchesBetProgressPercentage)
                 .knockoutMatchesBetCompletionPercentage(knockoutMatchesBetProgressPercentage)

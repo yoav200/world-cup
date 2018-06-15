@@ -7,6 +7,7 @@ var app = angular.module('worldcup', [
     'ui.router',
     'ui.router.stateHelper',
     'ui.bootstrap',
+    'ngCookies',
     'xeditable',
     'ngResource',
     'ngAnimate',
@@ -218,6 +219,7 @@ app.config(function ($urlRouterProvider, $httpProvider, growlProvider) {
 
     $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
         if (!Auth.checkPermissionForView(toState)) {
+            Auth.setStateUrl(toState.name);
             event.preventDefault();
             $state.go('join');
         }

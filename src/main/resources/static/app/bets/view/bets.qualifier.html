@@ -36,7 +36,8 @@
                         <select id="WINNER_FINAL"
                                 ng-options="team as team.name for team in teamsForStage('WINNER_FINAL') track by team.name"
                                 ng-model="qualifiers.WINNER_FINAL"
-                                ng-change="selectionChanged('WINNER_FINAL')">
+                                ng-change="selectionChanged('WINNER_FINAL')"
+                                data-ng-disabled="locked.isLocked">
                         </select>
                     </td>
                     <td>&nbsp;</td>
@@ -48,13 +49,15 @@
                         <select id="WINNER_GROUP_C"
                                 ng-options="team as team.name for team in teamsForStage('WINNER_GROUP_C') track by team.name"
                                 ng-model="qualifiers.WINNER_GROUP_C"
-                                ng-change="selectionChanged('WINNER_GROUP_C')">
+                                ng-change="selectionChanged('WINNER_GROUP_C')"
+                                data-ng-disabled="locked.isLocked">
                         </select></td>
                     <td class="info" rowspan="2">WINNER_ROS1<br>
                         <select id="WINNER_ROS1"
                                 ng-options="team as team.name for team in teamsForStage('WINNER_ROS1') track by team.name"
                                 ng-model="qualifiers.WINNER_ROS1"
-                                ng-change="selectionChanged('WINNER_ROS1')"></select>
+                                ng-change="selectionChanged('WINNER_ROS1')"
+                                data-ng-disabled="locked.isLocked"></select>
                     </td>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
@@ -63,13 +66,15 @@
                         <select id="WINNER_ROS3"
                                 ng-options="team as team.name for team in teamsForStage('WINNER_ROS3') track by team.name"
                                 ng-model="qualifiers.WINNER_ROS3"
-                                ng-change="selectionChanged('WINNER_ROS3')">
+                                ng-change="selectionChanged('WINNER_ROS3')"
+                                data-ng-disabled="locked.isLocked">
                         </select></td>
                     <td class="info">WINNER_GROUP_B<br>
                         <select id="WINNER_GROUP_B"
                                 ng-options="team as team.name for team in teamsForStage('WINNER_GROUP_B') track by team.name"
                                 ng-model="qualifiers.WINNER_GROUP_B"
-                                ng-change="selectionChanged('WINNER_GROUP_B')">
+                                ng-change="selectionChanged('WINNER_GROUP_B')"
+                                data-ng-disabled="locked.isLocked">
                         </select></td>
                 </tr>
                 <tr>
@@ -77,26 +82,30 @@
                         <select id="RUNNER_UP_GROUP_D"
                                 ng-options="team as team.name for team in teamsForStage('RUNNER_UP_GROUP_D') track by team.name"
                                 ng-model="qualifiers.RUNNER_UP_GROUP_D"
-                                ng-change="selectionChanged('RUNNER_UP_GROUP_D')">
+                                ng-change="selectionChanged('RUNNER_UP_GROUP_D')"
+                                data-ng-disabled="locked.isLocked">
                         </select></td>
                     <td class="info" rowspan="3">WINNER_QF1<br>
                         <select id="WINNER_QF1"
                                 ng-options="team as team.name for team in teamsForStage('WINNER_QF1') track by team.name"
                                 ng-model="qualifiers.WINNER_QF1"
-                                ng-change="selectionChanged('WINNER_QF1')">
+                                ng-change="selectionChanged('WINNER_QF1')"
+                                data-ng-disabled="locked.isLocked">
                         </select></td>
                     <td>&nbsp;</td>
                     <td class="info" rowspan="3">WINNER_QF3<br>
                         <select id="WINNER_QF3"
                                 ng-options="team as team.name for team in teamsForStage('WINNER_QF3') track by team.name"
                                 ng-model="qualifiers.WINNER_QF3"
-                                ng-change="selectionChanged('WINNER_QF3')">
+                                ng-change="selectionChanged('WINNER_QF3')"
+                                data-ng-disabled="locked.isLocked">
                         </select></td>
                     <td class="info">RUNNER_UP_GROUP_A<br>
                         <select id="RUNNER_UP_GROUP_A"
                                 ng-options="team as team.name for team in teamsForStage('RUNNER_UP_GROUP_A') track by team.name"
                                 ng-model="qualifiers.RUNNER_UP_GROUP_A"
-                                ng-change="selectionChanged('RUNNER_UP_GROUP_A')">
+                                ng-change="selectionChanged('RUNNER_UP_GROUP_A')"
+                                data-ng-disabled="locked.isLocked">
                         </select></td>
                 </tr>
                 <tr>
@@ -106,13 +115,15 @@
                         <select id="WINNER_SF1"
                                 ng-options="team as team.name for team in teamsForStage('WINNER_SF1') track by team.name"
                                 ng-model="qualifiers.WINNER_SF1"
-                                ng-change="selectionChanged('WINNER_SF1')">
+                                ng-change="selectionChanged('WINNER_SF1')"
+                                data-ng-disabled="locked.isLocked">
                         </select>
                         <br>WINNER_SF2<br>
                         <select id="WINNER_SF2"
                                 ng-options="team as team.name for team in teamsForStage('WINNER_SF2') track by team.name"
                                 ng-model="qualifiers.WINNER_SF2"
-                                ng-change="selectionChanged('WINNER_SF2')">
+                                ng-change="selectionChanged('WINNER_SF2')"
+                                data-ng-disabled="locked.isLocked">
                         </select>
                     </td>
                     <td>&nbsp;</td>
@@ -123,25 +134,29 @@
                         <select id="WINNER_GROUP_A"
                                 ng-options="team as team.name for team in teamsForStage('WINNER_GROUP_A') track by team.name"
                                 ng-model="qualifiers.WINNER_GROUP_A"
-                                ng-change="selectionChanged('WINNER_GROUP_A')">
+                                ng-change="selectionChanged('WINNER_GROUP_A')"
+                                data-ng-disabled="locked.isLocked">
                         </select></td>
                     <td class="info" rowspan="2">WINNER_ROS2<br>
                         <select id="WINNER_ROS2"
                                 ng-options="team as team.name for team in teamsForStage('WINNER_ROS2') track by team.name"
                                 ng-model="qualifiers.WINNER_ROS2"
-                                ng-change="selectionChanged('WINNER_ROS2')">
+                                ng-change="selectionChanged('WINNER_ROS2')"
+                                data-ng-disabled="locked.isLocked">
                         </select></td>
                     <td class="info" rowspan="2">WINNER_ROS4<br>
                         <select id="WINNER_ROS4"
                                 ng-options="team as team.name for team in teamsForStage('WINNER_ROS4') track by team.name"
                                 ng-model="qualifiers.WINNER_ROS4"
-                                ng-change="selectionChanged('WINNER_ROS4')">
+                                ng-change="selectionChanged('WINNER_ROS4')"
+                                data-ng-disabled="locked.isLocked">
                         </select></td>
                     <td class="info">WINNER_GROUP_D<br>
                         <select id="WINNER_GROUP_D"
                                 ng-options="team as team.name for team in teamsForStage('WINNER_GROUP_D') track by team.name"
                                 ng-model="qualifiers.WINNER_GROUP_D"
-                                ng-change="selectionChanged('WINNER_GROUP_D')">
+                                ng-change="selectionChanged('WINNER_GROUP_D')"
+                                data-ng-disabled="locked.isLocked">
                         </select></td>
                 </tr>
                 <tr>
@@ -149,7 +164,8 @@
                         <select id="RUNNER_UP_GROUP_B"
                                 ng-options="team as team.name for team in teamsForStage('RUNNER_UP_GROUP_B') track by team.name"
                                 ng-model="qualifiers.RUNNER_UP_GROUP_B"
-                                ng-change="selectionChanged('RUNNER_UP_GROUP_B')">
+                                ng-change="selectionChanged('RUNNER_UP_GROUP_B')"
+                                data-ng-disabled="locked.isLocked">
                         </select></td>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
@@ -157,7 +173,8 @@
                         <select id="RUNNER_UP_GROUP_C"
                                 ng-options="team as team.name for team in teamsForStage('RUNNER_UP_GROUP_C') track by team.name"
                                 ng-model="qualifiers.RUNNER_UP_GROUP_C"
-                                ng-change="selectionChanged('RUNNER_UP_GROUP_C')">
+                                ng-change="selectionChanged('RUNNER_UP_GROUP_C')"
+                                data-ng-disabled="locked.isLocked">
                         </select></td>
                 </tr>
                 <tr>
@@ -172,13 +189,15 @@
                         <select id="WINNER_GROUP_E"
                                 ng-options="team as team.name for team in teamsForStage('WINNER_GROUP_E') track by team.name"
                                 ng-model="qualifiers.WINNER_GROUP_E"
-                                ng-change="selectionChanged('WINNER_GROUP_E')">
+                                ng-change="selectionChanged('WINNER_GROUP_E')"
+                                data-ng-disabled="locked.isLocked">
                         </select></td>
                     <td class="info" rowspan="2">WINNER_ROS5<br>
                         <select id="WINNER_ROS5"
                                 ng-options="team as team.name for team in teamsForStage('WINNER_ROS5') track by team.name"
                                 ng-model="qualifiers.WINNER_ROS5"
-                                ng-change="selectionChanged('WINNER_ROS5')">
+                                ng-change="selectionChanged('WINNER_ROS5')"
+                                data-ng-disabled="locked.isLocked">
                         </select></td>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
@@ -186,13 +205,15 @@
                         <select id="WINNER_ROS7"
                                 ng-options="team as team.name for team in teamsForStage('WINNER_ROS7') track by team.name"
                                 ng-model="qualifiers.WINNER_ROS7"
-                                ng-change="selectionChanged('WINNER_ROS7')">
+                                ng-change="selectionChanged('WINNER_ROS7')"
+                                data-ng-disabled="locked.isLocked">
                         </select></td>
                     <td class="info">WINNER_GROUP_F<br>
                         <select id="WINNER_GROUP_F"
                                 ng-options="team as team.name for team in teamsForStage('WINNER_GROUP_F') track by team.name"
                                 ng-model="qualifiers.WINNER_GROUP_F"
-                                ng-change="selectionChanged('WINNER_GROUP_F')">
+                                ng-change="selectionChanged('WINNER_GROUP_F')"
+                                data-ng-disabled="locked.isLocked">
                         </select></td>
                 </tr>
                 <tr>
@@ -200,25 +221,29 @@
                         <select id="RUNNER_UP_GROUP_F"
                                 ng-options="team as team.name for team in teamsForStage('RUNNER_UP_GROUP_F') track by team.name"
                                 ng-model="qualifiers.RUNNER_UP_GROUP_F"
-                                ng-change="selectionChanged('RUNNER_UP_GROUP_F')">
+                                ng-change="selectionChanged('RUNNER_UP_GROUP_F')"
+                                data-ng-disabled="locked.isLocked">
                         </select></td>
                     <td class="info" rowspan="3">WINNER_QF2<br>
                         <select id="WINNER_QF2"
                                 ng-options="team as team.name for team in teamsForStage('WINNER_QF2') track by team.name"
                                 ng-model="qualifiers.WINNER_QF2"
-                                ng-change="selectionChanged('WINNER_QF2')">
+                                ng-change="selectionChanged('WINNER_QF2')"
+                                data-ng-disabled="locked.isLocked">
                         </select></td>
                     <td class="info" rowspan="3">WINNER_QF4<br>
                         <select id="WINNER_QF4"
                                 ng-options="team as team.name for team in teamsForStage('WINNER_QF4') track by team.name"
                                 ng-model="qualifiers.WINNER_QF4"
-                                ng-change="selectionChanged('WINNER_QF4')">
+                                ng-change="selectionChanged('WINNER_QF4')"
+                                data-ng-disabled="locked.isLocked">
                         </select></td>
                     <td class="info">RUNNER_UP_GROUP_E<br>
                         <select id="RUNNER_UP_GROUP_E"
                                 ng-options="team as team.name for team in teamsForStage('RUNNER_UP_GROUP_E') track by team.name"
                                 ng-model="qualifiers.RUNNER_UP_GROUP_E"
-                                ng-change="selectionChanged('RUNNER_UP_GROUP_E')">
+                                ng-change="selectionChanged('RUNNER_UP_GROUP_E')"
+                                data-ng-disabled="locked.isLocked">
                         </select></td>
                 </tr>
                 <tr>
@@ -232,26 +257,30 @@
                         <select id="WINNER_GROUP_G"
                                 ng-options="team as team.name for team in teamsForStage('WINNER_GROUP_G') track by team.name"
                                 ng-model="qualifiers.WINNER_GROUP_G"
-                                ng-change="selectionChanged('WINNER_GROUP_G')">
+                                ng-change="selectionChanged('WINNER_GROUP_G')"
+                                data-ng-disabled="locked.isLocked">
                         </select></td>
                     <td class="info" rowspan="2">WINNER_ROS6<br>
                         <select id="WINNER_ROS6"
                                 ng-options="team as team.name for team in teamsForStage('WINNER_ROS6') track by team.name"
                                 ng-model="qualifiers.WINNER_ROS6"
-                                ng-change="selectionChanged('WINNER_ROS6')">
+                                ng-change="selectionChanged('WINNER_ROS6')"
+                                data-ng-disabled="locked.isLocked">
                         </select></td>
                     <td>&nbsp;</td>
                     <td class="info" rowspan="2">WINNER_ROS8<br>
                         <select id="WINNER_ROS8"
                                 ng-options="team as team.name for team in teamsForStage('WINNER_ROS8') track by team.name"
                                 ng-model="qualifiers.WINNER_ROS8"
-                                ng-change="selectionChanged('WINNER_ROS8')">
+                                ng-change="selectionChanged('WINNER_ROS8')"
+                                data-ng-disabled="locked.isLocked">
                         </select></td>
                     <td class="info">WINNER_GROUP_H<br>
                         <select id="WINNER_GROUP_H"
                                 ng-options="team as team.name for team in teamsForStage('WINNER_GROUP_H') track by team.name"
                                 ng-model="qualifiers.WINNER_GROUP_H"
-                                ng-change="selectionChanged('WINNER_GROUP_H')">
+                                ng-change="selectionChanged('WINNER_GROUP_H')"
+                                data-ng-disabled="locked.isLocked">
                         </select></td>
                 </tr>
                 <tr>
@@ -259,7 +288,8 @@
                         <select id="RUNNER_UP_GROUP_H"
                                 ng-options="team as team.name for team in teamsForStage('RUNNER_UP_GROUP_H') track by team.name"
                                 ng-model="qualifiers.RUNNER_UP_GROUP_H"
-                                ng-change="selectionChanged('RUNNER_UP_GROUP_H')">
+                                ng-change="selectionChanged('RUNNER_UP_GROUP_H')"
+                                data-ng-disabled="locked.isLocked">
                         </select></td>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
@@ -268,7 +298,8 @@
                         <select id="RUNNER_UP_GROUP_G"
                                 ng-options="team as team.name for team in teamsForStage('RUNNER_UP_GROUP_G') track by team.name"
                                 ng-model="qualifiers.RUNNER_UP_GROUP_G"
-                                ng-change="selectionChanged('RUNNER_UP_GROUP_G')">
+                                ng-change="selectionChanged('RUNNER_UP_GROUP_G')"
+                                data-ng-disabled="locked.isLocked">
                         </select></td>
                 </tr>
                 <tr>
@@ -280,7 +311,8 @@
                         <select id="WINNER_THIRD_PLACE"
                                 ng-options="team as team.name for team in teamsForStage('WINNER_THIRD_PLACE') track by team.name"
                                 ng-model="qualifiers.WINNER_THIRD_PLACE"
-                                ng-change="selectionChanged('WINNER_THIRD_PLACE')">
+                                ng-change="selectionChanged('WINNER_THIRD_PLACE')"
+                                data-ng-disabled="locked.isLocked">
                         </select></td>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>

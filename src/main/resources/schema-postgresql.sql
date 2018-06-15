@@ -91,4 +91,12 @@ CREATE TABLE qualifier(
   stageId           VARCHAR NOT NULL
 );
 
+CREATE TABLE ranking (
+  id          SERIAL PRIMARY KEY,
+  date        TIMESTAMPZ,
+  accountId   INT REFERENCES account (id),
+  points      INT,
+  CONSTRAINT no_duplicate_ranking UNIQUE (accountId, date)
+);
+
 

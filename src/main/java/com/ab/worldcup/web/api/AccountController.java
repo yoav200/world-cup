@@ -2,7 +2,6 @@ package com.ab.worldcup.web.api;
 
 import com.ab.worldcup.account.Account;
 import com.ab.worldcup.account.AccountService;
-import com.ab.worldcup.web.components.EncryptionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -39,7 +38,7 @@ public class AccountController {
         }
         return account;
     }
-    
+
     // ~ ===============================  ADMIN ONLY ==========================
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -51,9 +50,9 @@ public class AccountController {
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @ResponseBody
-    @RequestMapping(value = "/{idd}", method = RequestMethod.POST)
-    public Account updateAccount(@PathVariable String idd, @RequestBody Account account) {
-        Long id = EncryptionUtil.decodeId(idd);
+    @RequestMapping(value = "/{id}", method = RequestMethod.POST)
+    public Account updateAccount(@PathVariable Long id, @RequestBody Account account) {
+        //Long id = EncryptionUtil.decodeId(idd);
         return accountService.updateAccountStatus(id, account.getStatus());
     }
 }

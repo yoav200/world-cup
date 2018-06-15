@@ -3,6 +3,7 @@ package com.ab.worldcup.match;
 import com.ab.worldcup.group.GroupService;
 import com.ab.worldcup.knockout.KnockoutService;
 import com.ab.worldcup.knockout.KnockoutTeam;
+import com.ab.worldcup.ranking.RankingService;
 import com.ab.worldcup.results.MatchResult;
 import com.ab.worldcup.results.Qualifier;
 import com.ab.worldcup.results.ResultInterface;
@@ -16,6 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -40,6 +43,9 @@ public class MatchService {
 
     @Autowired
     private ResultsService resultsService;
+
+    @Autowired
+    private RankingService rankingService;
 
     /**
      * Call this method only after persisting the result of <code>match</code>
@@ -70,8 +76,6 @@ public class MatchService {
                         .build();
                 resultsService.saveQualifier(qualifier);
             }
-
-
             resultsService.saveKnockoutTeam(teamUpdatedByMatch);
         }
 
@@ -84,6 +88,8 @@ public class MatchService {
             resultsService.saveQualifier(qualifier);
         }
 
+        // trigger ranking creation - this is done async
+        rankingService.createRankingAsync(LocalDateTime.now());
     }
 
     public Match updateMatchResult(Long matchId, MatchResultData matchResult) {
@@ -126,8 +132,11 @@ public class MatchService {
         // filter match results only
         List<? extends ResultInterface> matchResults = allResults.stream().filter(r -> r.getMatchId() != null).collect(Collectors.toList());
         List<GroupMatch> allGroupMatches = addResultsToMatches(groupService.getAllGroupMatches(), matchResults);
+        allGroupMatches.sort(Comparator.comparing(o -> o.matchId));
+
         List knockoutMatchList = addResultsToMatches(knockoutService.getAllKnockoutMatches(), matchResults);
         List<KnockoutMatch> allKnockoutMatch = knockoutService.addKnockoutTeamsOnKnockoutMatch(knockoutMatchList);
+        allKnockoutMatch.sort(Comparator.comparing(o -> o.matchId));
 
         List<Qualifier> allQualifiers = resultsService.getAllQualifiers();
         Map<Stage, List<Qualifier>> map = allQualifiers.stream().collect(Collectors.groupingBy(Qualifier::getStageId));
