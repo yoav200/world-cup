@@ -87,9 +87,6 @@ public class MatchService {
                     .build();
             resultsService.saveQualifier(qualifier);
         }
-
-        // trigger ranking creation - this is done async
-        rankingService.createRankingAsync(LocalDateTime.now());
     }
 
     public Match updateMatchResult(Long matchId, MatchResultData matchResult) {

@@ -6,6 +6,7 @@ import com.ab.worldcup.match.GroupMatch;
 import com.ab.worldcup.match.KnockoutMatch;
 import com.ab.worldcup.match.Match;
 import com.ab.worldcup.match.MatchService;
+import com.ab.worldcup.ranking.RankingService;
 import com.ab.worldcup.results.MatchResult;
 import com.ab.worldcup.results.ResultsService;
 import com.ab.worldcup.web.model.MatchResultData;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -35,6 +37,9 @@ public class MatchController {
 
     @Autowired
     private KnockoutService<MatchResult> knockoutService;
+
+    @Autowired
+    private RankingService rankingService;
 
     @Autowired
     @Qualifier("MatchResultDataValidator")
@@ -74,6 +79,9 @@ public class MatchController {
     public Match updateGroupMatches(@PathVariable Long matchId, @RequestBody @Valid MatchResultData matchResultData) {
         Match match = matchService.updateMatchResult(matchId, matchResultData);
         matchService.onMatchFinish(match);
+        // trigger ranking creation - this is done async
+        rankingService.createRankingAsync(LocalDateTime.now());
+
         return match;
     }
 }
