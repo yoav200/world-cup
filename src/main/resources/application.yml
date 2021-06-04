@@ -31,7 +31,7 @@ spring:
       enabled: always
 
 worldcup:
-  start-date-time: '2018-06-14 15:00:00+00'
+  start-date-time: '2021-06-11 22:00:00+00'
   admin-emails: "yoav200@gmail.com,ibadichi@gmail.com,itay.badichi@gmail.com"
   socialauth:
     base-callback-url: "http://localhost:8080"

@@ -3,7 +3,6 @@ package com.ab.worldcup.match;
 import com.ab.worldcup.group.GroupService;
 import com.ab.worldcup.knockout.KnockoutService;
 import com.ab.worldcup.knockout.KnockoutTeam;
-import com.ab.worldcup.ranking.RankingService;
 import com.ab.worldcup.results.MatchResult;
 import com.ab.worldcup.results.Qualifier;
 import com.ab.worldcup.results.ResultInterface;
@@ -17,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -43,9 +41,6 @@ public class MatchService {
 
     @Autowired
     private ResultsService resultsService;
-
-    @Autowired
-    private RankingService rankingService;
 
     /**
      * Call this method only after persisting the result of <code>match</code>
@@ -79,7 +74,7 @@ public class MatchService {
             resultsService.saveKnockoutTeam(teamUpdatedByMatch);
         }
 
-        if (match.getStageId().equals(Stage.FINAL) || match.getStageId().equals(Stage.THIRD_PLACE)){
+        if (match.getStageId().equals(Stage.FINAL) || match.getStageId().equals(Stage.THIRD_PLACE)) {
             Qualifier qualifier = Qualifier.builder()
                     .team(match.getResult().getKnockoutQualifier())
                     .stageId(match.getStageId().getNextStage().get(0))

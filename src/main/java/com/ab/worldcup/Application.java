@@ -14,7 +14,7 @@ import org.springframework.core.io.support.PropertiesLoaderUtils;
 
 import java.util.Properties;
 
-@SpringBootApplication(scanBasePackages = "com.ab.worldcup")
+@SpringBootApplication
 @EnableCaching
 public class Application {
 

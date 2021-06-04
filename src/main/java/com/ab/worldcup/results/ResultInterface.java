@@ -39,7 +39,6 @@ public interface ResultInterface {
                     && getWinner().opposite().equals(other.getWinner())) {
                 return true;
             }
-
         }
         return false;
     }
@@ -48,16 +47,15 @@ public interface ResultInterface {
         if (getMatchId().equals(other.getMatchId())) {
             if (getHomeTeam().equals(other.getHomeTeam())
                     && getAwayTeam().equals(other.getAwayTeam())
-                    && getHomeTeamGoals() == other.getHomeTeamGoals()
-                    && getAwayTeamGoals() == other.getAwayTeamGoals()) {
+                    && getHomeTeamGoals().equals(other.getHomeTeamGoals())
+                    && getAwayTeamGoals().equals(other.getAwayTeamGoals())) {
                 return true;
             } else if (getHomeTeam().equals(other.getAwayTeam())
                     && getAwayTeam().equals(other.getHomeTeam())
-                    && getHomeTeamGoals() == other.getAwayTeamGoals()
-                    && getAwayTeamGoals() == other.getHomeTeamGoals()) {
+                    && getHomeTeamGoals().equals(other.getAwayTeamGoals())
+                    && getAwayTeamGoals().equals(other.getHomeTeamGoals())) {
                 return true;
             }
-
         }
         return false;
     }

@@ -47,6 +47,7 @@ body {
 
 .navbar-brand .logo{
     margin-top: -26px;
+    height: 80px;
 }
 
 @media (max-width: 767px) {
@@ -62,10 +63,10 @@ body {
 }
 
 .flag {
-    width: 48px;
-    /*height: 32px;*/
+    width: 70px;
+    height: 70px;
     margin-top: 2px;
-    border: 1px solid #c7c6c6;
+    border: 0px solid #c7c6c6;
 }
 
 .back-to-top {
