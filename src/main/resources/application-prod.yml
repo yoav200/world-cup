@@ -20,4 +20,4 @@ spring:
 
 worldcup:
   socialauth:
-    base-callback-url: "https://ab-world-cup.herokuapp.com"
+    base-callback-url: "https://euro-2020-bet.herokuapp.com/"
