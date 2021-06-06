@@ -1,8 +1,12 @@
 spring:
   datasource:
-    url: ${JDBC_DATABASE_URL}?sslmode=require
-    username: ${JDBC_DATABASE_USERNAME}
-    password: ${JDBC_DATABASE_PASSWORD}
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+
+  r2dbc:
+    properties:
+      sslMode: REQUIRE
 
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
