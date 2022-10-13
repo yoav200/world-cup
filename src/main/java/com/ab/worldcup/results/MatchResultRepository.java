@@ -1,10 +1,9 @@
 package com.ab.worldcup.results;
 
 
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-
-import java.util.List;
 
 public interface MatchResultRepository extends JpaRepository<MatchResult, Long> {
 

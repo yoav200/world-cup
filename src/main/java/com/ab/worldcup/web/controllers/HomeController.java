@@ -1,9 +1,13 @@
 package com.ab.worldcup.web.controllers;
 
 import com.ab.worldcup.account.Account;
-import com.ab.worldcup.signin.Role;
+import com.ab.worldcup.account.Role;
 import com.ab.worldcup.web.components.SessionManager;
 import com.ab.worldcup.web.model.HeartBeatData;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
+import javax.servlet.http.HttpSession;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,11 +17,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import javax.servlet.http.HttpSession;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Controller
 public class HomeController {
@@ -32,7 +31,7 @@ public class HomeController {
     @ResponseBody
     public ResponseEntity<HeartBeatData> heartbeat(HttpSession session, @RequestBody Account account) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Boolean valid = true;
+        boolean valid = true;
         //check session timeout
         Object attribute = session.getAttribute(SessionManager.LAST_REQUEST_TIME);
         if (attribute != null) {

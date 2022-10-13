@@ -82,7 +82,17 @@ app.config(function ($urlRouterProvider, $httpProvider, growlProvider) {
         url: "/join",
         views: {
             'content@': {
-                templateUrl: 'app/navbar/login.view.html'
+                templateUrl: 'app/register/register.view.html',
+                controller: 'registerCtrl'
+            }
+        }
+    }).state('login', {
+        parent: 'site',
+        url: "/login",
+        views: {
+            'content@': {
+                templateUrl: 'app/login/login.view.html',
+                controller: 'loginCtrl'
             }
         }
     });
@@ -221,7 +231,7 @@ app.config(function ($urlRouterProvider, $httpProvider, growlProvider) {
         if (!Auth.checkPermissionForView(toState)) {
             Auth.setStateUrl(toState.name);
             event.preventDefault();
-            $state.go('join');
+            $state.go('login');
         }
     });
 }).run(function($rootScope, $location, $anchorScroll, editableOptions) {

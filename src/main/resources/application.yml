@@ -8,6 +8,7 @@ spring:
     username: admin
     password: admin
   jpa:
+    defer-datasource-initialization: true
     hibernate:
       ddl-auto: create-drop
       naming:
@@ -30,10 +31,36 @@ spring:
     ansi:
       enabled: always
 
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: top.ten.ranker@gmail.com
+    password: ${EMAIL_SERVER_PASSWORD}
+    properties:
+      mail:
+        smtp.auth: true
+        smtp.starttls.enable: true
+        smtp.timeout: 5000
+        smtp.writetimeout: 5000
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+      base-path: "/actuator"
+    health:
+      show-details: always
+
+logging:
+  level:
+    root: info
+    org.springframework: info
+    com.ab.worldcup: debug
+
+
 worldcup:
-  start-date-time: '2018-06-14 15:00:00+00'
-  admin-emails: "yoav200@gmail.com,ibadichi@gmail.com,itay.badichi@gmail.com"
-  socialauth:
-    base-callback-url: "http://localhost:8080"
-    success-page-url: "#/welcome"
-    access-denied-page-url: "#/access-denied"
+  start-date-time: '2022-11-20 19:00:00+00'
+  admin-emails: "yoav200@gmail.com,yoav.alhalel@bnymellon.com"
+

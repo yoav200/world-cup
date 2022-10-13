@@ -1,9 +1,8 @@
 package com.ab.worldcup.web.model;
 
+import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Data;
-
-import java.time.LocalDateTime;
 
 @Data
 @Builder

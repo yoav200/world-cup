@@ -1,10 +1,9 @@
 package com.ab.worldcup.ranking;
 
 import com.ab.worldcup.account.Account;
+import java.sql.Timestamp;
 import lombok.Builder;
 import lombok.Data;
-
-import java.sql.Timestamp;
 
 @Data
 @Builder

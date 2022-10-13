@@ -2,9 +2,8 @@ package com.ab.worldcup.team;
 
 import com.ab.worldcup.match.KnockoutMatchCode;
 import com.ab.worldcup.match.Stage;
-import org.apache.commons.lang3.tuple.Pair;
-
 import java.util.Optional;
+import org.apache.commons.lang3.tuple.Pair;
 
 public enum KnockoutTeamCode {
     WINNER_GROUP_A(Stage.ROUND_OF_16),

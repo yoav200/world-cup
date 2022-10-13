@@ -1,15 +1,18 @@
 package com.ab.worldcup.results;
 
+import static com.ab.worldcup.knockout.KnockoutMatchQualifier.HOME_TEAM;
+
 import com.ab.worldcup.knockout.KnockoutMatchQualifier;
 import com.ab.worldcup.team.Team;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-
-import javax.persistence.*;
-
-import static com.ab.worldcup.knockout.KnockoutMatchQualifier.HOME_TEAM;
 
 @Entity
 @ToString

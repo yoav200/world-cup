@@ -3,17 +3,16 @@ package com.ab.worldcup.match;
 import com.ab.worldcup.knockout.KnockoutTeamInterface;
 import com.ab.worldcup.team.KnockoutTeamCode;
 import com.ab.worldcup.team.Team;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import org.hibernate.annotations.Immutable;
-
+import java.io.Serializable;
+import java.util.Optional;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-import java.io.Serializable;
-import java.util.Optional;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import org.hibernate.annotations.Immutable;
 
 @Entity
 @Getter

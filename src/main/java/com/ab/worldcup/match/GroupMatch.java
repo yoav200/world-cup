@@ -2,11 +2,15 @@ package com.ab.worldcup.match;
 
 import com.ab.worldcup.team.Group;
 import com.ab.worldcup.team.Team;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.hibernate.annotations.Immutable;
-
-import javax.persistence.*;
 
 @Entity
 @Getter

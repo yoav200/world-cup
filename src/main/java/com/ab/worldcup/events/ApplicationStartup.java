@@ -3,12 +3,11 @@ package com.ab.worldcup.events;
 import com.ab.worldcup.group.GroupService;
 import com.ab.worldcup.match.GroupMatch;
 import com.ab.worldcup.match.MatchService;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 @Component
 public class ApplicationStartup implements ApplicationListener<ApplicationReadyEvent> {

@@ -1,9 +1,8 @@
 package com.ab.worldcup.bet;
 
 import com.ab.worldcup.match.Stage;
-import org.springframework.data.jpa.repository.JpaRepository;
-
 import java.util.List;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface BetRepository extends JpaRepository<Bet, Long> {
     Bet findByMatchId(Long matchId);

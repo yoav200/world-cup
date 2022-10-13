@@ -47,6 +47,7 @@ body {
 
 .navbar-brand .logo{
     margin-top: -26px;
+    height: 96px;
 }
 
 @media (max-width: 767px) {

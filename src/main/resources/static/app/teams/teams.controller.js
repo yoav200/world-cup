@@ -8,6 +8,15 @@ angular.module('worldcup').controller('teamsCtrl', function ($rootScope, $scope,
     $scope.confederation = [];
     $scope.matches = [];
 
+    $scope.propertyName = 'fifaRanking';
+    $scope.reverse = true;
+
+
+    $scope.sortBy = function(propertyName) {
+        $scope.reverse = ($scope.propertyName === propertyName) ? !$scope.reverse : false;
+        $scope.propertyName = propertyName;
+    };
+
     var parentState = 'teams', defaultChildState = '.fifaranking';
     // If the parent state has been transitioned to, redirect to the default child.
     if($state.current.name.substr(-parentState.length) === parentState) {

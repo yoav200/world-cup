@@ -5,10 +5,9 @@ import com.ab.worldcup.results.ResultInterface;
 import com.ab.worldcup.team.Group;
 import com.ab.worldcup.team.Team;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Getter;
-
 import java.util.List;
 import java.util.TreeSet;
+import lombok.Getter;
 
 @Getter
 public class GroupStanding {

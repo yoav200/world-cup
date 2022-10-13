@@ -3,13 +3,22 @@
     <thead>
     <tr>
         <th scope="col">Team</th>
-        <th scope="col">Ranking</th>
-        <th scope="col">Titles Won</th>
-        <th scope="col">World Cup Appearances</th>
+        <th scope="col">
+            <button ng-click="sortBy('fifaRanking')">Ranking</button>
+            <span class="sortorder" ng-show="propertyName === 'fifaRanking'" ng-class="{reverse: reverse}"></span>
+        </th>
+        <th scope="col">
+            <button ng-click="sortBy('titles')">Titles Won</button>
+            <span class="sortorder" ng-show="propertyName === 'titles'" ng-class="{reverse: reverse}"></span>
+        </th>
+        <th scope="col">
+            <button ng-click="sortBy('appearances')">World Cup Appearances</button>
+            <span class="sortorder" ng-show="propertyName === 'appearances'" ng-class="{reverse: reverse}"></span>
+        </th>
     </tr>
     </thead>
     <tbody>
-    <tr ng-repeat="team in teams | orderBy:'fifaRanking'">
+    <tr ng-repeat="team in teams | orderBy:propertyName:reverse">
         <th><h4><team data="team"/></h4></th>
         <td>{{team.fifaRanking}}</td>
         <td>{{team.titles}}</td>

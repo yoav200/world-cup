@@ -1,11 +1,14 @@
 package com.ab.worldcup.bet;
 
 import com.ab.worldcup.match.Stage;
-import lombok.Getter;
-
-import javax.persistence.*;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import lombok.Getter;
 
 @Entity
 @Getter
