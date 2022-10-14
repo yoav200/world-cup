@@ -26,6 +26,16 @@ public class HomeController {
         return "index.html";
     }
 
+    @RequestMapping("/confirmed")
+    public String confirmed() {
+        return "pages/confirmed.html";
+    }
+
+    @RequestMapping("/passwordChange")
+    public String passwordChange() {
+        return "pages/passwordChange.html";
+    }
+
 
     @RequestMapping("/api/heartbeat")
     @ResponseBody

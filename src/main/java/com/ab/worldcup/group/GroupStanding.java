@@ -13,10 +13,10 @@ import lombok.Getter;
 public class GroupStanding {
 
     @JsonProperty(value = "groupId")
-    private Group groupId;
+    private final Group groupId;
 
     @JsonProperty(value = "teamsInGroup")
-    private TreeSet<TeamInGroup<? super ResultInterface>> teamsInGroup;
+    private final TreeSet<TeamInGroup<? super ResultInterface>> teamsInGroup;
 
     @SuppressWarnings("unchecked")
     <T extends ResultInterface> GroupStanding(Group group, List<GroupMatch> matches, List<T> results, List<Team> teams) {

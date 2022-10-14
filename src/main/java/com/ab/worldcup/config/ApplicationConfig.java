@@ -1,11 +1,12 @@
 package com.ab.worldcup.config;
 
-import com.google.common.collect.ImmutableSet;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Set;
 
 @Component
 public class ApplicationConfig {
@@ -19,21 +20,21 @@ public class ApplicationConfig {
 
     private LocalDateTime startDateTime;
 
-    private ImmutableSet<String> adminEmails;
+    private Set<String> adminEmails;
 
 
     @PostConstruct
     public void init() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ssX");
         this.startDateTime = LocalDateTime.parse(startDateTimeConfig, formatter);
-        this.adminEmails = ImmutableSet.copyOf(administrators.split(","));
+        this.adminEmails = Set.of(administrators.split(","));
     }
 
     public LocalDateTime getStartDateTime() {
         return startDateTime;
     }
 
-    public ImmutableSet<String> getAdminEmails() {
+    public Set<String> getAdminEmails() {
         return adminEmails;
     }
 }

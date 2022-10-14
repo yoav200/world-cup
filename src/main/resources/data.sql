@@ -91,7 +91,7 @@ INSERT INTO team (id, name, code, appearances, titles, fifaRanking, confederatio
   (15, 'ENGLAND', 'eng', 16 , 1, 5, 'EUROPE', 'B'),
   (16, 'FRANCE', 'fra', 16 , 2, 4, 'EUROPE', 'D'),
   (17, 'GERMANY', 'ger', 20 , 4, 11, 'EUROPE', 'E'),
-  (18, 'NETHERLANDS', 'ned', 11 , 4, 8, 'EUROPE', 'A'),
+  (18, 'NETHERLANDS', 'ned', 11 , 0, 8, 'EUROPE', 'A'),
   (19, 'POLAND', 'pol', 9 , 0, 26, 'EUROPE', 'C'),
   (20, 'PORTUGAL', 'por', 8 , 0, 9, 'EUROPE','H'),
   (21, 'SERBIA', 'srb', 13 , 0, 21, 'EUROPE', 'G'),

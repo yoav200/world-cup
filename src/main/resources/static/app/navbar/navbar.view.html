@@ -58,7 +58,8 @@
                 <li ui-sref-active="active" data-ng-hide="Account.authenticate"><a ui-sref="login">Login</a></li>
                 <li class="dropdown" data-ng-show="Account.authenticate">
                     <a href class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                        <img ng-src="{{Account.imageUrl}}" style="max-height: 40px;"/> <span class="caret"></span>
+<!--                        <img ng-src="{{Account.imageUrl}}" style="max-height: 40px;"/> <span class="caret"></span>-->
+                        <span class="glyphicon">&#xe008;</span> <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu">
                         <li class="dropdown-header">Signed in as {{Account.displayName}}</li>

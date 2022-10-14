@@ -6,15 +6,16 @@ import com.ab.worldcup.group.GroupService;
 import com.ab.worldcup.results.Qualifier;
 import com.ab.worldcup.team.Group;
 import com.ab.worldcup.team.KnockoutTeamCode;
-import com.google.common.collect.ImmutableList;
-import java.time.LocalDateTime;
-import java.util.Optional;
-import java.util.stream.Collectors;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Component("QualifiersBetValidator")
 public class QualifiersBetValidator implements Validator {
@@ -59,7 +60,7 @@ public class QualifiersBetValidator implements Validator {
             } else {
                 Optional<Pair<KnockoutTeamCode, KnockoutTeamCode>> prevStageTeams = qualifier.getKnockoutTeamCode().getPrevStageTeams();
                 if (prevStageTeams.isPresent()) {
-                    ImmutableList<KnockoutTeamCode> codes = ImmutableList.of(prevStageTeams.get().getRight(), prevStageTeams.get().getLeft());
+                    List<KnockoutTeamCode> codes = List.of(prevStageTeams.get().getRight(), prevStageTeams.get().getLeft());
                     boolean noneMatch = qualifierBetData.getQualifiersList().stream()
                             .filter(t -> codes.contains(t.getKnockoutTeamCode()))
                             .noneMatch(t -> t.getTeam().equals(qualifier.getTeam()));

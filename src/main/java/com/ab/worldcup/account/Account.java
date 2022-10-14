@@ -1,27 +1,12 @@
 package com.ab.worldcup.account;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.*;
+
+import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
 @Entity
 @Table(name = "account")
@@ -34,35 +19,34 @@ import lombok.ToString;
 @EqualsAndHashCode
 public class Account {
 
-  @Id
-  @GeneratedValue
-  private Long id;
+    @Id
+    @GeneratedValue
+    private Long id;
 
-  @Column(nullable = false, unique = true, length = 45)
-  private String email;
+    @Column(nullable = false, unique = true, length = 45)
+    private String email;
 
-  @Column(nullable = false, length = 64)
-  private String password;
+    @Column(nullable = false, length = 64)
+    private String password;
 
-  @Column(name = "first_name", nullable = false, length = 20)
-  private String firstName;
+    @Column(name = "first_name", nullable = false, length = 20)
+    private String firstName;
 
-  @Column(name = "last_name", nullable = false, length = 20)
-  private String lastName;
+    @Column(name = "last_name", nullable = false, length = 20)
+    private String lastName;
 
-  @Column(name = "verification_code", length = 64)
-  private String verificationCode;
+    private Boolean locked = false;
 
-  private boolean enabled;
+    private Boolean enabled = false;
 
-  @Enumerated(EnumType.STRING)
-  private AccountStatus status;
+    @Enumerated(EnumType.STRING)
+    private AccountStatus status;
 
-  @Transient
-  @JsonProperty("roles")
-  private final Set<String> roles = new HashSet<>();
+    @Transient
+    @JsonProperty("roles")
+    private final Set<String> roles = new HashSet<>();
 
-  public String getFullName() {
-    return this.firstName + " " + this.lastName;
-  }
+    public String getFullName() {
+        return this.firstName + " " + this.lastName;
+    }
 }

@@ -112,3 +112,11 @@ body {
 .border_highlight {
     border: 3px solid #4cae4c;
 }
+
+.sortorder:after {
+    content: '\25b2';
+}
+
+.sortorder.reverse:after {
+    content: '\25bc';
+}

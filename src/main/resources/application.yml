@@ -5,6 +5,8 @@ spring:
   application:
     name: world-cup
   datasource:
+    url: jdbc:h2:mem:db;DB_CLOSE_DELAY=-1
+    driverClassName: org.h2.Driver
     username: admin
     password: admin
   jpa:
@@ -21,6 +23,7 @@ spring:
           batch_size: 200
           batch_versioned_data: true
     show-sql: true
+    open-in-view: false
 
   h2:
     console:

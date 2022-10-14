@@ -1,8 +1,5 @@
 package com.ab.worldcup.knockout;
 
-import static com.ab.worldcup.team.KnockoutTeamCode.LOSER_SF1;
-import static com.ab.worldcup.team.KnockoutTeamCode.LOSER_SF2;
-
 import com.ab.worldcup.group.GroupService;
 import com.ab.worldcup.group.GroupStanding;
 import com.ab.worldcup.group.TeamInGroup;
@@ -15,140 +12,145 @@ import com.ab.worldcup.team.Group;
 import com.ab.worldcup.team.KnockoutTeamCode;
 import com.ab.worldcup.team.KnockoutTeamCodeType;
 import com.ab.worldcup.team.Team;
-import com.google.common.collect.Iterables;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.TreeSet;
-import java.util.function.Function;
-import java.util.logging.Level;
-import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
-import lombok.extern.java.Log;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
-@Log
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import static com.ab.worldcup.team.KnockoutTeamCode.LOSER_SF1;
+import static com.ab.worldcup.team.KnockoutTeamCode.LOSER_SF2;
+
+@Log4j2
 @Service
 @AllArgsConstructor
 public class KnockoutService<T extends ResultInterface> {
 
-  private final KnockoutMatchRepository knockoutMatchRepository;
+    private final KnockoutMatchRepository knockoutMatchRepository;
 
-  private final KnockoutTeamRepository knockoutTeamRepository;
+    private final KnockoutTeamRepository knockoutTeamRepository;
 
-  private final GroupService groupService;
+    private final GroupService groupService;
 
-  private Optional<KnockoutTeam> getKnockoutTeamForKnockoutMatch(KnockoutMatch match, List<T> results) {
-    Optional<Team> homeTeam = getKnockoutTeamByTeamCode(match.getHomeTeamCode(), results);
-    Optional<Team> awayTeam = getKnockoutTeamByTeamCode(match.getAwayTeamCode(), results);
+    private Optional<KnockoutTeam> getKnockoutTeamForKnockoutMatch(KnockoutMatch match, List<T> results) {
+        Optional<Team> homeTeam = getKnockoutTeamByTeamCode(match.getHomeTeamCode(), results);
+        Optional<Team> awayTeam = getKnockoutTeamByTeamCode(match.getAwayTeamCode(), results);
 
-    KnockoutTeam knockoutTeamRecord = null;
+        KnockoutTeam knockoutTeamRecord = null;
 
-    if (homeTeam.isPresent() || awayTeam.isPresent()) {
-      knockoutTeamRecord = new KnockoutTeam();
-      knockoutTeamRecord.setMatchId(match.getMatchId());
-      homeTeam.ifPresent(knockoutTeamRecord::setHomeTeam);
-      awayTeam.ifPresent(knockoutTeamRecord::setAwayTeam);
-    }
-    return Optional.ofNullable(knockoutTeamRecord);
-  }
-
-  private Optional<Team> getKnockoutTeamByTeamCode(KnockoutTeamCode teamCode, List<T> results) {
-    Optional<Team> team = Optional.empty();
-    if (teamCode.getType() == KnockoutTeamCodeType.GROUP_QUALIFIER) {
-      team = getGroupQualifierByTeamCode(teamCode, results);
-    } else if (teamCode.getType() == KnockoutTeamCodeType.KNOCKOUT_MATCH_QUALIFIER) {
-      team = getKnockoutQualifierByTeamCode(teamCode, results);
-    }
-    return team;
-  }
-
-  private Optional<Team> getKnockoutQualifierByTeamCode(KnockoutTeamCode teamCode, List<T> results) {
-    if (teamCode.getKnockoutMatchCode().isEmpty()) {
-      log.log(Level.WARNING, "Wrong Input");
-      return Optional.empty();
-    }
-
-    KnockoutMatch match = knockoutMatchRepository.findByMatchCode(teamCode.getKnockoutMatchCode().get());
-    Long matchId = match.getMatchId();
-    Optional<T> matchResult = results.stream().filter(t -> t.getMatchId().equals(matchId)).findFirst();
-
-    if (matchResult.isEmpty()) {
-      log.log(Level.FINE,
-          "trying to calculate knockout match team for match ID " + matchId + " but match hasn't finished yet");
-      return Optional.empty();
-    } else {
-      if (LOSER_SF1.equals(teamCode) || LOSER_SF2.equals(teamCode)) {
-        // return match loser
-        return Optional.of(getKnockMatchLoser(matchResult.get()));
-      } else {
-        // return match winner
-        return Optional.of(matchResult.get().getKnockoutQualifier());
-      }
-    }
-  }
-
-  private Optional<Team> getGroupQualifierByTeamCode(KnockoutTeamCode teamCode, List<T> results) {
-    Optional<Group> group = teamCode.getRelevantGroup();
-    if (group.isEmpty()) {
-      log.log(Level.WARNING, "Wrong Input");
-      return Optional.empty();
-    }
-    if (!groupService.isGroupFinished(group.get(), results)) {
-      return Optional.empty();
-    } else {
-      GroupStanding groupStanding = groupService.getGroupStanding(group.get(), results);
-      TreeSet<TeamInGroup<? super ResultInterface>> teamsInGroup = groupStanding.getTeamsInGroup();
-      TeamInGroup teamInGroup = Iterables.get(teamsInGroup, teamCode.isGroupWinner() ? 0 : 1);
-      return Optional.of(teamInGroup.getTeam());
-    }
-  }
-
-  private Team getKnockMatchLoser(ResultInterface result) {
-    return result.getHomeTeam().equals(result.getKnockoutQualifier()) ? result.getAwayTeam() : result.getHomeTeam();
-  }
-
-  @Cacheable("allKnockoutMatchesCache")
-  public List<KnockoutMatch> getAllKnockoutMatches() {
-    return knockoutMatchRepository.findAll();
-  }
-
-  public List<KnockoutMatch> addKnockoutTeamsOnKnockoutMatch(List<KnockoutMatch> knockoutMatchList) {
-    List<KnockoutTeam> knockoutTeams = knockoutTeamRepository.findAll();
-    Map<Long, KnockoutTeam> knockoutTeamByMatchId = knockoutTeams.stream()
-        .collect(Collectors.toMap(KnockoutTeam::getMatchId, Function.identity()));
-    knockoutMatchList.forEach(match -> match.setKnockoutTeam(knockoutTeamByMatchId.get(match.getMatchId())));
-    return knockoutMatchList;
-  }
-
-  private List<KnockoutMatch> getAllByStageId(Stage nextStage) {
-    return knockoutMatchRepository.findAllByStageId(nextStage);
-  }
-
-  public List<KnockoutTeam> getKnockoutTeamUpdatedByMatch(Match match, List<T> results) {
-    List<KnockoutTeam> knockoutTeamList = new ArrayList<>();
-    Stage currentStage = match.getStageId();
-    boolean groupFinished = false;
-
-    if (Stage.GROUP.equals(currentStage)) {
-      Group group = groupService.getGroupIdByMatchId(match.getMatchId());
-      groupFinished = groupService.isGroupFinished(group, results);
-    }
-
-    if (groupFinished || !Stage.GROUP.equals(currentStage)) {
-      List<Stage> nextStages = currentStage.getNextStage();
-      for (Stage nextStage : nextStages) {
-        List<KnockoutMatch> knockoutMatchesInNextStage = getAllByStageId(nextStage);
-        for (KnockoutMatch knockoutMatch : knockoutMatchesInNextStage) {
-          Optional<KnockoutTeam> knockoutTeam = getKnockoutTeamForKnockoutMatch(knockoutMatch, results);
-          knockoutTeam.ifPresent(knockoutTeamList::add);
+        if (homeTeam.isPresent() || awayTeam.isPresent()) {
+            knockoutTeamRecord = new KnockoutTeam();
+            knockoutTeamRecord.setMatchId(match.getMatchId());
+            homeTeam.ifPresent(knockoutTeamRecord::setHomeTeam);
+            awayTeam.ifPresent(knockoutTeamRecord::setAwayTeam);
         }
-      }
+        return Optional.ofNullable(knockoutTeamRecord);
     }
-    return knockoutTeamList;
-  }
+
+    private Optional<Team> getKnockoutTeamByTeamCode(KnockoutTeamCode teamCode, List<T> results) {
+        Optional<Team> team = Optional.empty();
+        if (teamCode.getType() == KnockoutTeamCodeType.GROUP_QUALIFIER) {
+            team = getGroupQualifierByTeamCode(teamCode, results);
+        } else if (teamCode.getType() == KnockoutTeamCodeType.KNOCKOUT_MATCH_QUALIFIER) {
+            team = getKnockoutQualifierByTeamCode(teamCode, results);
+        }
+        return team;
+    }
+
+    private Optional<Team> getKnockoutQualifierByTeamCode(KnockoutTeamCode teamCode, List<T> results) {
+        if (teamCode.getKnockoutMatchCode().isEmpty()) {
+            log.warn("Wrong Input");
+            return Optional.empty();
+        }
+
+        KnockoutMatch match = knockoutMatchRepository.findByMatchCode(teamCode.getKnockoutMatchCode().get());
+        Long matchId = match.getMatchId();
+        Optional<T> matchResult = results.stream().filter(t -> t.getMatchId().equals(matchId)).findFirst();
+
+        if (matchResult.isEmpty()) {
+            log.debug("trying to calculate knockout match team for match ID " + matchId + " but match hasn't finished yet");
+            return Optional.empty();
+        } else {
+            if (LOSER_SF1.equals(teamCode) || LOSER_SF2.equals(teamCode)) {
+                // return match loser
+                return Optional.of(getKnockMatchLoser(matchResult.get()));
+            } else {
+                // return match winner
+                return Optional.of(matchResult.get().getKnockoutQualifier());
+            }
+        }
+    }
+
+    private Optional<Team> getGroupQualifierByTeamCode(KnockoutTeamCode teamCode, List<T> results) {
+        Optional<Group> group = teamCode.getRelevantGroup();
+        if (group.isEmpty()) {
+            log.warn("Wrong Input");
+            return Optional.empty();
+        }
+        if (!groupService.isGroupFinished(group.get(), results)) {
+            return Optional.empty();
+        } else {
+            GroupStanding groupStanding = groupService.getGroupStanding(group.get(), results);
+            TreeSet<TeamInGroup<? super ResultInterface>> teamsInGroup = groupStanding.getTeamsInGroup();
+
+            TeamInGroup<?> teamInGroup = indexOf(teamsInGroup, teamCode.isGroupWinner() ? 0 : 1);
+            return Optional.of(teamInGroup.getTeam());
+        }
+    }
+
+    private static TeamInGroup<?> indexOf(TreeSet<TeamInGroup<? super ResultInterface>> set, int index) {
+        // Step 1: Convert TreeSet to ArrayList or LinkedList
+        List<TeamInGroup<?>> list = new ArrayList<>(set);
+        // Step 2: Use the indexOf method of the List
+        return list.get(index);
+    }
+
+    private Team getKnockMatchLoser(ResultInterface result) {
+        return result.getHomeTeam().equals(result.getKnockoutQualifier()) ? result.getAwayTeam() : result.getHomeTeam();
+    }
+
+    @Cacheable("allKnockoutMatchesCache")
+    public List<KnockoutMatch> getAllKnockoutMatches() {
+        return knockoutMatchRepository.findAll();
+    }
+
+    public List<KnockoutMatch> addKnockoutTeamsOnKnockoutMatch(List<KnockoutMatch> knockoutMatchList) {
+        List<KnockoutTeam> knockoutTeams = knockoutTeamRepository.findAll();
+        Map<Long, KnockoutTeam> knockoutTeamByMatchId = knockoutTeams.stream()
+                .collect(Collectors.toMap(KnockoutTeam::getMatchId, Function.identity()));
+        knockoutMatchList.forEach(match -> match.setKnockoutTeam(knockoutTeamByMatchId.get(match.getMatchId())));
+        return knockoutMatchList;
+    }
+
+    private List<KnockoutMatch> getAllByStageId(Stage nextStage) {
+        return knockoutMatchRepository.findAllByStageId(nextStage);
+    }
+
+    public List<KnockoutTeam> getKnockoutTeamUpdatedByMatch(Match match, List<T> results) {
+        List<KnockoutTeam> knockoutTeamList = new ArrayList<>();
+        Stage currentStage = match.getStageId();
+        boolean groupFinished = false;
+
+        if (Stage.GROUP.equals(currentStage)) {
+            Group group = groupService.getGroupIdByMatchId(match.getMatchId());
+            groupFinished = groupService.isGroupFinished(group, results);
+        }
+
+        if (groupFinished || !Stage.GROUP.equals(currentStage)) {
+            List<Stage> nextStages = currentStage.getNextStage();
+            for (Stage nextStage : nextStages) {
+                List<KnockoutMatch> knockoutMatchesInNextStage = getAllByStageId(nextStage);
+                for (KnockoutMatch knockoutMatch : knockoutMatchesInNextStage) {
+                    Optional<KnockoutTeam> knockoutTeam = getKnockoutTeamForKnockoutMatch(knockoutMatch, results);
+                    knockoutTeam.ifPresent(knockoutTeamList::add);
+                }
+            }
+        }
+        return knockoutTeamList;
+    }
 
 //    public KnockoutMatch findKnockoutMatch(Long matchId) {
 //        return knockoutMatchRepository.findOne(matchId);
