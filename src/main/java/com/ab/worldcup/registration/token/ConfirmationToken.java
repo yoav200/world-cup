@@ -4,6 +4,7 @@ import com.ab.worldcup.account.Account;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -58,5 +59,18 @@ public class ConfirmationToken {
 
     private void updateUsages() {
         this.usages += 1;
+    }
+
+    public ConfirmationToken validate() {
+        if (StringUtils.isBlank(getToken())) {
+            throw new IllegalStateException("invalid token");
+        }
+        if (getExpiresAt().isBefore(LocalDateTime.now())) {
+            throw new IllegalStateException("token expired");
+        }
+        if (getConfirmedAt() != null) {
+            throw new IllegalStateException("token already has been used");
+        }
+        return this;
     }
 }

@@ -1,19 +1,17 @@
+server:
+  tomcat:
+    max-connections: 20
+    threads.max: 5
+
 spring:
   datasource:
-    url: ${JDBC_DATABASE_URL}
-    username: ${JDBC_DATABASE_USERNAME}
-    password: ${JDBC_DATABASE_PASSWORD}
-
+    url: ${DATABASE_URL}
   jpa:
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
-      ddl-auto: create-drop
-    show-sql: true
+      ddl-auto: none
+      format_sql: false
+    show-sql: false
+    open-in-view: false
 
-  h2:
-   console:
-     enabled: false
-
-worldcup:
-  socialauth:
-    base-callback-url: "https://ab-world-cup.herokuapp.com"
+  flyway:
+    enabled: true

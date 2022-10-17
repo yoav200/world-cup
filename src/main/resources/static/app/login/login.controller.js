@@ -34,13 +34,13 @@ angular.module('worldcup').controller('loginCtrl', function ($rootScope, $scope,
 
     var init = function() {
         if($stateParams.token) {
-            console.log("token in request:", $stateParams.token);
+            //console.log("token in request:", $stateParams.token);
             return $http({
                 url: "api/registration/confirm",
                 method: "GET",
                 params: {"token": $stateParams.token}
              }).then(function (response) {
-                console.log(response)
+                //console.log(response)
                 growl.success('You email has confirm, you can login.', {title: 'Success!'});
             });
         }

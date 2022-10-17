@@ -15,19 +15,19 @@ angular.module('worldcup').controller('registerCtrl', function ($rootScope, $sco
         if(Auth.isLoggedIn()) {
             // user is logged -n - update details
             return $http.put("api/account", $scope.registerData).then(function (response) {
-                console.log(response)
+                //console.log(response)
                 growl.success('Account details updated.', {title: 'Success!'});
             });
         } else if($stateParams.token) {
             // user not logged-in and token exists - change password
             return $http.put("api/registration/change-password", $scope.registerData).then(function (response) {
-                console.log(response)
+                //console.log(response)
                 growl.success('Account details updated.', {title: 'Success!'});
             });
         } else {
             // register new user
             return $http.post("api/registration", $scope.registerData).then(function (response) {
-                console.log(response)
+                //console.log(response)
                 growl.success('Registration complete!. Check your Inbox for confirmation.', {title: 'Success!'});
             });
         }
@@ -39,14 +39,14 @@ angular.module('worldcup').controller('registerCtrl', function ($rootScope, $sco
             method: "GET",
             params: {"email": $scope.registerData.email}
         }).then(function (response) {
-            console.log(response)
+            //console.log(response)
             growl.success('You email has confirm, you can login.', {title: 'Success!'});
         });
      };
 
     var init = function() {
         if(Auth.isLoggedIn()) {
-            console.log("user is logged:", $rootScope.Account);
+            //console.log("user is logged:", $rootScope.Account);
             // user is logged in
             $scope.registerData = {
                 action: "Update Details",
@@ -58,14 +58,14 @@ angular.module('worldcup').controller('registerCtrl', function ($rootScope, $sco
             };
         } else if($stateParams.token) {
             // a token was sent, check for who has this token and update data
-            console.log("token in request:", $stateParams.token);
+            //console.log("token in request:", $stateParams.token);
 
             return $http({
                 url: "api/registration/token",
                 method: "GET",
                 params: {"token": $stateParams.token}
             }).then(function (response) {
-                console.log(response)
+                //console.log(response)
                 $scope.registerData = {
                     action: "Update Details",
                     firstName: response.data.firstName,

@@ -2,33 +2,28 @@ package com.ab.worldcup.registration;
 
 import com.ab.worldcup.account.Account;
 import com.ab.worldcup.account.AccountService;
+import com.ab.worldcup.config.ApplicationConfig;
 import com.ab.worldcup.email.EmailSender;
 import com.ab.worldcup.registration.token.ConfirmationToken;
 import com.ab.worldcup.registration.token.ConfirmationTokenService;
 import lombok.AllArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDateTime;
 
 @Service
 @AllArgsConstructor
 public class RegistrationService {
 
-    // TODO: 13/10/2022 move to configuration
     private static final String loginUrl = "%s/#/login/%s";
 
     private static final String updateDetailsUrl = "%s/#/join/%s";
 
-    // TODO: 13/10/2022 move to configuration
-    private final String applicationDomain = "http://localhost:8080";
-
-    // TODO: 13/10/2022 move to configuration
-    private final int expirationTimeMinutes = 60;
+    private final ApplicationConfig applicationConfig;
 
     private final AccountService accountService;
+
     private final ConfirmationTokenService confirmationTokenService;
+
     private final EmailSender emailSender;
 
     public Account register(RegistrationRequest request) {
@@ -37,21 +32,10 @@ public class RegistrationService {
     }
 
     public Account getAccountByToken(String token) {
-        ConfirmationToken confirmationToken = confirmationTokenService
+        return confirmationTokenService
                 .findByToken(token)
+                .map(t -> t.validate().getAccount())
                 .orElseThrow(() -> new IllegalStateException("token not found"));
-
-        if (StringUtils.isBlank(confirmationToken.getToken())) {
-            throw new IllegalStateException("invalid token");
-        }
-        if (confirmationToken.getExpiresAt().isBefore(LocalDateTime.now())) {
-            throw new IllegalStateException("token expired");
-        }
-        if (confirmationToken.getConfirmedAt() != null) {
-            throw new IllegalStateException("token already has been used");
-        }
-
-        return confirmationToken.getAccount();
     }
 
     @Transactional
@@ -65,14 +49,19 @@ public class RegistrationService {
     public Account validateEmail(String email) {
         Account account = accountService.findAccountByEmail(email);
 
+        final int confirmationTimeoutMinutes = applicationConfig.getConfirmationTimeoutMinutes();
+        final String appUrl = applicationConfig.getAppUrl();
+
         // TODO: 16/10/2022 add validation on confirmationToken to avoid email spamming
         ConfirmationToken confirmationToken = confirmationTokenService.findByAccountId(account.getId())
-                .map(t -> confirmationTokenService.reuseConfirmationToken(t, expirationTimeMinutes))
-                .orElse(confirmationTokenService.createConfirmationToken(account, expirationTimeMinutes));
+                .map(token -> token.reuse(confirmationTimeoutMinutes))
+                .orElse(new ConfirmationToken(account, confirmationTimeoutMinutes));
+
+        confirmationTokenService.save(confirmationToken);
 
         if (account.getEnabled()) {
             // account is already enabled, send link to update details
-            String link = String.format(updateDetailsUrl, applicationDomain, confirmationToken.getToken());
+            String link = String.format(updateDetailsUrl, appUrl, confirmationToken.getToken());
             emailSender.send(
                     account.getEmail(),
                     "Verify your email",
@@ -81,10 +70,10 @@ public class RegistrationService {
                             "Please click on the below link to verify your account and update your details ",
                             "Verify",
                             link,
-                            expirationTimeMinutes));
+                            confirmationTimeoutMinutes));
         } else {
             // account is not enabled, send activation email
-            String link = String.format(loginUrl, applicationDomain, confirmationToken.getToken());
+            String link = String.format(loginUrl, appUrl, confirmationToken.getToken());
             emailSender.send(
                     account.getEmail(),
                     "Verify your email",
@@ -93,7 +82,7 @@ public class RegistrationService {
                             "Thank you for registering. Please click on the below link to activate your account",
                             "Activate Now",
                             link,
-                            expirationTimeMinutes));
+                            confirmationTimeoutMinutes));
         }
         return account;
     }

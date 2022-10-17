@@ -1,40 +1,30 @@
 package com.ab.worldcup.config;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import lombok.Data;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
 
 import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Set;
 
-@Component
+@Data
+@Configuration
+@ConfigurationProperties(prefix = "worldcup")
 public class ApplicationConfig {
-
-    @Value("${worldcup.start-date-time}")
     private String startDateTimeConfig;
 
-    @Value("${worldcup.admin-emails}")
-    private String administrators;
+    private int confirmationTimeoutMinutes;
 
-
-    private LocalDateTime startDateTime;
+    private String appUrl;
 
     private Set<String> adminEmails;
-
+    private LocalDateTime startDateTime;
 
     @PostConstruct
     public void init() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ssX");
         this.startDateTime = LocalDateTime.parse(startDateTimeConfig, formatter);
-        this.adminEmails = Set.of(administrators.split(","));
-    }
-
-    public LocalDateTime getStartDateTime() {
-        return startDateTime;
-    }
-
-    public Set<String> getAdminEmails() {
-        return adminEmails;
     }
 }
