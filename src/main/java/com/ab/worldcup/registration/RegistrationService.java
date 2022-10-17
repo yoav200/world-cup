@@ -6,6 +6,7 @@ import com.ab.worldcup.email.EmailSender;
 import com.ab.worldcup.registration.token.ConfirmationToken;
 import com.ab.worldcup.registration.token.ConfirmationTokenService;
 import lombok.AllArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,7 +17,13 @@ import java.time.LocalDateTime;
 public class RegistrationService {
 
     // TODO: 13/10/2022 move to configuration
+    private static final String loginUrl = "%s/#/login/%s";
+
+    private static final String updateDetailsUrl = "%s/#/join/%s";
+
+    // TODO: 13/10/2022 move to configuration
     private final String applicationDomain = "http://localhost:8080";
+
     // TODO: 13/10/2022 move to configuration
     private final int expirationTimeMinutes = 60;
 
@@ -25,46 +32,91 @@ public class RegistrationService {
     private final EmailSender emailSender;
 
     public Account register(RegistrationRequest request) {
-
         Account newAccount = accountService.createNewAccount(request);
+        return validateEmail(newAccount.getEmail());
+    }
 
-        ConfirmationToken confirmationToken = accountService.createConfirmationToken(
-                newAccount,
-                expirationTimeMinutes
-        );
+    public Account getAccountByToken(String token) {
+        ConfirmationToken confirmationToken = confirmationTokenService
+                .findByToken(token)
+                .orElseThrow(() -> new IllegalStateException("token not found"));
 
-        String link = applicationDomain + "/api/registration/confirm?token=" + confirmationToken.getToken();
+        if (StringUtils.isBlank(confirmationToken.getToken())) {
+            throw new IllegalStateException("invalid token");
+        }
+        if (confirmationToken.getExpiresAt().isBefore(LocalDateTime.now())) {
+            throw new IllegalStateException("token expired");
+        }
+        if (confirmationToken.getConfirmedAt() != null) {
+            throw new IllegalStateException("token already has been used");
+        }
 
-        emailSender.send(
-                request.getEmail(),
-                "Confirm your email",
-                buildActivationEmail(request.getFirstName(), link, expirationTimeMinutes));
-
-        return newAccount;
+        return confirmationToken.getAccount();
     }
 
     @Transactional
-    public String confirmToken(String token) {
-        ConfirmationToken confirmationToken = confirmationTokenService
-                .getToken(token)
+    public ConfirmationToken confirmToken(String token) {
+        ConfirmationToken confirmationToken = confirmationTokenService.findByToken(token)
                 .orElseThrow(() -> new IllegalStateException("token not found"));
 
-        if (confirmationToken.getConfirmedAt() != null) {
-            throw new IllegalStateException("email already confirmed");
-        }
-
-        LocalDateTime expiredAt = confirmationToken.getExpiresAt();
-
-        if (expiredAt.isBefore(LocalDateTime.now())) {
-            throw new IllegalStateException("token expired");
-        }
-
-        confirmationTokenService.setConfirmedAt(token);
-        accountService.enableAccount(confirmationToken.getAccount().getEmail());
-        return "confirmed";
+        return confirmationTokenService.confirmToken(confirmationToken);
     }
 
-    private String buildActivationEmail(String name, String link, int minutes) {
+    public Account validateEmail(String email) {
+        Account account = accountService.findAccountByEmail(email);
+
+        // TODO: 16/10/2022 add validation on confirmationToken to avoid email spamming
+        ConfirmationToken confirmationToken = confirmationTokenService.findByAccountId(account.getId())
+                .map(t -> confirmationTokenService.reuseConfirmationToken(t, expirationTimeMinutes))
+                .orElse(confirmationTokenService.createConfirmationToken(account, expirationTimeMinutes));
+
+        if (account.getEnabled()) {
+            // account is already enabled, send link to update details
+            String link = String.format(updateDetailsUrl, applicationDomain, confirmationToken.getToken());
+            emailSender.send(
+                    account.getEmail(),
+                    "Verify your email",
+                    buildActivationEmail(
+                            account.getFirstName(),
+                            "Please click on the below link to verify your account and update your details ",
+                            "Verify",
+                            link,
+                            expirationTimeMinutes));
+        } else {
+            // account is not enabled, send activation email
+            String link = String.format(loginUrl, applicationDomain, confirmationToken.getToken());
+            emailSender.send(
+                    account.getEmail(),
+                    "Verify your email",
+                    buildActivationEmail(
+                            account.getFirstName(),
+                            "Thank you for registering. Please click on the below link to activate your account",
+                            "Activate Now",
+                            link,
+                            expirationTimeMinutes));
+        }
+        return account;
+    }
+
+    public Account changePassword(RegistrationRequest request) {
+        ConfirmationToken confirmationToken = confirmationTokenService.findByToken(request.getToken())
+                .orElseThrow(() -> new IllegalStateException("token not found"));
+
+        if (!confirmationToken.getAccount().getEmail().equals(request.getEmail())) {
+            throw new IllegalArgumentException("Token not match email");
+        }
+
+        ConfirmationToken confirmToken = confirmationTokenService.confirmToken(confirmationToken);
+
+        return accountService.updateAccountDetails(confirmToken.getAccount(), request);
+    }
+
+    private String buildActivationEmail(
+            String name,
+            String message,
+            String actionText,
+            String link,
+            int minutes) {
         return "<div style=\"font-family:Helvetica,Arial,sans-serif;font-size:16px;margin:0;color:#0b0c0c\">\n" +
                 "\n" +
                 "<span style=\"display:none;font-size:1px;color:#fff;max-height:0\"></span>\n" +
@@ -120,7 +172,7 @@ public class RegistrationService {
                 "      <td width=\"10\" valign=\"middle\"><br></td>\n" +
                 "      <td style=\"font-family:Helvetica,Arial,sans-serif;font-size:19px;line-height:1.315789474;max-width:560px\">\n" +
                 "        \n" +
-                "            <p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\">Hi " + name + ",</p><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> Thank you for registering. Please click on the below link to activate your account: </p><blockquote style=\"Margin:0 0 20px 0;border-left:10px solid #b1b4b6;padding:15px 0 0.1px 15px;font-size:19px;line-height:25px\"><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> <a href=\"" + link + "\">Activate Now</a> </p></blockquote>\n Link will expire in " + minutes + " minutes. <p>See you soon</p>" +
+                "            <p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\">Hi " + name + ",</p><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> " + message + " </p><blockquote style=\"Margin:0 0 20px 0;border-left:10px solid #b1b4b6;padding:15px 0 0.1px 15px;font-size:19px;line-height:25px\"><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> <a href=\"" + link + "\">" + actionText + "</a> </p></blockquote>\n Link will expire in " + minutes + " minutes. <p>See you soon</p>" +
                 "        \n" +
                 "      </td>\n" +
                 "      <td width=\"10\" valign=\"middle\"><br></td>\n" +

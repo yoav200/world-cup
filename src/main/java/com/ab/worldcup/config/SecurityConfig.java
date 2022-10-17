@@ -71,23 +71,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/admin/**").hasRole(Role.ADMIN.toString())
                 .anyRequest().permitAll();
 
-
-//        http
-//            .csrf().disable()
-//            .headers().frameOptions().disable()
-//
-//            .and()
-//                .formLogin().loginPage("/login")
-//                .defaultSuccessUrl("/users")
-//            .and()
-//                .logout()
-//                .logoutUrl("/logout")
-//                .deleteCookies("JSESSIONID")
-//                .logoutSuccessUrl("/#/")
-//            .and()
-//                .rememberMe();
-
-
         http
                 .csrf().disable()
                 .cors().disable()

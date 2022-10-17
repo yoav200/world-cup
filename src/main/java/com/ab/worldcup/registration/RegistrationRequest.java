@@ -22,4 +22,6 @@ public class RegistrationRequest {
     private final String email;
     @NotBlank(message = "Password is mandatory")
     private final String password;
+
+    private final String token;
 }

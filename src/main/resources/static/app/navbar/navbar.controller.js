@@ -4,6 +4,6 @@ angular.module('worldcup').controller('navbarController', function ($rootScope, 
 
     $scope.logout = Auth.logout;
 
-    $scope.socialLogin = Auth.socialLogin;
+    //$scope.socialLogin = Auth.socialLogin;
 
 });

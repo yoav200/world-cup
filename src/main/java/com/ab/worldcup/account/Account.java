@@ -1,10 +1,14 @@
 package com.ab.worldcup.account;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -23,9 +27,17 @@ public class Account {
     @GeneratedValue
     private Long id;
 
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+
+    @JsonIgnore
+    @UpdateTimestamp
+    private LocalDateTime updateDateTime;
+
     @Column(nullable = false, unique = true, length = 45)
     private String email;
 
+    @JsonIgnore
     @Column(nullable = false, length = 64)
     private String password;
 
@@ -35,6 +47,7 @@ public class Account {
     @Column(name = "last_name", nullable = false, length = 20)
     private String lastName;
 
+    @JsonIgnore
     private Boolean locked = false;
 
     private Boolean enabled = false;

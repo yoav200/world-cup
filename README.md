@@ -4,7 +4,7 @@ World Cup Betting application
 
 ## Motivation
 
-Web application to follow and manage bets for the FIFA 2018 World cup games.
+Web application to follow and manage bets for the FIFA 2022 Qatar World cup games.
 
 ## Installation
 

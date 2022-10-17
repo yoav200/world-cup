@@ -2,6 +2,7 @@ package com.ab.worldcup.web.api;
 
 import com.ab.worldcup.account.Account;
 import com.ab.worldcup.account.AccountService;
+import com.ab.worldcup.registration.RegistrationRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -11,6 +12,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -25,7 +27,6 @@ public class AccountController {
     }
 
     @GetMapping(value = "/identity", produces = {MediaType.APPLICATION_JSON_VALUE})
-    @ResponseBody
     public Account connect() {
         Account account = null;
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -38,18 +39,26 @@ public class AccountController {
         return account;
     }
 
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @PutMapping
+    public Account updateAccount(@Valid @RequestBody RegistrationRequest request) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.getName().equals(request.getEmail())) {
+            Account account = accountService.findAccountByEmail(authentication.getName());
+            return accountService.updateAccountDetails(account, request);
+        }
+        throw new IllegalArgumentException("Unauthorized access");
+    }
 
     // ~ ===============================  ADMIN ONLY ==========================
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping(value = "/")
-    @ResponseBody
     public List<Account> getAllAccounts() {
         return accountService.getAllAccounts();
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @ResponseBody
     @PostMapping(value = "/{id}")
     public Account updateAccount(@PathVariable Long id, @RequestBody Account account) {
         return accountService.updateAccountStatus(id, account.getStatus());

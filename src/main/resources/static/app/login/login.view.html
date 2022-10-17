@@ -4,7 +4,7 @@
   <div class="row">
     <div class="col-md-6">
 
-      <form action="" method="post" id="fileForm" role="form">
+      <form  role="form" ng-submit="login()">
 
         <div style="margin-bottom: 25px" class="input-group">
           <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
@@ -25,16 +25,15 @@
         </div>
 
         <div style="margin-top:10px" class="form-group">
-            <input class="btn btn-success" type="button" name="loginBtn" value="Login" data-ng-click="login()">
+            <input class="btn btn-success" type="submit" name="loginBtn" value="Login">
         </div>
 
         <div class="form-group">
           <div class="col-md-12 control" style="border-top: 1px solid#888; padding-top:15px; font-size:85%">
-            <div style="float:left;">Don't have an account! <a href="#/join">Join Here</a></div>
-            <div style="float:right;"><a href="#">Forgot password?</a></div>
+            <div style="float:left;">Don't have an account! <a href="#/join/">Join Here</a></div>
+            <div style="float:right;"><a href="#/email-validation">Forgot password?</a> <a href="#/email-validation">Need new activation?</a></div>
           </div>
         </div>
-
 
       </form>
 

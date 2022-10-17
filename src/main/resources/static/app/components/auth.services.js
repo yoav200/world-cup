@@ -20,7 +20,6 @@ angular.module('worldcup').factory('Auth', function ($rootScope, $state, $http, 
         });
     };
 
-
     var getAccount = function () {
         return $http.get("api/account/identity").then(function (response) {
             return response.data;
@@ -41,6 +40,9 @@ angular.module('worldcup').factory('Auth', function ($rootScope, $state, $http, 
                 id : response.id,
                 roles: response.roles,
                 displayName: response.fullName,
+                firstName: response.firstName,
+                lastName: response.lastName,
+                email: response.email,
                 imageUrl: response.profileImageUrl,
                 provider: undefined
             };
@@ -53,9 +55,8 @@ angular.module('worldcup').factory('Auth', function ($rootScope, $state, $http, 
             if(stateName) {
                 $log.info("found state to goto", stateName);
                 $cookies.remove("state_name");
-                $state.go(stateName)
+                //$state.go(stateName)
             }
-
         });
         // start polling
         heartBeat();
@@ -72,11 +73,9 @@ angular.module('worldcup').factory('Auth', function ($rootScope, $state, $http, 
         if (!auth.isLoggedIn()) {
             return false;
         }
-
         if (!view.permissions || !view.permissions.length) {
             return true;
         }
-
         return auth.userHasPermission(view.permissions);
     };
 
@@ -85,26 +84,23 @@ angular.module('worldcup').factory('Auth', function ($rootScope, $state, $http, 
         if (!auth.isLoggedIn()) {
             return false;
         }
-
         var found = false;
         angular.forEach(permissions, function (permission, index) {
             if (Account.roles.indexOf(permission) >= 0) {
                 found = true;
             }
         });
-
         return found;
     };
-
 
     auth.isLoggedIn = function () {
         return (Account && Account.roles && Account.roles.length > 0);
     };
 
-    auth.socialLogin = function (provider) {
-        console.log(provider);
-        $state.go('login', {'provider': provider, view : callbackState});
-    };
+//    auth.socialLogin = function (provider) {
+//        console.log(provider);
+//        $state.go('login', {'provider': provider, view : callbackState});
+//    };
 
     auth.currentAccount = function () {
         return Account;
@@ -117,5 +113,6 @@ angular.module('worldcup').factory('Auth', function ($rootScope, $state, $http, 
     auth.setStateUrl = function(stateName) {
         $cookies.put("state_name", stateName);
     };
+
     return auth;
 });

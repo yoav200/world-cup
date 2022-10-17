@@ -79,16 +79,25 @@ app.config(function ($urlRouterProvider, $httpProvider, growlProvider) {
         }
     }).state('join', {
         parent: 'site',
-        url: "/join",
+        url: "/join/:token",
         views: {
             'content@': {
                 templateUrl: 'app/register/register.view.html',
                 controller: 'registerCtrl'
             }
         }
+    }).state('email-validation', {
+          parent: 'site',
+          url: "/email-validation",
+          views: {
+              'content@': {
+                  templateUrl: 'app/register/email-validation.view.html',
+                  controller: 'registerCtrl'
+              }
+          }
     }).state('login', {
         parent: 'site',
-        url: "/login",
+        url: "/login/:token",
         views: {
             'content@': {
                 templateUrl: 'app/login/login.view.html',
