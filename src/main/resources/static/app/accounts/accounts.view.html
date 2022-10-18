@@ -10,7 +10,7 @@
             <th>Id</th>
             <th scope="col">Nmae</th>
             <th scope="col">Email</th>
-            <th scope="col">Social Provider</th>
+            <th scope="col">Enable</th>
             <th scope="col">Status</th>
         </tr>
         </thead>
@@ -25,7 +25,7 @@
                 <span ng-show="account.status=='ACTIVE'" class="glyphicon glyphicon-usd" aria-hidden="true"></span>
             </td>
             <td>{{account.email}}</td>
-            <td>{{account.providerId}}</td>
+            <td>{{account.enabled}}</td>
             <td>
                 <a href="#" editable-select="account.status"
                    e-ng-options="s.value as s.text for s in statuses"
