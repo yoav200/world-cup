@@ -1,0 +1,23 @@
+server:
+  tomcat:
+    max-connections: 20
+    threads.max: 5
+
+spring:
+  datasource:
+    url: ${DATABASE_URL}
+  jpa:
+    hibernate:
+      ddl-auto: none
+      format_sql: false
+    show-sql: false
+    open-in-view: false
+
+  flyway:
+    enabled: true
+
+worldcup:
+  start-date-time-config: '2022-11-20 19:00:00+00'
+  admin-emails: "yoav200@gmail.com,yoav.alhalel@bnymellon.com"
+  confirmation-timeout-minutes: 60
+  app-url: "https://world-cup-app.herokuapp.com"
