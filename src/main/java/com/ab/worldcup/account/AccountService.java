@@ -1,15 +1,15 @@
 package com.ab.worldcup.account;
 
+import static com.ab.worldcup.account.CustomUserDetailsService.USER_NOT_FOUND_MSG;
+
 import com.ab.worldcup.registration.RegistrationRequest;
+import com.ab.worldcup.web.components.BadRequestException;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-
-import static com.ab.worldcup.account.CustomUserDetailsService.USER_NOT_FOUND_MSG;
 
 @Log4j2
 @Service
@@ -51,7 +51,7 @@ public class AccountService {
                 .isPresent();
 
         if (userExists) {
-            throw new IllegalStateException("email already taken");
+            throw new BadRequestException("email already taken");
         }
 
         Account account = Account.builder()

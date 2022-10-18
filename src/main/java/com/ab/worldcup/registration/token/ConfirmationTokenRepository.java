@@ -13,17 +13,17 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public interface ConfirmationTokenRepository extends JpaRepository<ConfirmationToken, Long> {
 
-    Optional<ConfirmationToken> findByToken(String token);
+  Optional<ConfirmationToken> findByToken(String token);
 
-    Optional<ConfirmationToken> findByAccountId(Long accountId);
+  Optional<ConfirmationToken> findByAccountId(Long accountId);
 
-    @Transactional
-    @Modifying
-    @Query("UPDATE ConfirmationToken c SET c.confirmedAt = ?2 WHERE c.token = ?1")
-    void updateConfirmedAt(String token, LocalDateTime confirmedAt);
+  @Transactional
+  @Modifying
+  @Query("UPDATE ConfirmationToken c SET c.confirmedAt = ?2 WHERE c.token = ?1")
+  void updateConfirmedAt(String token, LocalDateTime confirmedAt);
 
-    @Transactional
-    @Modifying
-    @Query("UPDATE Account a SET a.enabled = TRUE WHERE a.email = ?1")
-    void enableAccount(String email);
+  @Transactional
+  @Modifying
+  @Query("UPDATE Account a SET a.enabled = TRUE WHERE a.email = ?1")
+  void enableAccount(String email);
 }

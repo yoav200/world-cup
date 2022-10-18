@@ -1,30 +1,32 @@
 package com.ab.worldcup.config;
 
-import lombok.Data;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
-
-import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Set;
+import javax.annotation.PostConstruct;
+import lombok.Data;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
 
 @Data
 @Configuration
 @ConfigurationProperties(prefix = "worldcup")
 public class ApplicationConfig {
-    private String startDateTimeConfig;
 
-    private int confirmationTimeoutMinutes;
+  private String startDateTimeConfig;
 
-    private String appUrl;
+  private int confirmationTimeoutMinutes;
 
-    private Set<String> adminEmails;
-    private LocalDateTime startDateTime;
+  private String appUrl;
 
-    @PostConstruct
-    public void init() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ssX");
-        this.startDateTime = LocalDateTime.parse(startDateTimeConfig, formatter);
-    }
+  private Set<String> adminEmails;
+
+  private Set<String> allowedDomains;
+  private LocalDateTime startDateTime;
+
+  @PostConstruct
+  public void init() {
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ssX");
+    this.startDateTime = LocalDateTime.parse(startDateTimeConfig, formatter);
+  }
 }

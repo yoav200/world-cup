@@ -13,15 +13,18 @@ import javax.validation.constraints.NotBlank;
 @EqualsAndHashCode
 @ToString
 public class RegistrationRequest {
-    @NotBlank(message = "First Name is mandatory")
-    private final String firstName;
-    @NotBlank(message = "Last Name is mandatory")
-    private final String lastName;
-    @Email(message = "Invalid Email")
-    @NotBlank(message = "Email is mandatory")
-    private final String email;
-    @NotBlank(message = "Password is mandatory")
-    private final String password;
+  @NotBlank(message = "First Name is mandatory")
+  private final String firstName;
 
-    private final String token;
+  @NotBlank(message = "Last Name is mandatory")
+  private final String lastName;
+
+  @Email(message = "Invalid Email")
+  @NotBlank(message = "Email is mandatory")
+  private final String email;
+
+  @NotBlank(message = "Password is mandatory")
+  private final String password;
+
+  private final String token;
 }

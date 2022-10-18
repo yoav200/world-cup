@@ -9,7 +9,7 @@ angular.module('worldcup').controller('teamsCtrl', function ($rootScope, $scope,
     $scope.matches = [];
 
     $scope.propertyName = 'fifaRanking';
-    $scope.reverse = true;
+    $scope.reverse = false;
 
 
     $scope.sortBy = function(propertyName) {

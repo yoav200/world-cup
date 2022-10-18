@@ -3,6 +3,8 @@ package com.ab.worldcup.web.components;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.web.error.ErrorAttributeOptions;
 import org.springframework.boot.web.servlet.error.DefaultErrorAttributes;
 import org.springframework.stereotype.Component;
@@ -32,19 +34,34 @@ public class CustomErrorAttributes extends DefaultErrorAttributes {
     if (object != null) {
       messages.addAll(extractErrorsAsMessage((List<FieldError>) object));
     } else {
-      String message = (String) errorAttributes.get("message");
-      String error = (String) errorAttributes.get("error");
+      String message =
+          Optional.ofNullable(errorAttributes.get("message"))
+              .map(Object::toString)
+              .orElse("No message available");
+
+      String error =
+          Optional.ofNullable(errorAttributes.get("error"))
+              .map(Object::toString)
+              .orElse("No error available");
+
       messages.add(Map.of("text", message, "severity", severity, "title", error));
     }
     errorAttributes.put("messages", messages);
     return errorAttributes;
   }
 
-
   private List<Map<String, String>> extractErrorsAsMessage(List<FieldError> errors) {
     List<Map<String, String>> messages = new ArrayList<>();
     errors.forEach(
-        e -> messages.add(Map.of("text", e.getDefaultMessage(), "severity", "warning", "title", e.getField())));
+        e ->
+            messages.add(
+                Map.of(
+                    "text",
+                    StringUtils.defaultString(e.getDefaultMessage(), "No message available"),
+                    "severity",
+                    "warning",
+                    "title",
+                    e.getField())));
     return messages;
   }
 }
