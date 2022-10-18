@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.web.error.ErrorAttributeOptions;
 import org.springframework.boot.web.servlet.error.DefaultErrorAttributes;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.FieldError;
 import org.springframework.web.context.request.WebRequest;
 
+@Log4j2
 @Component
 public class CustomErrorAttributes extends DefaultErrorAttributes {
 
@@ -19,6 +22,13 @@ public class CustomErrorAttributes extends DefaultErrorAttributes {
   public Map<String, Object> getErrorAttributes(WebRequest webRequest, ErrorAttributeOptions options) {
     Map<String, Object> errorAttributes = super.getErrorAttributes(webRequest, options);
     List<Map<String, String>> messages = new ArrayList<>();
+
+    // for debug purposes only
+    String mapEntries = errorAttributes.keySet().stream()
+        .map(key -> key + "=" + errorAttributes.get(key))
+        .collect(Collectors.joining(", ", "{", "}"));
+
+    log.info("CustomErrorAttributes: [{}]", mapEntries);
 
     Integer status = (Integer) errorAttributes.get("status");
     String severity = "success"; //
