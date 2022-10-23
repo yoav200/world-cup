@@ -63,4 +63,4 @@ worldcup:
   admin-emails: "yoav200@gmail.com,yoav.alhalel@bnymellon.com"
   confirmation-timeout-minutes: 60
   app-url: "http://localhost:8080"
-  allowed-domains: "gmail.com,bnymellon.com"
+  allowed-domains: ""

@@ -11,6 +11,18 @@
                            ng-model="registerData.email" required/>
                 </div>
 
+                <div style="margin-bottom: 25px;" class="form-group"
+                     ng-show="registerData.action=='Register'">
+                    <div style="border-top: 1px solid#888; padding-top:15px; font-size:85%">
+                        You will receive an email to complete the registration and validation process. Be sure
+                        to check your spam folders. Already registered? <a href="#/login/">Login in Here</a>
+                    </div>
+                </div>
+
+                <div style="margin-top: 25px;" class="form-group">
+                    <div class="g-recaptcha" data-sitekey="6LfgMaEiAAAAAMBj5LIxog-7lNXDS1pJvEcnlbf5"></div>
+                </div>
+
                 <div class="form-group">
                     <input class="btn btn-success" type="submit" name="submit_reg" value="Send"/>
                 </div>

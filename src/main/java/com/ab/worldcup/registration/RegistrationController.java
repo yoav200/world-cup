@@ -1,18 +1,28 @@
 package com.ab.worldcup.registration;
 
 import com.ab.worldcup.account.Account;
+import com.ab.worldcup.registration.recaptcha.RecaptchaService;
 import com.ab.worldcup.registration.token.ConfirmationToken;
-import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.*;
-
 import javax.validation.Valid;
+import lombok.AllArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
+@Log4j2
 @AllArgsConstructor
 @RestController
 @RequestMapping(path = "/api/registration")
 public class RegistrationController {
 
   private final RegistrationService registrationService;
+
+  private final RecaptchaService recaptchaService;
 
   /**
    * Register new user
@@ -54,8 +64,14 @@ public class RegistrationController {
    * @param email and email for an existing account
    * @return account after sending verification email (activation or update details)
    */
-  @GetMapping(path = "email-validation")
-  public Account emailValidation(@RequestParam("email") String email) {
+  @PostMapping(path = "email-validation")
+  public Account emailValidation(
+      @RequestParam(value = "recaptcha", required = false) String recaptcha,
+      @RequestParam("email") String email
+  ) {
+
+    log.info("is captcha valid: {}", recaptchaService.isValid(recaptcha));
+
     return registrationService.sendValidationEmail(email);
   }
 
