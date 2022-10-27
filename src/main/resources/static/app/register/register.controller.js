@@ -37,7 +37,7 @@ angular.module('worldcup').controller('registerCtrl', function ($rootScope, $sco
         return $http({
             url: "api/registration/email-validation",
             method: "POST",
-            params: {"email": $scope.registerData.email, "recaptcha" : grecaptcha.getResponse()}
+            params: {"email": $scope.registerData.email /*, "recaptcha" : grecaptcha.getResponse()*/ }
         }).then(function (response) {
             //console.log(response)
             growl.success('You email has confirm, you can login.', {title: 'Success!'});

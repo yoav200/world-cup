@@ -1,7 +1,6 @@
 package com.ab.worldcup.registration;
 
 import com.ab.worldcup.account.Account;
-import com.ab.worldcup.registration.recaptcha.RecaptchaService;
 import com.ab.worldcup.registration.token.ConfirmationToken;
 import javax.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -22,7 +21,7 @@ public class RegistrationController {
 
   private final RegistrationService registrationService;
 
-  private final RecaptchaService recaptchaService;
+  //private final RecaptchaService recaptchaService;
 
   /**
    * Register new user
@@ -70,7 +69,7 @@ public class RegistrationController {
       @RequestParam("email") String email
   ) {
 
-    log.info("is captcha valid: {}", recaptchaService.isValid(recaptcha));
+    //log.info("is captcha valid: {}", recaptchaService.isValid(recaptcha));
 
     return registrationService.sendValidationEmail(email);
   }
