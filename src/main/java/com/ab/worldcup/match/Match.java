@@ -15,7 +15,9 @@ import javax.persistence.Transient;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
+import org.hibernate.annotations.Immutable;
 
+@Immutable
 @Entity
 @Getter
 @ToString

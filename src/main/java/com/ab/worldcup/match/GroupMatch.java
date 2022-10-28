@@ -10,44 +10,42 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import org.hibernate.annotations.Immutable;
 
 @Entity
 @Getter
 @EqualsAndHashCode(callSuper = false)
-@Immutable
 @Table(name = "group_match")
 public class GroupMatch extends Match {
 
-    @ManyToOne
-    @JoinColumn(name = "homeTeam", referencedColumnName = "id")
-    private Team homeTeam;
+  @ManyToOne
+  @JoinColumn(name = "homeTeam", referencedColumnName = "id")
+  private Team homeTeam;
 
-    @ManyToOne
-    @JoinColumn(name = "awayTeam", referencedColumnName = "id")
-    private Team awayTeam;
+  @ManyToOne
+  @JoinColumn(name = "awayTeam", referencedColumnName = "id")
+  private Team awayTeam;
 
-    @Enumerated(EnumType.STRING)
-    private Group groupId;
+  @Enumerated(EnumType.STRING)
+  private Group groupId;
 
-    @Override
-    public Stage getStageId() {
-        return Stage.GROUP;
-    }
+  @Override
+  public Stage getStageId() {
+    return Stage.GROUP;
+  }
 
-    @Override
-    public String toString() {
-        return "Group " + groupId.name() + ",  "
-                + homeTeam.getName()
-                + " : "
-                + awayTeam.getName()
-                + (getResult() != null ? " (F)" : "");
-                // + (getResult() != null ? " &#10004;" : "");
-    }
+  @Override
+  public String toString() {
+    return "Group " + groupId.name() + ",  "
+        + homeTeam.getName()
+        + " : "
+        + awayTeam.getName()
+        + (getResult() != null ? " (F)" : "");
+    // + (getResult() != null ? " &#10004;" : "");
+  }
 
-    // used for the UI
-    public boolean isReady() {
-        return true;
-    }
+  // used for the UI
+  public boolean isReady() {
+    return true;
+  }
 
 }
