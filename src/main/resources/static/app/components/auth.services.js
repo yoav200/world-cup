@@ -14,7 +14,8 @@ angular.module('worldcup').factory('Auth', function ($rootScope, $state, $http, 
     var heartBeat = function () {
         $http.post('api/heartbeat', Account).then(function (response) {
             if (!response.data.valid) {
-                auth.logout();
+                //auth.logout();
+                window.location.href = "/#/";
             }
             $timeout(heartBeat, TIMEOUT_MILLIS);
         });

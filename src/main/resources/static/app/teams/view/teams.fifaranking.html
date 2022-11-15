@@ -4,22 +4,25 @@
     <tr>
         <th scope="col">Team</th>
         <th scope="col">
-            <button ng-click="sortBy('fifaRanking')">Ranking</button>
-            <span class="sortorder" ng-show="propertyName === 'fifaRanking'" ng-class="{reverse: reverse}"></span>
+            <button class="btn btn-link" ng-click="sortBy('fifaRanking')">Ranking
+                <span class="sortorder" ng-show="propertyName === 'fifaRanking'" ng-class="{reverse: reverse}"></span>
+            </button>
         </th>
         <th scope="col">
-            <button ng-click="sortBy('titles')">Titles Won</button>
-            <span class="sortorder" ng-show="propertyName === 'titles'" ng-class="{reverse: reverse}"></span>
+            <button class="btn btn-link" ng-click="sortBy('titles')">Titles
+                <span class="sortorder" ng-show="propertyName === 'titles'" ng-class="{reverse: reverse}"></span>
+            </button>
         </th>
         <th scope="col">
-            <button ng-click="sortBy('appearances')">World Cup Appearances</button>
-            <span class="sortorder" ng-show="propertyName === 'appearances'" ng-class="{reverse: reverse}"></span>
+            <button class="btn btn-link" ng-click="sortBy('appearances')">Appearances
+                <span class="sortorder" ng-show="propertyName === 'appearances'" ng-class="{reverse: reverse}"></span>
+            </button>
         </th>
     </tr>
     </thead>
     <tbody>
     <tr ng-repeat="team in teams | orderBy:propertyName:reverse">
-        <th><h4><team data="team"/></h4></th>
+        <th><h5><team data="team"/></h5></th>
         <td>{{team.fifaRanking}}</td>
         <td>{{team.titles}}</td>
         <td>{{team.appearances}}</td>
