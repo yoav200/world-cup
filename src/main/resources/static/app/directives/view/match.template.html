@@ -1,48 +1,30 @@
-
 <div class="panel panel-default" style="margin-left: 10px;"
      ng-repeat="match in matches | orderBy: 'kickoff'">
 
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-md-6 col-md-offset-2">
-        <strong>{{match.kickoff | date : 'MMM d, HH:mm'}}</strong>
-        Match {{match.matchId}}, {{match.stageId}} {{match.groupId}}
-      </div>
+    <div class="panel-heading">
+        <div>{{match.kickoff | date : 'MMM d, HH:mm'}}, Match {{match.matchId}}, {{match.stageId}} {{match.groupId}}</div>
     </div>
-    <div class="row-fluid>">
-      <div class="col-sm-9">
-        <div class="row">
-          <div class="col-xs-8 col-sm-6"><team data="match.homeTeam"/></div>
-          <div class="col-xs-4 col-sm-6"><b>{{match.result.homeTeamGoals}}</b></div>
+
+    <div class="panel-body">
+        <div class="row>">
+          <div class="col-sm-10">
+            <div class="row">
+              <div class="col-xs-8 col-sm-6">
+                <team data="match.homeTeam"/>
+              </div>
+              <div class="col-xs-2 col-sm-6"><b>{{match.result.homeTeamGoals}}</b></div>
+            </div>
+            <div class="row">
+              <div class="col-xs-8 col-sm-6">
+                <team data="match.awayTeam"/>
+              </div>
+              <div class="col-xs-2 col-sm-6"><b>{{match.result.awayTeamGoals}}</b></div>
+            </div>
+          </div>
         </div>
-        <div class="row">
-          <div class="col-xs-8 col-sm-6"><team data="match.awayTeam"/></div>
-          <div class="col-xs-4 col-sm-6"><b>{{match.result.awayTeamGoals}}</b></div>
-        </div>
-      </div>
     </div>
-    <div class="row">
-      <div class="col-md-6 col-md-offset-2" id="match-{{match.matchId}}-link">
-        <match-links data="match"/>
-      </div>
+
+    <div class="panel-footer" id="match-{{match.matchId}}-link">
+      <match-links data="match"/>
     </div>
-  </div>
-
-<!--  <table class="table  table-condensed table-borderless">-->
-<!--   <tr>-->
-<!--     <td>#{{match.matchId}}, {{match.stageId}} {{match.groupId}}, <b>{{match.kickoff | date : 'MMM d, HH:mm'}}</b></td>-->
-<!--     <td class="text-right"><match-links data="match"/></td>-->
-<!--   </tr>-->
-<!--  <tr>-->
-<!--    <td><team data="match.homeTeam"/></td>-->
-<!--    <td class="text-right"><b>{{match.result.homeTeamGoals}}</b></td>-->
-<!--  </tr>-->
-<!--   <tr>-->
-<!--     <td><team data="match.awayTeam"/></td>-->
-<!--     <td class="text-right"><b>{{match.result.awayTeamGoals}}</b></td>-->
-<!--   </tr>-->
-<!--  </table>-->
-
-
-
 </div>
