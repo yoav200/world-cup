@@ -1,18 +1,18 @@
 
 <div class="panel panel-default" style="margin-left: 10px; padding: 10px;"
      ng-repeat="match in matches | orderBy: 'kickoff'">
-  <table class="table">
-     <tr>
-         <td><b>{{match.stage}}</b> {{match.kickoff | date : 'MMM d, HH:mm'}}</td>
-         <td class="text-right"><match-links data="match"/></td>
-     </tr>
+  <table class="table table-condensed">
+   <tr>
+     <td>#{{match.matchId}}, {{match.stageId}} {{match.groupId}}, <b>{{match.kickoff | date : 'MMM d, HH:mm'}}</b></td>
+     <td class="text-right"><match-links data="match"/></td>
+   </tr>
   <tr>
-      <td><h5><team data="match.homeTeam"/></h5></td>
-      <td class="text-right">{{match.result.homeTeamGoals}}</td>
+    <td><team data="match.homeTeam"/></td>
+    <td class="text-right"><b>{{match.result.homeTeamGoals}}</b></td>
   </tr>
-     <tr>
-         <td><team data="match.awayTeam"/></h5></td>
-         <td class="text-right">{{match.result.awayTeamGoals}}</td>
-     </tr>
+   <tr>
+     <td><team data="match.awayTeam"/></td>
+     <td class="text-right"><b>{{match.result.awayTeamGoals}}</b></td>
+   </tr>
   </table>
 </div>
