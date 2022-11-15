@@ -1,34 +1,55 @@
-
 <div class="panel panel-default" ng-repeat="(confederation,teams) in confederation">
 
-    <div class="media">
-        <div class="media-left">
-            <a href="#">
-                <img class="media-object" ng-src="/images/confederations/{{confederation | spaceToUnderscore}}.jpg"/>
-            </a>
+  <div class="container">
+    <div class="row">
+
+      <div class="media">
+        <div class="media-left media-middle">
+          <a href="#">
+            <img class="media-object" ng-src="/images/confederations/{{confederation | spaceToUnderscore}}.jpg"/>
+          </a>
         </div>
         <div class="media-body">
-            <h2 class="media-heading">{{confederation | underscoreToSpace | capitalize}}</h2>
-            <!-- Table -->
-            <table class="table table-condensed">
-                <thead>
-                <tr>
-                    <th scope="col">Team</th>
-                    <th scope="col">Ranking</th>
-                    <th scope="col">Titles</th>
-                    <th scope="col">Appearances</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr ng-repeat="team in teams">
-                    <th><team data="team"/></th>
-                    <td>{{team.fifaRanking}}</td>
-                    <td>{{team.titles}}</td>
-                    <td>{{team.appearances}}</td>
-                </tr>
-                </tbody>
-            </table>
+          <h2 class="media-heading">{{confederation | underscoreToSpace | capitalize}}</h2>
         </div>
+      </div>
+
     </div>
+    <div class="row">
+
+      <table class="table table-condensed">
+        <thead>
+        <tr>
+          <th scope="col">Team</th>
+          <th scope="col">
+            <button class="btn btn-link" ng-click="sortBy('fifaRanking')">Ranking
+              <span class="sortorder" ng-show="propertyName === 'fifaRanking'" ng-class="{reverse: reverse}"></span>
+            </button>
+          </th>
+          <th scope="col">
+            <button class="btn btn-link" ng-click="sortBy('titles')">Titles
+              <span class="sortorder" ng-show="propertyName === 'titles'" ng-class="{reverse: reverse}"></span>
+            </button>
+          </th>
+          <th scope="col">
+            <button class="btn btn-link" ng-click="sortBy('appearances')">Appearances
+              <span class="sortorder" ng-show="propertyName === 'appearances'" ng-class="{reverse: reverse}"></span>
+            </button>
+          </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="team in teams | orderBy:propertyName:reverse">
+          <th><team data="team"/></th>
+          <td>{{team.fifaRanking}}</td>
+          <td>{{team.titles}}</td>
+          <td>{{team.appearances}}</td>
+        </tr>
+        </tbody>
+      </table>
+
+    </div>
+  </div>
+
 
 </div>
