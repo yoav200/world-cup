@@ -1,7 +1,6 @@
 
 <div class="panel panel-default" ng-repeat="(confederation,teams) in confederation">
 
-
     <div class="media">
         <div class="media-left">
             <a href="#">
@@ -11,7 +10,7 @@
         <div class="media-body">
             <h2 class="media-heading">{{confederation | underscoreToSpace | capitalize}}</h2>
             <!-- Table -->
-            <table class="table">
+            <table class="table table-condensed">
                 <thead>
                 <tr>
                     <th scope="col">Team</th>
@@ -22,7 +21,7 @@
                 </thead>
                 <tbody>
                 <tr ng-repeat="team in teams">
-                    <th><h5><team data="team"/></h5></th>
+                    <th><team data="team"/></th>
                     <td>{{team.fifaRanking}}</td>
                     <td>{{team.titles}}</td>
                     <td>{{team.appearances}}</td>

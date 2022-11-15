@@ -1,5 +1,5 @@
 
-<table class="table">
+<table class="table table-condensed">
     <thead>
     <tr>
         <th scope="col">Team</th>
@@ -22,7 +22,7 @@
     </thead>
     <tbody>
     <tr ng-repeat="team in teams | orderBy:propertyName:reverse">
-        <th><h5><team data="team"/></h5></th>
+        <th><team data="team"/></th>
         <td>{{team.fifaRanking}}</td>
         <td>{{team.titles}}</td>
         <td>{{team.appearances}}</td>

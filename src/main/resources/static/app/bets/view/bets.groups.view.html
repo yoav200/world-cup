@@ -30,7 +30,7 @@
                     <tr ng-repeat-start="teamInGroup in prepareTeamsInGroup(group.teamsInGroup)"
                         data-toggle="collapse"
                         data-target="#team-{{teamInGroup.team.code}}-matches" style="cursor: pointer;">
-                        <th><h5><team data="teamInGroup.team"/></h5></th>
+                        <th><team data="teamInGroup.team"/></th>
                         <td>{{teamInGroup.gamesPlayed }}</td>
                         <td>{{teamInGroup.gamesWon }}</td>
                         <td>{{teamInGroup.gamesTied }}</td>
@@ -39,12 +39,6 @@
                         <td>{{teamInGroup.goalsReceived }}</td>
                         <td>{{(teamInGroup.goalsScored - teamInGroup.goalsReceived)}}</td>
                         <td>{{teamInGroup.points | number}}</td>
-<!--                        <td>-->
-<!--                            <button type="button" class="btn btn-default btn-sm" data-toggle="collapse"-->
-<!--                                    data-target="#team-{{teamInGroup.team.code}}-matches">-->
-<!--                                <span aria-hidden="true"></span> Matches-->
-<!--                            </button>-->
-<!--                        </td>-->
                     </tr>
                     <tr ng-repeat-end>
                         <td colspan="10">
