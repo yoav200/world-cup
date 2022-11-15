@@ -28,7 +28,9 @@ public class CustomErrorAttributes extends DefaultErrorAttributes {
         .map(key -> key + "=" + errorAttributes.get(key))
         .collect(Collectors.joining(", ", "{", "}"));
 
-    log.info("CustomErrorAttributes: [{}]", mapEntries);
+    log.info(super.getError(webRequest));
+    log.info(super.getMessage(webRequest,  super.getError(webRequest)));
+    log.info(mapEntries);
 
     Integer status = (Integer) errorAttributes.get("status");
     String severity = "success"; //
@@ -45,14 +47,16 @@ public class CustomErrorAttributes extends DefaultErrorAttributes {
       messages.addAll(extractErrorsAsMessage((List<FieldError>) object));
     } else {
       String message =
-          Optional.ofNullable(errorAttributes.get("message"))
+          Optional.ofNullable(errorAttributes.get("default message"))
               .map(Object::toString)
-              .orElse("No message available");
+              .orElse(Optional.ofNullable(errorAttributes.get("message"))
+                  .map(Object::toString)
+                  .orElse("No message available"));
 
       String error =
           Optional.ofNullable(errorAttributes.get("error"))
               .map(Object::toString)
-              .orElse("No error available");
+              .orElse(StringUtils.capitalize(severity));
 
       messages.add(Map.of("text", message, "severity", severity, "title", error));
     }
