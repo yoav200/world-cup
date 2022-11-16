@@ -9,8 +9,10 @@ import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.web.error.ErrorAttributeOptions;
 import org.springframework.boot.web.servlet.error.DefaultErrorAttributes;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.context.request.WebRequest;
 
 @Log4j2
@@ -49,7 +51,11 @@ public class CustomErrorAttributes extends DefaultErrorAttributes {
     } else {
       String message;
 
-      if (throwable != null) {
+      if(throwable instanceof MethodArgumentNotValidException) {
+        message = ((MethodArgumentNotValidException) throwable).getAllErrors().stream()
+            .map(DefaultMessageSourceResolvable::getDefaultMessage)
+            .collect(Collectors.joining(","));
+      } else if (throwable != null) {
         message = throwable.getMessage();
       } else {
         message = Optional.ofNullable(errorAttributes.get("default message"))
