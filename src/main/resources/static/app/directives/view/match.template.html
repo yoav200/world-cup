@@ -2,7 +2,7 @@
      ng-repeat="match in matches | orderBy: 'kickoff'">
 
     <div class="panel-heading">
-        <div>{{match.kickoff | date : 'MMM d, HH:mm'}}, Match {{match.matchId}}, {{match.stageId}} {{match.groupId}}</div>
+        <div>{{match.kickoff | date : 'dd MMM yy, HH:mm'}}, Match {{match.matchId}}, {{match.stageId}} {{match.groupId}}</div>
     </div>
 
     <div class="panel-body">

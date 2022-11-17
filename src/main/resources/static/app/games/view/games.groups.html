@@ -13,7 +13,8 @@
             <table class="table table-hover table-condensed ">
                 <thead>
                 <tr>
-                    <th scope="col"></th>
+                    <th style="width: 3px;"></th>
+                    <th scope="col">Team</th>
                     <th scope="col" title="Game Played">P</th>
                     <th scope="col" title="Games Won">W</th>
                     <th scope="col" title="Draw">D</th>
@@ -28,6 +29,9 @@
                 <tr ng-repeat-start="teamInGroup in prepareTeamsInGroup(group.teamsInGroup)"
                     data-toggle="collapse"
                     data-target="#team-{{teamInGroup.team.code}}-matches" style="cursor: pointer;">
+                    <td style="padding: 0px;">
+                        <div ng-if="$index == 0 || $index == 1" style="width: 3px; height:45px; background-color:#4285F4"></div>
+                    </td>
                     <td><team data="teamInGroup.team"/></td>
                     <td>{{teamInGroup.gamesPlayed }}</td>
                     <td>{{teamInGroup.gamesWon }}</td>
@@ -39,7 +43,7 @@
                     <td>{{teamInGroup.points | number}}</td>
                 </tr>
                 <tr ng-repeat-end>
-                    <td colspan="9" style="padding: 0px;">
+                    <td colspan="10" style="padding: 0px;">
                         <div id="team-{{teamInGroup.team.code}}-matches" class="collapse">
                             <matches data="teamInGroup.matches"></matches>
                         </div>
@@ -48,6 +52,13 @@
                 </tbody>
             </table>
         </div>
+
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div  style="padding:10px; height: 44px; border-left: 3px solid #4285F4;">Advance to Next Round</div>
+            </div>
+        </div>
+
     </div>
 </section>
 

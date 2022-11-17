@@ -19,7 +19,7 @@
                     </thead>
                     <tbody>
                     <tr ng-repeat="data in overviewData.match">
-                        <td title="Kickoff at {{data.match.kickoff | date : 'MMM d, h:mm a'}}">{{data.match.matchId}}</td>
+                        <td title="Kickoff at {{data.match.kickoff | date : 'dd MMM yy, h:mm a'}}">{{data.match.matchId}}</td>
                         <td>
                     <span ng-switch="data.match.homeTeam || '_undefined_'" >
                         <span ng-switch-when="_undefined_">{{data.match.homeTeamCode}}</span>
@@ -77,7 +77,7 @@
                     </span>
                         </td>
                         <td>{{data.bet.stageId}}</td>
-                        <td>{{data.bet.lockTime | date : 'MMM d, h:mm a'}}</td>
+                        <td>{{data.bet.lockTime | date : 'dd MMM yy, h:mm a'}}</td>
                         <td>{{data.calculatedUserBet.isCorrectQualifier}}</td>
                         <td>{{data.calculatedUserBet.totalPoints}}</td>
                     </tr>
