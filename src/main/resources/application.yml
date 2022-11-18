@@ -59,7 +59,7 @@ logging:
 
 
 worldcup:
-  start-date-time-config: '2022-11-20 19:00:00+00'
+  start-date-time-config: '2022-11-20 16:00:00+00'
   admin-emails: "yoav200@gmail.com,yoav.alhalel@bnymellon.com"
   confirmation-timeout-minutes: 60
   app-url: "http://localhost:8080"

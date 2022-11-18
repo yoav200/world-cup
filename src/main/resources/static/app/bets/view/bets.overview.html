@@ -10,7 +10,8 @@
                     <tr>
                         <th>#</th>
                         <th scope="col" colspan="3">Match</th>
-                        <th scope="col">Stage Id</th>
+                        <th scope="col">Stage</th>
+                        <th scope="col">Lock Timed</th>
                         <th scope="col">Result</th>
                         <th scope="col">Bet</th>
                         <th scope="col">Points</th>
@@ -21,30 +22,31 @@
                     <tr ng-repeat="data in overviewData.match">
                         <td title="Kickoff at {{data.match.kickoff | date : 'dd MMM yy, h:mm a'}}">{{data.match.matchId}}</td>
                         <td>
-                    <span ng-switch="data.match.homeTeam || '_undefined_'" >
-                        <span ng-switch-when="_undefined_">{{data.match.homeTeamCode}}</span>
-                        <span ng-switch-default><team data="data.match.homeTeam"/></span>
-                    </span>
+                            <span ng-switch="data.match.homeTeam || '_undefined_'" >
+                                <span ng-switch-when="_undefined_">{{data.match.homeTeamCode}}</span>
+                                <span ng-switch-default><team data="data.match.homeTeam"/></span>
+                            </span>
                         </td>
                         <td> vs </td>
                         <td>
-                    <span ng-switch="data.match.awayTeam || '_undefined_'" >
-                        <span ng-switch-when="_undefined_">{{data.match.awayTeamCode}}</span>
-                        <span ng-switch-default><team data="data.match.awayTeam"/></span>
-                    </span>
+                            <span ng-switch="data.match.awayTeam || '_undefined_'" >
+                                <span ng-switch-when="_undefined_">{{data.match.awayTeamCode}}</span>
+                                <span ng-switch-default><team data="data.match.awayTeam"/></span>
+                            </span>
                         </td>
                         <td>{{data.match.stageId}}</td>
+                        <td>{{data.bet.lockTime | date : 'dd MMM yy, h:mm a'}}</td>
                         <td>
-                    <span ng-switch="data.matchResult || '_undefined_'" >
-                        <span ng-switch-when="_undefined_">NA</span>
-                        <span ng-switch-default>{{data.matchResult.homeTeamGoals}} : {{data.matchResult.awayTeamGoals}}</span>
-                    </span>
+                            <span ng-switch="data.matchResult || '_undefined_'" >
+                                <span ng-switch-when="_undefined_">NA</span>
+                                <span ng-switch-default>{{data.matchResult.homeTeamGoals}} : {{data.matchResult.awayTeamGoals}}</span>
+                            </span>
                         </td>
                         <td>
-                    <span ng-switch="data.calculatedUserBet.userBet || '_undefined_'" >
-                        <span ng-switch-when="_undefined_">NA</span>
-                        <span ng-switch-default>{{data.calculatedUserBet.userBet.homeTeamGoals}} : {{data.calculatedUserBet.userBet.awayTeamGoals}}</span>
-                    </span>
+                            <span ng-switch="data.calculatedUserBet.userBet || '_undefined_'" >
+                                <span ng-switch-when="_undefined_">NA</span>
+                                <span ng-switch-default>{{data.calculatedUserBet.userBet.homeTeamGoals}} : {{data.calculatedUserBet.userBet.awayTeamGoals}}</span>
+                            </span>
                         </td>
                         <td>{{data.calculatedUserBet.totalPoints}}</td>
                         <td>
@@ -71,10 +73,10 @@
                     <tr ng-repeat="data in overviewData.qualifier">
                         <td>{{data.bet.id}}</td>
                         <td>
-                    <span ng-switch="data.calculatedUserBet.userBet.qualifier || '_undefined_'" >
-                        <span ng-switch-when="_undefined_">{{data.bet.description}}</span>
-                        <span ng-switch-default><team data="data.calculatedUserBet.userBet.qualifier"/></span>
-                    </span>
+                            <span ng-switch="data.calculatedUserBet.userBet.qualifier || '_undefined_'" >
+                                <span ng-switch-when="_undefined_">{{data.bet.description}}</span>
+                                <span ng-switch-default><team data="data.calculatedUserBet.userBet.qualifier"/></span>
+                            </span>
                         </td>
                         <td>{{data.bet.stageId}}</td>
                         <td>{{data.bet.lockTime | date : 'dd MMM yy, h:mm a'}}</td>

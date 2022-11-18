@@ -43,17 +43,79 @@
                     <div class="col-sm-4">
                         <p class="form-control-static">{{selected.match.kickoff | date : 'MMM d, HH:mm' }}</p>
                     </div>
-
-                    <label class="control-label col-sm-2">Match #:</label>
-                    <div class="col-sm-4">
-                        <p class="form-control-static">
-                            <a role="button" data-ng-click="scrollMatches('prev')">Previous Match</a>
-                            {{selected.match.matchId}}
-                            <a role="button" data-ng-click="scrollMatches('next')">Next Match</a>
-                        </p>
-                    </div>
-
                 </div>
+
+
+                <style>
+                    .ss-wp-tnp {
+                        width: 100%;
+                        line-height: 12px;
+                        margin-bottom: 8px;
+                    }
+                    .ss-wp-tnr {
+                        font-size: 12px;
+                        line-height: 16px;
+                    }
+                    .ss-wp-ft {
+                        text-align: left;
+                        width: 33%;
+                    }
+                    .ss-wp-d {
+                        text-align: center;
+                        width: 33%;
+                    }
+                    .ss-wp-st {
+                        text-align: right;
+                        width: 33%;
+                    }
+                    .ss-wp-tp {
+                        font-size: 14px;
+                    }
+                    .ss-wp-dp {
+                        text-align: center;
+                        color: #70757a;
+                    }
+                    .ss-wp-br {
+                        height: 8px;
+                    }
+                    .ss-wp-b {
+                        width: 100%;
+                    }
+                    .ss-wp-bc {
+                        transition: width 0.3s;
+                    }
+                </style>
+                <div class="form-group">
+                    <label class="control-label col-sm-2">Bet Statistics:</label>
+                    <div class="col-sm-10">
+                        <table class="ss-wp-tnp">
+                        <tbody>
+                        <tr class="ss-wp-tnr">
+                            <td class="ss-wp-ft">{{selected.match.homeTeam.name}}</td>
+                            <td class="ss-wp-d">Draw</td>
+                            <td class="ss-wp-st">{{selected.match.awayTeam.name}}</td>
+                        </tr>
+                        <tr class="ss-wp-tp">
+                            <td class="ss-wp-ft" style="color:#4285F4">{{infoPopover.betsOnHomeTeamPercent}}%</td>
+                            <td class="ss-wp-dp">{{infoPopover.betsOnDrawPercent}}%</td>
+                            <td class="ss-wp-st" style="color:#216A3C">{{infoPopover.betsOnAwayTeamPercent}}%</td>
+                        </tr>
+                        </tbody>
+                        </table>
+
+                        <table class="ss-wp-b">
+                        <tbody>
+                            <tr class="ss-wp-br">
+                                <td class="ss-wp-bc" style="background-color:#4285F4" width="{{infoPopover.betsOnHomeTeamPercent}}%"></td>
+                                <td class="ss-wp-bc" style="background-color:#D6D6D6" width="{{infoPopover.betsOnDrawPercent}}%"></td>
+                                <td class="ss-wp-bc" style="background-color:#216A3C" width="{{infoPopover.betsOnAwayTeamPercent}}%"></td>
+                            </tr>
+                        </tbody>
+                        </table>
+                    </div>
+                </div>
+
+
                 <div class="form-group">
                     <label class="control-label col-sm-2">Match:</label>
                     <div class="col-sm-10">
@@ -61,16 +123,16 @@
                         <tbody>
                         <tr>
                             <td class="col-md-4"><team data="selected.match.homeTeam"></team></td>
-                            <td class="col-md-4"><team data="selected.match.awayTeam"></team></td>
-                            <td class="col-md-1 text-center">
-                                <button type="button"
-                                        class="btn btn-default"
-                                        uib-popover-template="infoPopover.templateUrl"
-                                        popover-title="{{infoPopover.title}}">
-                                    <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
-                                </button>
-                            </td>
-                            <td class="col-md-1 text-center">
+
+<!--                            <td class="col-md-1 text-center">-->
+<!--                                <button type="button"-->
+<!--                                        class="btn btn-default"-->
+<!--                                        uib-popover-template="infoPopover.templateUrl"-->
+<!--                                        popover-title="{{infoPopover.title}}">-->
+<!--                                    <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>-->
+<!--                                </button>-->
+<!--                            </td>-->
+                            <td class="col-md-2 text-center">
                                 <input type="number"
                                        min="0" max="20"
                                        class="form-control"
@@ -80,8 +142,8 @@
                                        data-ng-disabled="selected.match.started"
                                        size="3">
                             </td>
-                            <td class="col-md-1 text-center">:</td>
-                            <td class="col-md-1 text-center">
+<!--                            <td class="col-md-1 text-center">:</td>-->
+                            <td class="col-md-2 text-center">
                                 <input type="number"
                                        min="0" max="20"
                                        class="form-control"
@@ -91,9 +153,20 @@
                                        data-ng-disabled="selected.match.started"
                                        size="3">
                             </td>
+                            <td class="col-md-4"><team data="selected.match.awayTeam"></team></td>
                         </tr>
                         </tbody>
                         </table>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-4">
+                        <p class="form-control-static">
+                            <a role="button" data-ng-click="scrollMatches('prev')">Previous Match</a>
+                            {{selected.match.matchId}}
+                            <a role="button" data-ng-click="scrollMatches('next')">Next Match</a>
+                        </p>
                     </div>
                 </div>
 
