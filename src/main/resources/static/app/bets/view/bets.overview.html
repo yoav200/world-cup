@@ -3,90 +3,119 @@
     <div class="jumbotron">
         <h2>Your bets overview</h2>
 
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div><span class="bg-info">&nbsp;&nbsp;</span> Bet Result</div>
+                <div><span class="bg-success">&nbsp;&nbsp;</span> Points Gamed</div>
+            </div>
+        </div>
+
         <uib-tabset active="active" justified="true">
             <uib-tab index="0" heading="Match Bets">
-                <table class="table table-hover table-striped table-bordered">
-                    <thead>
-                    <tr>
-                        <th>#</th>
-                        <th scope="col" colspan="3">Match</th>
-                        <th scope="col">Stage</th>
-                        <th scope="col">Lock Timed</th>
-                        <th scope="col">Result</th>
-                        <th scope="col">Bet</th>
-                        <th scope="col">Points</th>
-                        <th scope="col">&nbsp;</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr ng-repeat="data in overviewData.match">
-                        <td title="Kickoff at {{data.match.kickoff | date : 'dd MMM yy, h:mm a'}}">{{data.match.matchId}}</td>
-                        <td>
-                            <span ng-switch="data.match.homeTeam || '_undefined_'" >
-                                <span ng-switch-when="_undefined_">{{data.match.homeTeamCode}}</span>
-                                <span ng-switch-default><team data="data.match.homeTeam"/></span>
-                            </span>
-                        </td>
-                        <td> vs </td>
-                        <td>
-                            <span ng-switch="data.match.awayTeam || '_undefined_'" >
-                                <span ng-switch-when="_undefined_">{{data.match.awayTeamCode}}</span>
-                                <span ng-switch-default><team data="data.match.awayTeam"/></span>
-                            </span>
-                        </td>
-                        <td>{{data.match.stageId}}</td>
-                        <td>{{data.bet.lockTime | date : 'dd MMM yy, h:mm a'}}</td>
-                        <td>
-                            <span ng-switch="data.matchResult || '_undefined_'" >
-                                <span ng-switch-when="_undefined_">NA</span>
-                                <span ng-switch-default>{{data.matchResult.homeTeamGoals}} : {{data.matchResult.awayTeamGoals}}</span>
-                            </span>
-                        </td>
-                        <td>
-                            <span ng-switch="data.calculatedUserBet.userBet || '_undefined_'" >
-                                <span ng-switch-when="_undefined_">NA</span>
-                                <span ng-switch-default>{{data.calculatedUserBet.userBet.homeTeamGoals}} : {{data.calculatedUserBet.userBet.awayTeamGoals}}</span>
-                            </span>
-                        </td>
-                        <td>{{data.calculatedUserBet.totalPoints}}</td>
-                        <td>
-                            <match-links data="data.match"/>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
+                <div class="panel panel-default" style="margin: 10px;"
+                     ng-repeat="data in overviewData.match | orderBy: 'kickoff'">
+                    <div class="panel-heading" title="Bet number {{data.bet.id}}">
+                        <div>{{data.match.kickoff | date : 'dd MMM yy, HH:mm'}}, {{data.match.stageId}} {{data.match.groupId}}</div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-sm-10">
+                                <div class="row">
+                                    <div class="col-xs-8 col-sm-8">
+                                        <span ng-switch="data.match.homeTeam || '_undefined_'" >
+                                            <span ng-switch-when="_undefined_">{{data.match.homeTeamCode}}</span>
+                                            <span ng-switch-default><team data="data.match.homeTeam"/></span>
+                                        </span>
+                                    </div>
+                                    <div class="col-xs-1 col-sm-2">
+                                        <span ng-switch="data.matchResult || '_undefined_'" >
+                                            <span ng-switch-when="_undefined_">-</span>
+                                            <span ng-switch-default>{{data.matchResult.homeTeamGoals}}</span>
+                                        </span>
+                                    </div>
+                                    <div class="col-xs-1 col-sm-2 bg-info">
+                                        <span ng-switch="data.calculatedUserBet.userBet || '_undefined_'" >
+                                            <span ng-switch-when="_undefined_">-</span>
+                                            <span ng-switch-default>{{data.calculatedUserBet.userBet.homeTeamGoals}}</span>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-8 col-sm-8">
+                                        <span ng-switch="data.match.awayTeam || '_undefined_'" >
+                                            <span ng-switch-when="_undefined_">{{data.match.awayTeamCode}}</span>
+                                            <span ng-switch-default><team data="data.match.awayTeam"/></span>
+                                        </span>
+                                    </div>
+                                    <div class="col-xs-1 col-sm-2">
+                                        <span ng-switch="data.matchResult || '_undefined_'" >
+                                            <span ng-switch-when="_undefined_">-</span>
+                                            <span ng-switch-default>{{data.matchResult.awayTeamGoals}}</span>
+                                        </span>
+                                    </div>
+                                    <div class="col-xs-1 col-sm-2 bg-info">
+                                        <span ng-switch="data.calculatedUserBet.userBet || '_undefined_'" >
+                                            <span ng-switch-when="_undefined_">-</span>
+                                            <span ng-switch-default>{{data.calculatedUserBet.userBet.awayTeamGoals}}</span>
+                                         </span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-8 col-sm-8"></div>
+                                    <div class="col-xs-1 col-sm-2"></div>
+                                    <div class="col-xs-1 col-sm-2 bg-success">
+                                        <span ng-switch="data.calculatedUserBet.userBet || '_undefined_'" >
+                                            <span ng-switch-when="_undefined_">-</span>
+                                            <span ng-switch-default title="Point Gained"><b>{{data.calculatedUserBet.totalPoints}}</b></span>
+                                         </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-footer" id="match-{{data.match.matchId}}-link">
+                        <match-links data="data.match"/>
+                    </div>
+                </div>
             </uib-tab>
 
+
             <uib-tab index="1" heading="Qualifiers Bets">
-                <table class="table table-hover table-striped table-bordered">
-                    <thead>
-                    <tr>
-                        <th>#</th>
-                        <th scope="col">Qualifier</th>
-                        <th scope="col">Stage</th>
-                        <th scope="col">Lock Timed</th>
-                        <th scope="col">Correct Qualifier</th>
-                        <th scope="col">Points</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr ng-repeat="data in overviewData.qualifier">
-                        <td>{{data.bet.id}}</td>
-                        <td>
-                            <span ng-switch="data.calculatedUserBet.userBet.qualifier || '_undefined_'" >
-                                <span ng-switch-when="_undefined_">{{data.bet.description}}</span>
-                                <span ng-switch-default><team data="data.calculatedUserBet.userBet.qualifier"/></span>
-                            </span>
-                        </td>
-                        <td>{{data.bet.stageId}}</td>
-                        <td>{{data.bet.lockTime | date : 'dd MMM yy, h:mm a'}}</td>
-                        <td>{{data.calculatedUserBet.isCorrectQualifier}}</td>
-                        <td>{{data.calculatedUserBet.totalPoints}}</td>
-                    </tr>
-                    </tbody>
-                </table>
+                <div class="panel panel-default" style="margin: 10px;" ng-repeat="data in overviewData.qualifier">
+                    <div class="panel-heading" title="Bet number {{data.bet.id}}">
+                        <div>{{data.bet.description}}</div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-sm-10">
+                                <div class="row">
+                                    <div class="col-xs-8 col-sm-8">
+                                        <span ng-switch="data.calculatedUserBet.userBet.qualifier || '_undefined_'" >
+                                            <span ng-switch-when="_undefined_">{{data.bet.stageId}}</span>
+                                            <span ng-switch-default><team data="data.calculatedUserBet.userBet.qualifier"/></span>
+                                        </span>
+                                    </div>
+                                    <div class="col-xs-2 col-sm-4 bg-info">
+                                        <span ng-switch="data.calculatedUserBet.isCorrectQualifier">
+                                            <span ng-switch-when="True">True</span>
+                                            <span ng-switch-when="False">False</span>
+                                            <span ng-switch-default>NA</span>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-8 col-sm-8"></div>
+                                    <div class="col-xs-2 col-sm-4 bg-success">
+                                       <b>{{data.calculatedUserBet.totalPoints}}</b>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </uib-tab>
         </uib-tabset>
+
     </div>
 
 </section>
