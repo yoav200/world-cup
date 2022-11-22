@@ -116,7 +116,7 @@ public class RankingService {
         .filter(b -> b.getType().equals(BetType.MATCH) && b.getStageId().equals(Stage.GROUP)).count();
     int knockoutMatchesCount = (int) allBets.stream()
         .filter(b -> b.getType().equals(BetType.MATCH) && !b.getStageId().equals(Stage.GROUP)).count();
-    for (Account account : accountRepository.findAll()) {
+    for (Account account : accountRepository.findAllActiveUsers()) {
       List<UserBet> betForAccount = betService.findByUserBetIdAccountId(account.getId());
       RankingData rankingData = resultsService.getRankingForAccount(account, betForAccount, qualifierBetsCount,
           groupMatchesCount, knockoutMatchesCount);
