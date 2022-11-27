@@ -125,9 +125,10 @@ public class TeamInGroup<T extends ResultInterface> implements Comparable<TeamIn
           }
         }
       }
-      // DirectMatch does not Exists or ended up with tie
+      // DirectMatch does not Exist or ended up with tie
       // Go to configuration file
-      return t1.team.getFifaRanking().compareTo(t2.team.getFifaRanking());
+      //return t2.team.getFifaRanking().compareTo(t1.team.getFifaRanking());
+      return TieBreakConfig.getTeamRank(t1.team.getId()) - TieBreakConfig.getTeamRank(t2.team.getId());
     }
   };
 
@@ -135,7 +136,7 @@ public class TeamInGroup<T extends ResultInterface> implements Comparable<TeamIn
   @Override
   public int compareTo(TeamInGroup that) {
     // FIFA TIE BREAKING POLICY
-    // https://en.wikipedia.org/wiki/2018_FIFA_World_Cup_qualification#Tiebreakers
+    // https://en.wikipedia.org/wiki/2022_FIFA_World_Cup_qualification#Tiebreakers
 
     // 1. Points
     if (this.points != that.points) {
@@ -169,10 +170,10 @@ public class TeamInGroup<T extends ResultInterface> implements Comparable<TeamIn
           }
         }
       }
-      // DirectMatch does not Exists or ended up with tie
+      // DirectMatch does not Exist or ended up with tie
       // Go to configuration file
-      return team.getFifaRanking().compareTo(that.team.getFifaRanking());
-      //return TieBreakConfig.getTeamRank(this.team.getId()) - TieBreakConfig.getTeamRank(that.team.getId());
+      //return that.team.getFifaRanking().compareTo(team.getFifaRanking());
+      return TieBreakConfig.getTeamRank(this.team.getId()) - TieBreakConfig.getTeamRank(that.team.getId());
     }
   }
 }

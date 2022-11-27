@@ -7,6 +7,7 @@ import com.ab.worldcup.team.TeamRepository;
 import java.util.HashMap;
 import java.util.Map;
 import javax.annotation.PostConstruct;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
@@ -30,7 +31,7 @@ public class TieBreakConfig {
         Group[] values = Group.values();
         for (Group group : values) {
             String currGroupConfig = this.environment.getProperty("Group" + group.name());
-            if (!currGroupConfig.isEmpty()) {
+            if (StringUtils.isNoneBlank(currGroupConfig)) {
                 String[] split = currGroupConfig.split(",");
                 int rank = 4;
                 for (String s : split) {

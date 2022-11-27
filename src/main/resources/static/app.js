@@ -243,7 +243,7 @@ app.config(function ($urlRouterProvider, $httpProvider, growlProvider) {
             $state.go('login');
         }
     });
-}).run(function($rootScope, $location, $anchorScroll, editableOptions) {
+}).run(function($rootScope, $location, $anchorScroll, $document, editableOptions) {
 
     $rootScope.scrollTo = function (id) {
         $location.hash(id);
@@ -254,6 +254,14 @@ app.config(function ($urlRouterProvider, $httpProvider, growlProvider) {
     // inline edit style
     // bootstrap3 theme. Can be also 'bs2', 'default'
     editableOptions.theme = 'bs3';
+
+
+    $document.on('click','.navbar-collapse.in',function(e) {
+        if( $(e.target).is('a:not(".dropdown-toggle")') ) {
+            $(this).collapse('hide');
+        }
+    });
+
 });
 
 
