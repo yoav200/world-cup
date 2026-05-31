@@ -1,75 +1,165 @@
 <section id="rules">
 
-    <div class="jumbotron">
-        <h2>Rules</h2>
-        <h4>
-            You are more than welcome to join in, but before you do, please take few minutes to read the rules:
-        </h4>
+    <!-- Hero -->
+    <div class="rules-hero text-center mb-4">
+        <h1><i class="bi bi-trophy"></i> World Cup 2026 Betting</h1>
+        <p class="lead">Predict. Compete. Win the prize pool.</p>
+    </div>
 
-        <br><ins>Distribution of spoils:</ins><br><br>
+    <!-- How it Works -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-4">
+            <div class="card rules-card h-100 text-center">
+                <div class="card-body">
+                    <div class="rules-icon"><i class="bi bi-pencil-square"></i></div>
+                    <h5 class="card-title">1. Place Your Bets</h5>
+                    <p class="card-text">Predict match scores and qualifier teams. Every bet you place earns coins for the shared prize pool.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card rules-card h-100 text-center">
+                <div class="card-body">
+                    <div class="rules-icon"><i class="bi bi-bar-chart-line"></i></div>
+                    <h5 class="card-title">2. Earn Points</h5>
+                    <p class="card-text">Score points for correct predictions. Climb the leaderboard throughout the tournament.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card rules-card h-100 text-center">
+                <div class="card-body">
+                    <div class="rules-icon"><i class="bi bi-coin"></i></div>
+                    <h5 class="card-title">3. Win the Pool</h5>
+                    <p class="card-text">Top 3 players split the virtual coin prize pool at the end of the tournament.</p>
+                </div>
+            </div>
+        </div>
+    </div>
 
-        Your main goal is to gain as many points as possible<br>
-        At the end of the tournament, top 3 users will win the pot<br>
-        First place - 50% of the pot<br>
-        Second place - 30% of the pot<br>
-        Third place - 20% of the pot<br>
-        pot size depends on how many users will join in<br><br>
+    <!-- Points Section -->
+    <div class="card rules-section mb-4">
+        <div class="card-header rules-section-header">
+            <h4 class="mb-0"><i class="bi bi-star"></i> Points System</h4>
+        </div>
+        <div class="card-body">
+            <h5>Match Bets</h5>
+            <p>You can update your bet for each match until its kickoff time. Results are based on 90 minutes only (no extra time or penalties).</p>
+            <div class="table-responsive">
+                <table class="table table-bordered table-sm">
+                    <thead class="table-light">
+                        <tr><th>Prediction</th><th>Points</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Correct result (1X2)</td><td><strong>1 point</strong></td></tr>
+                        <tr><td>Exact score</td><td><strong>+2 points</strong></td></tr>
+                    </tbody>
+                </table>
+            </div>
 
-        And what if more than one user is in the first 3 places?<br>
-        1. 2 users share the the highest score<br>
-        They will split 80% (1st and 2nd prizes) of the pot between them<br>
-        The second best score (1 or more users) will split the rest of the pot between them<br>
-        The third best score will not win any prize in this case.<br>
-        2. 3 or more users share the highest score - they split 100% of the pot between them<br>
-        The second and third best doesn't win anything.<br>
-        3. One user has the highest score, 2 or more users share the second highest score<br>
-        The first place will take 50% of the pot<br>
-        The users in the second place will split 50% (2nd and 3rd prizes) of the pot between them<br>
-        Third best score doesn't win anything<br>
+            <div class="card bg-light p-3 mb-3">
+                <strong>Example:</strong> United States vs Mexico &mdash; you predict USA wins 3&ndash;1
+                <ul class="mb-0 mt-2">
+                    <li>Mexico wins or draw &rarr; <span class="text-danger">0 points</span></li>
+                    <li>USA wins 2&ndash;0 &rarr; <span class="text-primary">1 point</span> (correct result)</li>
+                    <li>USA wins 3&ndash;1 &rarr; <span class="text-success">3 points</span> (result + exact score)</li>
+                </ul>
+            </div>
 
-        <br><br><ins>Points calculation method:</ins><br><br>
+            <h5>Qualifier Bets</h5>
+            <p>Pick which teams advance to each knockout stage. Qualifier bets can be changed until the tournament starts.</p>
+            <div class="table-responsive">
+                <table class="table table-bordered table-sm">
+                    <thead class="table-light">
+                        <tr><th>Stage</th><th>Points per correct pick</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Round of 32</td><td>1</td></tr>
+                        <tr><td>Round of 16</td><td>2</td></tr>
+                        <tr><td>Quarter-final</td><td>4</td></tr>
+                        <tr><td>Semi-final</td><td>6</td></tr>
+                        <tr><td>Final</td><td>8</td></tr>
+                        <tr><td>Third Place</td><td>10</td></tr>
+                        <tr><td>Winner</td><td>12</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="text-muted"><small>Knockout match bets are placed separately once the teams are determined &mdash; regardless of your qualifier picks.</small></p>
+        </div>
+    </div>
 
-        Match Points (can be updated during the tournament, each match until it's kickoff time)<br>
-        <ul>
-            <li><b>Correct match result (1X2) worth 1 point</b></li>
-            <li><b>Guessing exact match score worth another 2 points</b></li>
-            <li><b>result is determined after 90 minutes, not including extra time/penalties</b></li>
-        </ul>
+    <!-- Virtual Coins Section -->
+    <div class="card rules-section mb-4">
+        <div class="card-header rules-section-header rules-section-header-gold">
+            <h4 class="mb-0"><i class="bi bi-coin"></i> Virtual Coin Prize Pool</h4>
+        </div>
+        <div class="card-body">
+            <p>
+                Instead of real money, we use <strong>virtual coins</strong>. Every action in the game adds coins to
+                a <strong>shared prize pool</strong> (the &ldquo;bucket&rdquo;). The bigger the pool, the bigger the bragging rights!
+            </p>
+            <p>You can see the live pool total in the <span class="coin-bucket-badge"><i class="bi bi-coin"></i> navbar badge</span>.</p>
 
-        e.g: United States vs Wales<br>
-        You guessed United States wins 3-1<br>
-        If Wales wins or the match ends up with a draw - you get no points<br>
-        If United States wins in every score except 3-1 - you get 1 point<br>
-        If United States wins exactly 3-1 - you get 3 points<br><br>
+            <h5>How Coins Are Earned</h5>
+            <div class="table-responsive">
+                <table class="table table-bordered table-sm">
+                    <thead class="table-light">
+                        <tr><th>Action</th><th>Coins Added</th><th>Details</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><i class="bi bi-box-arrow-in-right"></i> Daily Login</td><td>10</td><td>Once per day, per user</td></tr>
+                        <tr><td><i class="bi bi-pencil-square"></i> Match Bet Placed</td><td>25</td><td>Per bet, per user</td></tr>
+                        <tr><td><i class="bi bi-diagram-3"></i> Qualifier Bet Placed</td><td>50</td><td>Once per user</td></tr>
+                        <tr><td><i class="bi bi-check-circle"></i> Full Round Complete</td><td>100</td><td>All bets placed for a round</td></tr>
+                        <tr class="table-warning"><td><i class="bi bi-rocket-takeoff"></i> Tournament Start Seed</td><td>5,000</td><td>Automatic &mdash; once</td></tr>
+                        <tr class="table-warning"><td><i class="bi bi-lightning"></i> Knockout Stage Bonus</td><td>3,000</td><td>Automatic &mdash; once</td></tr>
+                        <tr class="table-warning"><td><i class="bi bi-flag"></i> Final Bonus</td><td>2,000</td><td>Automatic &mdash; once</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="text-muted"><small>Coin rates may be adjusted during the tournament. Past events keep their original amount.</small></p>
+        </div>
+    </div>
 
-        This is relevant to all tournament matches (from group stage till the final)<br><br>
+    <!-- Prize Distribution Section -->
+    <div class="card rules-section mb-4">
+        <div class="card-header rules-section-header">
+            <h4 class="mb-0"><i class="bi bi-gift"></i> Prize Distribution</h4>
+        </div>
+        <div class="card-body">
+            <p>At the end of the tournament, the top 3 players split the coin pool:</p>
 
-        Bet on knockout matches can be done only once the match teams are known<br>
-        Make sure you place your bet before knockout matches, you don't want to lose points because of that<br>
-        Betting on knockout matches is done regardless to the teams chosen by you as qualifiers<br><br>
+            <div class="row text-center mb-3">
+                <div class="col-md-4">
+                    <div class="prize-card prize-gold">
+                        <div class="prize-medal"><i class="bi bi-trophy"></i></div>
+                        <h5>1st Place</h5>
+                        <div class="prize-pct">50%</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="prize-card prize-silver">
+                        <div class="prize-medal"><i class="bi bi-award"></i></div>
+                        <h5>2nd Place</h5>
+                        <div class="prize-pct">30%</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="prize-card prize-bronze">
+                        <div class="prize-medal"><i class="bi bi-award"></i></div>
+                        <h5>3rd Place</h5>
+                        <div class="prize-pct">20%</div>
+                    </div>
+                </div>
+            </div>
 
-        <br><br><ins>Qualifier Bets:</ins><br><br>
-
-        <b>Qualifier Points can be changed until the tournament starts</b><br>
-        For every correct qualifier you get:
-        <b>
+            <h5>Tie-Breaking Rules</h5>
             <ul>
-                <li>Round of 16 - 2 point</li>
-                <li>Quarter final - 4 points</li>
-                <li>Semi-final - 6 points</li>
-                <li>Final - 8 points</li>
-                <li>Third Place - 10 points</li>
-                <li>Winner - 12 points</li>
+                <li><strong>2 players share 1st place</strong> &mdash; they split 80% (1st + 2nd prizes); the next-best score gets 20%.</li>
+                <li><strong>3+ players share 1st place</strong> &mdash; they split the entire 100%.</li>
+                <li><strong>1st place is unique, 2+ share 2nd</strong> &mdash; 1st gets 50%; tied players split 50% (2nd + 3rd).</li>
             </ul>
-        </b>
-
-
-        <br><br><ins>Participation Method and Costs</ins><br><br>
-
-        Joining can be done via your Facebook/Google account,<br>
-        Payment cannot be done using our website - so it's in the good old fashioned way..<br>
-        Once you pay we will update your user and you'll see a "$" sign next to your name in the ranking table.<br>
-        Participation costs 100 Shekels/30 USD/25 GBP
+        </div>
     </div>
 
 </section>

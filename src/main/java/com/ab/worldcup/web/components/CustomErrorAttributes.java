@@ -7,11 +7,11 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.boot.web.error.Error;
 import org.springframework.boot.web.error.ErrorAttributeOptions;
 import org.springframework.boot.web.servlet.error.DefaultErrorAttributes;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.stereotype.Component;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.context.request.WebRequest;
 
@@ -47,12 +47,12 @@ public class CustomErrorAttributes extends DefaultErrorAttributes {
 
     Object object = errorAttributes.get("errors");
     if (object != null) {
-      messages.addAll(extractErrorsAsMessage((List<FieldError>) object));
+      messages.addAll(extractErrorsAsMessage((List<Error>) object));
     } else {
       String message;
 
-      if(throwable instanceof MethodArgumentNotValidException) {
-        message = ((MethodArgumentNotValidException) throwable).getAllErrors().stream()
+      if (throwable instanceof MethodArgumentNotValidException exception) {
+        message = exception.getAllErrors().stream()
             .map(DefaultMessageSourceResolvable::getDefaultMessage)
             .collect(Collectors.joining(","));
       } else if (throwable != null) {
@@ -64,10 +64,9 @@ public class CustomErrorAttributes extends DefaultErrorAttributes {
                 .map(Object::toString)
                 .orElse("No message available"));
       }
-      String error =
-          Optional.ofNullable(errorAttributes.get("error"))
-              .map(Object::toString)
-              .orElse(StringUtils.capitalize(severity));
+      String error = Optional.ofNullable(errorAttributes.get("error"))
+          .map(Object::toString)
+          .orElse(StringUtils.capitalize(severity));
 
       messages.add(Map.of("text", message, "severity", severity, "title", error));
     }
@@ -75,7 +74,7 @@ public class CustomErrorAttributes extends DefaultErrorAttributes {
     return errorAttributes;
   }
 
-  private List<Map<String, String>> extractErrorsAsMessage(List<FieldError> errors) {
+  private List<Map<String, String>> extractErrorsAsMessage(List<Error> errors) {
     List<Map<String, String>> messages = new ArrayList<>();
     errors.forEach(
         e ->
@@ -86,7 +85,7 @@ public class CustomErrorAttributes extends DefaultErrorAttributes {
                     "severity",
                     "warning",
                     "title",
-                    e.getField())));
+                    "Validation Error")));
     return messages;
   }
 }

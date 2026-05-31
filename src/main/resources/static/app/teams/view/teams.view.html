@@ -1,13 +1,11 @@
 <section id="teams">
-    <div>
-        <h1>Teams <small>{{view.section}}</small></h1>
+    <h2 class="mb-3"><i class="bi bi-flag me-2"></i>Teams</h2>
 
-        <ul class="nav nav-tabs nav-justified">
-            <li role="presentation" ui-sref-active="active"><a ui-sref="teams.fifaranking">FIFA Ranking</a></li>
-            <li role="presentation" ui-sref-active="active"><a ui-sref="teams.confederation">Confederation</a></li>
-        </ul>
-    </div>
+    <ul class="view-tabs">
+        <li class="nav-item" ui-sref-active="active"><a class="nav-link" ui-sref="teams.fifaranking"><i class="bi bi-sort-numeric-up me-1"></i>FIFA Ranking</a></li>
+        <li class="nav-item" ui-sref-active="active"><a class="nav-link" ui-sref="teams.confederation"><i class="bi bi-globe-americas me-1"></i>Confederation</a></li>
+    </ul>
 
-    <div class="panel" ui-view></div>
+    <div ui-view></div>
 
 </section>

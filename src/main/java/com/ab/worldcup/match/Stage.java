@@ -4,12 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public enum Stage {
-    GROUP, ROUND_OF_16, QUARTER_FINAL, SEMI_FINAL, THIRD_PLACE, THIRD_PLACE_WINNER, FINAL, WINNER;
+    GROUP, ROUND_OF_32, ROUND_OF_16, QUARTER_FINAL, SEMI_FINAL, THIRD_PLACE, THIRD_PLACE_WINNER, FINAL, WINNER;
 
     public List<Stage> getNextStage() {
         ArrayList<Stage> next = new ArrayList<>();
         switch (this) {
             case GROUP:
+                next.add(ROUND_OF_32);
+                break;
+            case ROUND_OF_32:
                 next.add(ROUND_OF_16);
                 break;
             case ROUND_OF_16:
@@ -34,6 +37,8 @@ public enum Stage {
         switch (this) {
             case GROUP:
                 return 48;
+            case ROUND_OF_32:
+                return 32;
             case ROUND_OF_16:
                 return 16;
             case QUARTER_FINAL:

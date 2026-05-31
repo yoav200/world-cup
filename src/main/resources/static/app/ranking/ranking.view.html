@@ -1,49 +1,103 @@
 <section id="ranking">
 
-    <div class="jumbotron">
-        <h2>Ranking <small><a class="btn btn-link" ui-sref="rules">Rules</a></small></h2>
-        <p>Welcome to Qatar 2022 world cup betting competition:</p>
+    <div class="d-flex flex-wrap align-items-center justify-content-between mb-4">
+        <div>
+            <h2 class="mb-1">Leaderboard</h2>
+            <p class="text-muted mb-0">World Cup 2026 betting competition</p>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+            <select class="form-select form-select-sm" style="width: auto;"
+                    ng-model="selectedLeagueId"
+                    ng-change="onLeagueFilterChange()"
+                    ng-show="leagues.length > 0">
+                <option value="">All Players</option>
+                <option ng-repeat="league in leagues" ng-value="league.id">{{league.name}}</option>
+            </select>
+            <a class="btn btn-outline-secondary btn-sm" ui-sref="rules">
+                <i class="bi bi-journal-text me-1"></i>Rules
+            </a>
+        </div>
+    </div>
 
-        <table class="table table-condensed table-hover table-striped table-bordered">
-            <thead>
-            <tr>
-                <th>#</th>
-                <th>Rank</th>
-                <th scope="col">Username</th>
-                <th scope="col">Points</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr ng-repeat="ranking in rankingData" ng-class="{'border_highlight': ranking.account.id === Account.id } ">
-                <td>{{$index+1}}</td>
-                <td>
-                    <span ng-show="ranking.rank < ranking.prevRank">
-                        <span>({{ranking.prevRank-ranking.rank}})</span>
-                        <span class="glyphicon glyphicon-arrow-up text-success"></span>
-                    </span>
+    <!-- Podium cards (top 3) -->
+    <div class="row g-3 mb-4" ng-show="rankingData.length >= 3">
+        <div class="col-md-4" ng-repeat="idx in [1, 0, 2]">
+            <div class="card ranking-podium text-center h-100"
+                 ng-class="{'ranking-gold': idx === 0, 'ranking-silver': idx === 1, 'ranking-bronze': idx === 2,
+                            'ranking-me': rankingData[idx].account.id === Account.id}">
+                <div class="card-body py-3">
+                    <div class="ranking-podium-medal">
+                        <span ng-if="idx === 0">🥇</span>
+                        <span ng-if="idx === 1">🥈</span>
+                        <span ng-if="idx === 2">🥉</span>
+                    </div>
+                    <img ng-if="rankingData[idx].account.profileImageUrl"
+                         ng-src="{{rankingData[idx].account.profileImageUrl}}"
+                         class="ranking-avatar mb-2"/>
+                    <h6 class="mb-1">{{rankingData[idx].account.fullName}}</h6>
+                    <span class="badge bg-dark fs-6">{{rankingData[idx].points}} pts</span>
+                    <div class="mt-1" ng-show="rankingData[idx].points > rankingData[idx].prevPoints">
+                        <small class="text-success">+{{rankingData[idx].points - rankingData[idx].prevPoints}}</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-                    <span ng-show="ranking.rank > ranking.prevRank">
-                        <span>({{ranking.prevRank-ranking.rank}})</span>
-                        <span class="glyphicon glyphicon-arrow-down text-warning"></span>
-                    </span>
+    <!-- Full table -->
+    <div class="card ranking-card">
+        <div class="table-responsive">
+            <table class="table table-hover table-sm align-middle mb-0">
+                <thead>
+                <tr class="table-light">
+                    <th class="text-center" style="width: 50px;">#</th>
+                    <th class="text-center" style="width: 100px;">Rank</th>
+                    <th scope="col" class="ps-3">Player</th>
+                    <th scope="col" class="text-end pe-3" style="width: 120px;">Points</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="ranking in rankingData"
+                    ng-class="{'ranking-me': ranking.account.id === Account.id}">
+                    <td class="text-center text-muted">{{$index + 1}}</td>
+                    <td class="text-center">
+                        <span ng-if="ranking.rank === 1" class="ranking-medal">🥇</span>
+                        <span ng-if="ranking.rank === 2" class="ranking-medal">🥈</span>
+                        <span ng-if="ranking.rank === 3" class="ranking-medal">🥉</span>
+                        <strong ng-if="ranking.rank > 3">{{ranking.rank}}</strong>
 
-                    <span><strong>{{ranking.rank}}</strong></span>
-                </td>
-                <td>
-                    <img ng-src="{{ranking.account.profileImageUrl}}" style="max-height: 50px;"/>
-                    <span>{{ranking.account.fullName}}</span>
-                    <span ng-show="ranking.account.status=='ACTIVE'" class="glyphicon glyphicon-usd" aria-hidden="true"></span>
-                </td>
-                <td>
-                    <span ng-show="ranking.points > ranking.prevPoints">
-                        (+{{ranking.points - ranking.prevPoints}})
-                    </span>
-
-                    <span><strong>{{ranking.points}}</strong></span>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+                        <span ng-if="ranking.prevRank != null && ranking.rank < ranking.prevRank">
+                            <i class="bi bi-caret-up-fill text-success"></i>
+                            <small class="text-success">{{ranking.prevRank - ranking.rank}}</small>
+                        </span>
+                        <span ng-if="ranking.prevRank != null && ranking.rank > ranking.prevRank">
+                            <i class="bi bi-caret-down-fill text-danger"></i>
+                            <small class="text-danger">{{ranking.rank - ranking.prevRank}}</small>
+                        </span>
+                        <span ng-if="ranking.prevRank != null && ranking.rank == ranking.prevRank">
+                            <i class="bi bi-dash-lg text-muted"></i>
+                        </span>
+                    </td>
+                    <td class="ps-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <img ng-if="ranking.account.profileImageUrl"
+                                 ng-src="{{ranking.account.profileImageUrl}}"
+                                 class="ranking-avatar-sm"/>
+                            <span>{{ranking.account.fullName}}</span>
+                            <i ng-show="ranking.account.status=='ACTIVE'"
+                               class="bi bi-patch-check-fill text-primary" title="Active player"></i>
+                        </div>
+                    </td>
+                    <td class="text-end pe-3">
+                        <strong>{{ranking.points}}</strong>
+                        <small ng-show="ranking.points > ranking.prevPoints" class="text-success ms-1">
+                            +{{ranking.points - ranking.prevPoints}}
+                        </small>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 
 </section>

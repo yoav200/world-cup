@@ -1,11 +1,11 @@
 package com.ab.worldcup.web.components;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import org.springframework.web.servlet.HandlerInterceptor;
 
-public class SessionManager extends HandlerInterceptorAdapter {
+public class SessionManager implements HandlerInterceptor {
 
   public static final long MAX_INACTIVE_SESSION_TIME = 1000 * 60 * 20; // 20 minutes
 

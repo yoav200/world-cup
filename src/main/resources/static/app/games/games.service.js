@@ -30,13 +30,14 @@ angular.module('worldcup').factory('Matches', function($http) {
     /**
      * build a map where key is stageId and value is list of matches for the stage
      * @param matches
-     * @returns {{firstStage: Array, secondStage: Array, roundOf16Left: Array, roundOf16Right: Array, quarterFinalLeft: Array, quarterFinalRight: Array, semiFinalsLeft: Array, semiFinalsRight: Array, thirdPlace: Array, finals: Array, finalWinner: undefined}}
+     * @returns object with arrays for each bracket position
      */
     var getMatchesForStage = function (matches) {
 
         var matchesByStage = {
             firstStage: [],
-            //secondStage: [],
+            roundOf32Left: [],
+            roundOf32Right: [],
             roundOf16Left: [],
             roundOf16Right: [],
             quarterFinalLeft: [],
@@ -47,32 +48,16 @@ angular.module('worldcup').factory('Matches', function($http) {
             finals: [],
             finalWinner: undefined
         };
-        
+
+        // collect knockout matches by stage
+        var stageCollectors = {};
+
         for (var i = 0; i < matches.length; i++) {
             var match = matches[i];
-            var matchId = match.matchId;
             var stageId = match.stageId;
 
             if (stageId === 'GROUP') {
                 matchesByStage.firstStage.push(match);
-            } else if (stageId === 'ROUND_OF_16') {
-                if ([49, 50, 53, 54].indexOf(matchId) > -1) {
-                    matchesByStage.roundOf16Left.push(match);
-                } else if ([51, 52, 55, 56].indexOf(matchId) > -1) {
-                    matchesByStage.roundOf16Right.push(match);
-                }
-            } else if (stageId === 'QUARTER_FINAL') {
-                if ([57, 58].indexOf(matchId) > -1) {
-                    matchesByStage.quarterFinalLeft.push(match);
-                } else if ([59, 60].indexOf(matchId) > -1) {
-                    matchesByStage.quarterFinalRight.push(match);
-                }
-            } else if (stageId === 'SEMI_FINAL') {
-                if ([61].indexOf(matchId) > -1) {
-                    matchesByStage.semiFinalsLeft.push(match);
-                } else if ([62].indexOf(matchId) > -1) {
-                    matchesByStage.semiFinalsRight.push(match);
-                }
             } else if (stageId === 'THIRD_PLACE') {
                 matchesByStage.thirdPlace.push(match);
             } else if (stageId === 'FINAL') {
@@ -82,8 +67,41 @@ angular.module('worldcup').factory('Matches', function($http) {
                 } else if(match.result && match.result.winner === 'AWAY_TEAM_WON') {
                     matchesByStage.finalWinner = match.awayTeam;
                 }
+            } else {
+                if (!stageCollectors[stageId]) {
+                    stageCollectors[stageId] = [];
+                }
+                stageCollectors[stageId].push(match);
             }
         }
+
+        // split each knockout stage into left/right halves by matchId order
+        var splitStage = function(stageList) {
+            if (!stageList) return { left: [], right: [] };
+            stageList.sort(function(a, b) { return a.matchId - b.matchId; });
+            var half = Math.ceil(stageList.length / 2);
+            return {
+                left: stageList.slice(0, half),
+                right: stageList.slice(half)
+            };
+        };
+
+        var r32 = splitStage(stageCollectors['ROUND_OF_32']);
+        matchesByStage.roundOf32Left = r32.left;
+        matchesByStage.roundOf32Right = r32.right;
+
+        var r16 = splitStage(stageCollectors['ROUND_OF_16']);
+        matchesByStage.roundOf16Left = r16.left;
+        matchesByStage.roundOf16Right = r16.right;
+
+        var qf = splitStage(stageCollectors['QUARTER_FINAL']);
+        matchesByStage.quarterFinalLeft = qf.left;
+        matchesByStage.quarterFinalRight = qf.right;
+
+        var sf = splitStage(stageCollectors['SEMI_FINAL']);
+        matchesByStage.semiFinalsLeft = sf.left;
+        matchesByStage.semiFinalsRight = sf.right;
+
         return matchesByStage;
     };
     

@@ -9,7 +9,6 @@ import com.ab.worldcup.team.Team;
 import com.ab.worldcup.team.TeamRepository;
 import java.util.HashSet;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -24,8 +23,8 @@ public class GroupService {
 
   public <T extends ResultInterface> boolean isGroupFinished(Group groupId, List<T> matches) {
     List<GroupMatch> groupMatches = groupMatchRepository.findByGroupId(groupId);
-    List<Long> matchesInGroup = groupMatches.stream().map(Match::getMatchId).collect(Collectors.toList());
-    return new HashSet<>(matches.stream().map(ResultInterface::getMatchId).collect(Collectors.toList())).containsAll(
+    List<Long> matchesInGroup = groupMatches.stream().map(Match::getMatchId).toList();
+    return new HashSet<>(matches.stream().map(ResultInterface::getMatchId).toList()).containsAll(
         matchesInGroup);
   }
 

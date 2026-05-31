@@ -37,6 +37,14 @@
     box-shadow: 0 -3px 0 #c00
 }
 
+.r_32 .mtch_container {
+    padding: 8px 0
+}
+
+.r_32 .m_segment {
+    height: 30px
+}
+
 .r_16 .mtch_container {
     padding: 20px 0
 }

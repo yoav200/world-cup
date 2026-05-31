@@ -7,9 +7,10 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface RankingRepository extends JpaRepository<Ranking, Long> {
 
-    //@Query(value = "SELECT distinct date FROM ranking order by date desc", nativeQuery = true)
-    @Query("SELECT DISTINCT date FROM Ranking ORDER order by date desc")
+    @Query("SELECT DISTINCT r.date FROM Ranking r ORDER BY r.date DESC")
     List<Timestamp> findDistinctDates();
 
     List<Ranking> findAllByDate(Timestamp date);
+
+    void deleteByDate(Timestamp date);
 }

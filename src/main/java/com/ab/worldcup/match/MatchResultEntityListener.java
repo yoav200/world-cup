@@ -3,8 +3,8 @@ package com.ab.worldcup.match;
 
 import com.ab.worldcup.BeanUtil;
 import com.ab.worldcup.results.MatchResult;
-import javax.persistence.PostPersist;
-import javax.persistence.PostUpdate;
+import jakarta.persistence.PostPersist;
+import jakarta.persistence.PostUpdate;
 
 public class MatchResultEntityListener {
 

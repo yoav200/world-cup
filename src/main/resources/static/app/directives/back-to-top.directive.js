@@ -4,7 +4,7 @@ angular.module('worldcup').directive('backToTop', function () {
     return {
         restrict: 'E'
         , replace: true
-        , template: '<div class="back-to-top"><i class="fa fa-chevron-up">Top</i></div>'
+        , template: '<div class="back-to-top"><i class="bi bi-chevron-up">Top</i></div>'
         , link: function ($scope, element, attrs) {
             $(window).scroll(function () {
                 if ($(window).scrollTop() <= 0) {

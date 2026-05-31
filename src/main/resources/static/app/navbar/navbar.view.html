@@ -1,71 +1,106 @@
-
 <!-- Fixed navbar -->
-<nav class="navbar navbar-default navbar-fixed-top">
+<nav class="navbar navbar-expand-md fixed-top">
     <div class="container">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="#">
-               <span style="color: white; font-weight: bold;"> WORLD CUP QATAR 2022</span>
-<!--                <img data-ng-src="/images/logo/world-cup-2022-logo.png" class="logo">-->
-            </a>
-        </div>
+        <a class="navbar-brand" href="#">
+            <i class="bi bi-trophy-fill me-1"></i> WORLD CUP 2026
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
         <div id="navbar" class="collapse navbar-collapse">
-            <ul class="nav navbar-nav">
-                <li ui-sref-active="active"><a ui-sref="rules">Rules</a></li>
-                <li ui-sref-active="active"><a ui-sref="ranking">Ranking</a></li>
-                <li ui-sref-active="active"><a ui-sref="teams">Teams</a></li>
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item" ui-sref-active="active">
+                    <a class="nav-link" ui-sref="rules"><i class="bi bi-book me-1"></i>Rules</a>
+                </li>
+                <li class="nav-item" ui-sref-active="active">
+                    <a class="nav-link" ui-sref="ranking"><i class="bi bi-bar-chart-line me-1"></i>Ranking</a>
+                </li>
+                <li class="nav-item" ui-sref-active="active">
+                    <a class="nav-link" ui-sref="teams"><i class="bi bi-flag me-1"></i>Teams</a>
+                </li>
 
-                <li class="dropdown" ui-sref-active="active">
-                    <a href class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                        Games <span class="caret"></span>
+                <li class="nav-item dropdown" ui-sref-active="active">
+                    <a href class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false">
+                        <i class="bi bi-calendar-event me-1"></i>Games
                     </a>
                     <ul class="dropdown-menu">
-                        <li ui-sref-active="active"><a ui-sref="games.groups">Groups View</a></li>
-                        <li ui-sref-active="active"><a ui-sref="games.firststage">Matches View</a></li>
-                        <li role="separator" class="divider" permission="['ROLE_ADMIN']"></li>
+                        <li ui-sref-active="active">
+                            <a class="dropdown-item" ui-sref="games.groups"><i class="bi bi-grid-3x3 me-2"></i>Groups View</a>
+                        </li>
+                        <li ui-sref-active="active">
+                            <a class="dropdown-item" ui-sref="games.firststage"><i class="bi bi-list-ul me-2"></i>Matches View</a>
+                        </li>
+                        <li permission="['ROLE_ADMIN']"><hr class="dropdown-divider"></li>
                         <li ui-sref-active="active" permission="['ROLE_ADMIN']">
-                            <a ui-sref="games.manage">Update Match <small>admin only!</small></a></li>
+                            <a class="dropdown-item" ui-sref="games.manage">
+                                <i class="bi bi-pencil-square me-2"></i>Update Match
+                                <span class="badge bg-danger ms-1">Admin</span>
+                            </a>
                         </li>
                     </ul>
                 </li>
 
-                <li class="dropdown" ui-sref-active="active">
-                    <a href class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                        Bets <span class="caret"></span>
+                <li class="nav-item dropdown" ui-sref-active="active" permission="['ROLE_USER']">
+                    <a href class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false">
+                        <i class="bi bi-pencil-square me-1"></i>Bets
                     </a>
                     <ul class="dropdown-menu">
-                        <li ui-sref-active="active"><a ui-sref="bets.overview">Overview</a></li>
-                        <li ui-sref-active="active"><a ui-sref="bets.groups">Groups View</a></li>
-                        <li ui-sref-active="active"><a ui-sref="bets.matches">Matches</a></li>
-                        <li ui-sref-active="active"><a ui-sref="bets.qualifier">Qualifiers</a></li>
+                        <li ui-sref-active="active">
+                            <a class="dropdown-item" ui-sref="bets.overview"><i class="bi bi-eye me-2"></i>Overview</a>
+                        </li>
+                        <li ui-sref-active="active">
+                            <a class="dropdown-item" ui-sref="bets.groups"><i class="bi bi-grid-3x3 me-2"></i>Groups View</a>
+                        </li>
+                        <li ui-sref-active="active">
+                            <a class="dropdown-item" ui-sref="bets.matches"><i class="bi bi-bullseye me-2"></i>Matches</a>
+                        </li>
+                        <li ui-sref-active="active">
+                            <a class="dropdown-item" ui-sref="bets.qualifier"><i class="bi bi-diagram-3 me-2"></i>Qualifiers</a>
+                        </li>
                     </ul>
                 </li>
 
-                <li ui-sref-active="active" permission="['ROLE_ADMIN']">
-                    <a ui-sref="accounts">Accounts</a></li>
+                <li class="nav-item" ui-sref-active="active" permission="['ROLE_USER']">
+                    <a class="nav-link" ui-sref="leagues"><i class="bi bi-people me-1"></i>Leagues</a>
                 </li>
 
+                <li class="nav-item" ui-sref-active="active" permission="['ROLE_ADMIN']">
+                    <a class="nav-link" ui-sref="accounts"><i class="bi bi-person-gear me-1"></i>Accounts</a>
+                </li>
             </ul>
 
-            <ul class="nav navbar-nav navbar-right" >
-                <li ui-sref-active="active" data-ng-hide="Account.authenticate"><a ui-sref="join">Join</a></li>
-                <li ui-sref-active="active" data-ng-hide="Account.authenticate"><a ui-sref="login">Login</a></li>
-                <li class="dropdown" data-ng-show="Account.authenticate">
-                    <a href class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-<!--                        <img ng-src="{{Account.imageUrl}}" style="max-height: 40px;"/> <span class="caret"></span>-->
-                        <span class="glyphicon">&#xe008;</span> <span class="caret"></span>
+            <ul class="navbar-nav ms-auto align-items-center">
+                <li class="nav-item me-2" data-ng-show="coinBucket !== null">
+                    <span class="coin-bucket-badge" title="Prize Pool">
+                        <i class="bi bi-coin"></i> {{coinBucket | number}}
+                    </span>
+                </li>
+                <li class="nav-item" data-ng-hide="Account.authenticate">
+                    <a class="nav-link" href="/oauth2/authorization/bny">
+                        <i class="bi bi-box-arrow-in-right me-1"></i>Login
                     </a>
-                    <ul class="dropdown-menu">
-                        <li class="dropdown-header">Signed in as {{Account.displayName}}</li>
-                        <li ui-sref-active="active"><a ui-sref="join">Update Details</a></li>
-                        <li role="separator" class="divider"></li>
-                        <li><a href data-ng-click="logout()">Log out</a></li>
+                </li>
+                <li class="nav-item dropdown" data-ng-show="Account.authenticate">
+                    <a href class="nav-link dropdown-toggle navbar-user-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false">
+                        <img ng-src="{{Account.imageUrl}}" class="navbar-avatar" ng-if="Account.imageUrl"/>
+                        <i class="bi bi-person-circle navbar-avatar-fallback" ng-if="!Account.imageUrl"></i>
+                        <span class="d-none d-lg-inline">{{Account.displayName}}</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li>
+                            <div class="dropdown-header text-center py-2">
+                                <img ng-src="{{Account.imageUrl}}" class="rounded-circle mb-1" style="width:40px;height:40px;object-fit:cover;" ng-if="Account.imageUrl"/>
+                                <div class="fw-semibold">{{Account.displayName}}</div>
+                                <small class="text-muted">{{Account.email}}</small>
+                            </div>
+                        </li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <a class="dropdown-item" href data-ng-click="logout()">
+                                <i class="bi bi-box-arrow-right me-2"></i>Log out
+                            </a>
+                        </li>
                     </ul>
                 </li>
             </ul>

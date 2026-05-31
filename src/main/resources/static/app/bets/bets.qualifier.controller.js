@@ -1,7 +1,7 @@
 'use strict';
 
 
-angular.module('worldcup').controller('betsQualifierCtrl', function ($rootScope, $scope, $interval, Bets, Teams, growl) {
+angular.module('worldcup').controller('betsQualifierCtrl', function ($rootScope, $scope, $interval, Bets, Teams, Tournament, growl) {
 
     // ==============   for countdown =====================
 
@@ -48,157 +48,237 @@ angular.module('worldcup').controller('betsQualifierCtrl', function ($rootScope,
 
     // ====================================================
 
-    // model that is passed to server
-    $scope.qualifiers = {
-        WINNER_GROUP_A: undefined,
-        WINNER_GROUP_B: undefined,
-        WINNER_GROUP_C: undefined,
-        WINNER_GROUP_D: undefined,
-        WINNER_GROUP_E: undefined,
-        WINNER_GROUP_F: undefined,
-        WINNER_GROUP_G: undefined,
-        WINNER_GROUP_H: undefined,
-        RUNNER_UP_GROUP_A: undefined,
-        RUNNER_UP_GROUP_B: undefined,
-        RUNNER_UP_GROUP_C: undefined,
-        RUNNER_UP_GROUP_D: undefined,
-        RUNNER_UP_GROUP_E: undefined,
-        RUNNER_UP_GROUP_F: undefined,
-        RUNNER_UP_GROUP_G: undefined,
-        RUNNER_UP_GROUP_H: undefined,
-        WINNER_ROS1: undefined,
-        WINNER_ROS2: undefined,
-        WINNER_ROS3: undefined,
-        WINNER_ROS4: undefined,
-        WINNER_ROS5: undefined,
-        WINNER_ROS6: undefined,
-        WINNER_ROS7: undefined,
-        WINNER_ROS8: undefined,
-        WINNER_QF1: undefined,
-        WINNER_QF2: undefined,
-        WINNER_QF3: undefined,
-        WINNER_QF4: undefined,
-        WINNER_SF1: undefined,
-        WINNER_SF2: undefined,
-        LOSER_SF1: undefined,
-        LOSER_SF2: undefined,
-        WINNER_THIRD_PLACE: undefined,
-        WINNER_FINAL: undefined
+    // model that is passed to server (populated dynamically from tournament config)
+    $scope.qualifiers = {};
+    // holds the dropdown options for each qualifier code
+    $scope.teamsForSelect = {};
+    // groups list from config
+    $scope.groups = [];
+    // ordered list of knockout stages to display (excludes ROUND_OF_32 which is shown as group qualifiers)
+    $scope.knockoutStages = [];
+    // qualifier entries grouped by stage
+    $scope.qualifiersByStage = {};
+    // group letter → { winner: code, runnerUp: code }
+    $scope.groupQualifiers = {};
+    // third place qualifier entries
+    $scope.thirdPlaceCodes = [];
+
+    // stage display labels
+    $scope.stageLabels = {
+        'ROUND_OF_16': 'Round of 32 Winners',
+        'QUARTER_FINAL': 'Round of 16 Winners',
+        'SEMI_FINAL': 'Quarter-final Winners',
+        'FINAL': 'Final',
+        'THIRD_PLACE_WINNER': 'Third Place Winner',
+        'WINNER': 'Tournament Winner'
     };
 
-    // holds the lists for each game
-    $scope.teamsForSelect = {
-        WINNER_GROUP_A: [],
-        WINNER_GROUP_B: [],
-        WINNER_GROUP_C: [],
-        WINNER_GROUP_D: [],
-        WINNER_GROUP_E: [],
-        WINNER_GROUP_F: [],
-        WINNER_GROUP_G: [],
-        WINNER_GROUP_H: [],
-        RUNNER_UP_GROUP_A: [],
-        RUNNER_UP_GROUP_B: [],
-        RUNNER_UP_GROUP_C: [],
-        RUNNER_UP_GROUP_D: [],
-        RUNNER_UP_GROUP_E: [],
-        RUNNER_UP_GROUP_F: [],
-        RUNNER_UP_GROUP_G: [],
-        RUNNER_UP_GROUP_H: [],
-        WINNER_ROS1: [],
-        WINNER_ROS2: [],
-        WINNER_ROS3: [],
-        WINNER_ROS4: [],
-        WINNER_ROS5: [],
-        WINNER_ROS6: [],
-        WINNER_ROS7: [],
-        WINNER_ROS8: [],
-        WINNER_QF1: [],
-        WINNER_QF2: [],
-        WINNER_QF3: [],
-        WINNER_QF4: [],
-        WINNER_SF1: [],
-        WINNER_SF2: [],
-        WINNER_THIRD_PLACE: [],
-        WINNER_FINAL: []
+    // private state
+    var downstreamMap = {};   // code → [downstream codes that reference it in feedsFrom]
+    var codeEntryMap = {};    // code → entry from tournament config
+    var teamsByGroup = {};    // group letter → [teams]
+
+    // ============== Label generation ==============
+
+    var generateLabel = function (code) {
+        if (code === 'WINNER_THIRD_PLACE') return 'Third Place Winner';
+        if (code === 'WINNER_FINAL') return 'Tournament Winner';
+        if (code.indexOf('WINNER_GROUP_') === 0) return 'Winner';
+        if (code.indexOf('RUNNER_UP_GROUP_') === 0) return 'Runner-up';
+        if (code.indexOf('THIRD_PLACE_') === 0) {
+            return '3rd Place (' + code.replace('THIRD_PLACE_', '').split('').join('/') + ')';
+        }
+        if (code.indexOf('LOSER_') === 0) return code.replace('LOSER_', 'Loser ');
+        if (code.indexOf('WINNER_') === 0) return code.replace('WINNER_', '') + ' Winner';
+        return code.replace(/_/g, ' ');
     };
 
-    // save qualifiers
+    var generateDescription = function (entry) {
+        if (!entry.feedsFrom || entry.feedsFrom.length !== 2) return '';
+        return generateLabel(entry.feedsFrom[0]) + ' vs ' + generateLabel(entry.feedsFrom[1]);
+    };
+
+    // ============== Build from tournament config ==============
+
+    var buildFromConfig = function (config) {
+        $scope.groups = config.groups;
+        var qualifierCodes = config.qualifierCodes;
+        var allStages = [];
+
+        for (var stageName in qualifierCodes) {
+            if (!qualifierCodes.hasOwnProperty(stageName)) continue;
+            allStages.push(stageName);
+            $scope.qualifiersByStage[stageName] = [];
+
+            var codes = qualifierCodes[stageName];
+            for (var i = 0; i < codes.length; i++) {
+                var entry = codes[i];
+
+                // initialize qualifier model and dropdown
+                $scope.qualifiers[entry.code] = undefined;
+                $scope.teamsForSelect[entry.code] = [];
+                codeEntryMap[entry.code] = entry;
+
+                // build downstream map from feedsFrom
+                if (entry.feedsFrom) {
+                    for (var j = 0; j < entry.feedsFrom.length; j++) {
+                        var parent = entry.feedsFrom[j];
+                        if (!downstreamMap[parent]) downstreamMap[parent] = [];
+                        downstreamMap[parent].push(entry.code);
+                    }
+                }
+
+                var isLoser = entry.code.indexOf('LOSER_') === 0;
+
+                var uiEntry = {
+                    code: entry.code,
+                    label: generateLabel(entry.code),
+                    description: generateDescription(entry),
+                    group: entry.group,
+                    type: entry.type,
+                    feedsFrom: entry.feedsFrom,
+                    isLoser: isLoser
+                };
+
+                $scope.qualifiersByStage[stageName].push(uiEntry);
+
+                // organize group qualifiers for the grid layout
+                if (stageName === 'ROUND_OF_32') {
+                    if (entry.group && entry.code.indexOf('WINNER_GROUP_') === 0) {
+                        if (!$scope.groupQualifiers[entry.group]) $scope.groupQualifiers[entry.group] = {};
+                        $scope.groupQualifiers[entry.group].winner = entry.code;
+                    } else if (entry.group && entry.code.indexOf('RUNNER_UP_GROUP_') === 0) {
+                        if (!$scope.groupQualifiers[entry.group]) $scope.groupQualifiers[entry.group] = {};
+                        $scope.groupQualifiers[entry.group].runnerUp = entry.code;
+                    } else if (entry.code.indexOf('THIRD_PLACE_') === 0) {
+                        $scope.thirdPlaceCodes.push(uiEntry);
+                    }
+                }
+            }
+        }
+
+        // knockout stages = everything after ROUND_OF_32, excluding THIRD_PLACE (auto-set losers)
+        $scope.knockoutStages = allStages.filter(function (s) {
+            return s !== 'ROUND_OF_32' && s !== 'THIRD_PLACE';
+        });
+    };
+
+    // ============== Populate group teams ==============
+
+    var populateGroupTeams = function (teams) {
+        teamsByGroup = {};
+        angular.forEach(teams, function (team) {
+            if (!teamsByGroup[team.groupId]) teamsByGroup[team.groupId] = [];
+            teamsByGroup[team.groupId].push(team);
+        });
+
+        // set dropdown options for group qualifier codes
+        for (var code in codeEntryMap) {
+            if (!codeEntryMap.hasOwnProperty(code)) continue;
+            var entry = codeEntryMap[code];
+            if (entry.type === 'GROUP_QUALIFIER') {
+                if (entry.group) {
+                    $scope.teamsForSelect[code] = teamsByGroup[entry.group] || [];
+                } else if (code.indexOf('THIRD_PLACE_') === 0) {
+                    var groupLetters = code.replace('THIRD_PLACE_', '').split('');
+                    var allTeams = [];
+                    for (var i = 0; i < groupLetters.length; i++) {
+                        allTeams = allTeams.concat(teamsByGroup[groupLetters[i]] || []);
+                    }
+                    $scope.teamsForSelect[code] = allTeams;
+                }
+            }
+        }
+    };
+
+    // ============== Selection change handling ==============
+
+    $scope.selectionChanged = function (code) {
+        setFlagToSelect(code);
+        updateDownstream(code);
+        autoSetLosers();
+    };
+
+    var updateDownstream = function (code) {
+        var downstream = downstreamMap[code] || [];
+        for (var i = 0; i < downstream.length; i++) {
+            var targetCode = downstream[i];
+            var entry = codeEntryMap[targetCode];
+            if (!entry || !entry.feedsFrom || entry.feedsFrom.length !== 2) continue;
+
+            var p1 = $scope.qualifiers[entry.feedsFrom[0]];
+            var p2 = $scope.qualifiers[entry.feedsFrom[1]];
+            if (p1 && p2) {
+                $scope.teamsForSelect[targetCode] = [p1, p2];
+            }
+        }
+    };
+
+    var autoSetLosers = function () {
+        for (var code in codeEntryMap) {
+            if (!codeEntryMap.hasOwnProperty(code) || code.indexOf('LOSER_') !== 0) continue;
+
+            var winnerCode = code.replace('LOSER_', 'WINNER_');
+            if ($scope.qualifiers[winnerCode] &&
+                $scope.teamsForSelect[code] && $scope.teamsForSelect[code].length === 2) {
+                var loser = $scope.teamsForSelect[code].filter(function (team) {
+                    return team.name !== $scope.qualifiers[winnerCode].name;
+                });
+                if (loser.length > 0) {
+                    $scope.qualifiers[code] = loser[0];
+                    setFlagToSelect(code);
+                    updateDownstream(code);
+                }
+            }
+        }
+    };
+
+    // ============== Helper to check if stage has only non-selectable entries ==============
+
+    $scope.hasOnlyLosers = function (stage) {
+        var entries = $scope.qualifiersByStage[stage] || [];
+        for (var i = 0; i < entries.length; i++) {
+            if (!entries[i].isLoser) return false;
+        }
+        return true;
+    };
+
+    // ============== Save qualifiers ==============
+
     $scope.saveQualifiers = function () {
         var qualifiersData = [];
         for (var key in $scope.qualifiers) {
             if ($scope.qualifiers.hasOwnProperty(key) && $scope.qualifiers[key]) {
-                var qualifier = {
+                qualifiersData.push({
                     knockoutTeamCode: key,
                     team: $scope.qualifiers[key],
                     stageId: undefined
-                };
-                qualifiersData.push(qualifier);
+                });
             }
         }
-
-        Bets.setQualifiers({qualifiersList: qualifiersData}).then(function (response) {
+        Bets.setQualifiers({qualifiersList: qualifiersData}).then(function () {
             growl.success('You\'re bet saved successfully.', {title: 'Success!'});
             getQualifiers();
         });
     };
 
     $scope.teamsForStage = function (code) {
-        return $scope.teamsForSelect[code];
-    };
-
-    $scope.selectionChanged = function (code) {
-        if (['WINNER_GROUP_C', 'RUNNER_UP_GROUP_D'].includes(code)) {
-            checkAndUpdateForSelect(['WINNER_GROUP_C', 'RUNNER_UP_GROUP_D'], 'WINNER_ROS1');
-        } else if (['WINNER_GROUP_A', 'RUNNER_UP_GROUP_B'].includes(code)) {
-            checkAndUpdateForSelect(['WINNER_GROUP_A', 'RUNNER_UP_GROUP_B'], 'WINNER_ROS2');
-        } else if (['WINNER_GROUP_E', 'RUNNER_UP_GROUP_F'].includes(code)) {
-            checkAndUpdateForSelect(['WINNER_GROUP_E', 'RUNNER_UP_GROUP_F'], 'WINNER_ROS5');
-        } else if (['WINNER_GROUP_G', 'RUNNER_UP_GROUP_H'].includes(code)) {
-            checkAndUpdateForSelect(['WINNER_GROUP_G', 'RUNNER_UP_GROUP_H'], 'WINNER_ROS6');
-        } else if (['WINNER_GROUP_B', 'RUNNER_UP_GROUP_A'].includes(code)) {
-            checkAndUpdateForSelect(['WINNER_GROUP_B', 'RUNNER_UP_GROUP_A'], 'WINNER_ROS3');
-        } else if (['WINNER_GROUP_D', 'RUNNER_UP_GROUP_C'].includes(code)) {
-            checkAndUpdateForSelect(['WINNER_GROUP_D', 'RUNNER_UP_GROUP_C'], 'WINNER_ROS4');
-        } else if (['WINNER_GROUP_F', 'RUNNER_UP_GROUP_E'].includes(code)) {
-            checkAndUpdateForSelect(['WINNER_GROUP_F', 'RUNNER_UP_GROUP_E'], 'WINNER_ROS7');
-        } else if (['WINNER_GROUP_H', 'RUNNER_UP_GROUP_G'].includes(code)) {
-            checkAndUpdateForSelect(['WINNER_GROUP_H', 'RUNNER_UP_GROUP_G'], 'WINNER_ROS8');
-        } else if (['WINNER_ROS1', 'WINNER_ROS2'].includes(code)) {
-            checkAndUpdateForSelect(['WINNER_ROS1', 'WINNER_ROS2'], 'WINNER_QF1');
-        } else if (['WINNER_ROS5', 'WINNER_ROS6'].includes(code)) {
-            checkAndUpdateForSelect(['WINNER_ROS5', 'WINNER_ROS6'], 'WINNER_QF2');
-        } else if (['WINNER_ROS3', 'WINNER_ROS4'].includes(code)) {
-            checkAndUpdateForSelect(['WINNER_ROS3', 'WINNER_ROS4'], 'WINNER_QF3');
-        } else if (['WINNER_ROS7', 'WINNER_ROS8'].includes(code)) {
-            checkAndUpdateForSelect(['WINNER_ROS7', 'WINNER_ROS8'], 'WINNER_QF4');
-        } else if (['WINNER_QF1', 'WINNER_QF2'].includes(code)) {
-            checkAndUpdateForSelect(['WINNER_QF1', 'WINNER_QF2'], 'WINNER_SF1');
-        } else if (['WINNER_QF3', 'WINNER_QF4'].includes(code)) {
-            checkAndUpdateForSelect(['WINNER_QF3', 'WINNER_QF4'], 'WINNER_SF2');
-        } else if (['WINNER_SF1', 'WINNER_SF2'].includes(code)) {
-            checkAndUpdateForSelect(['WINNER_SF1', 'WINNER_SF2'], 'WINNER_FINAL');
-        } else if (['WINNER_THIRD_PLACE', 'WINNER_FINAL'].includes(code)) {
-            setFlagToSelect('WINNER_THIRD_PLACE');
-            setFlagToSelect('WINNER_FINAL');
-        } else {
-            console.log("no case for me", code)
-        }
-        // set third place
-        setThirdPlaceList();
+        return $scope.teamsForSelect[code] || [];
     };
 
     // ==============  private functions ==================
 
-    var getTeams = function () {
-        Teams.getAllTeams().then(function (response) {
-            // update Round of 16 teams
-            angular.forEach(response, function (team, index) {
-                var winner = 'WINNER_GROUP_' + team.groupId;
-                var runnerUp = 'RUNNER_UP_GROUP_' + team.groupId;
-                $scope.teamsForSelect[winner].push(team);
-                $scope.teamsForSelect[runnerUp].push(team);
-            });
-        });
+    // nifty!
+    var setFlagToSelect = function (code) {
+        var el = angular.element('#' + code);
+        // remove any previous flag icon
+        el.parent().find('.fi').remove();
+        if ($scope.qualifiers[code]) {
+            var team = $scope.qualifiers[code];
+            // insert a flag-icons <span> before the select element
+            var flagSpan = angular.element('<span class="fi fi-' + team.isoCode + '" style="font-size:1.2em; vertical-align:middle; margin-right:6px;"></span>');
+            el.before(flagSpan);
+        }
     };
 
     var getQualifiers = function () {
@@ -220,53 +300,16 @@ angular.module('worldcup').controller('betsQualifierCtrl', function ($rootScope,
         });
     };
 
-    // nifty!
-    var setFlagToSelect = function (code) {
-        if ($scope.qualifiers[code]) {
-            var team = $scope.qualifiers[code];
-            var flag = "/images/teams/" + team.confederation.toLowerCase() + "/" + team.code + ".png";
-            var css = '#fff url(' + flag + ') no-repeat 78px 2px';
-            angular.element(('#' + code)).css({'background': css});
-        } else {
-            angular.element(('#' + code)).css({'background': ''});
-        }
-    };
-
-    var checkAndUpdateForSelect = function (codes, codeToUpdate) {
-        setFlagToSelect(codes[0]);
-        setFlagToSelect(codes[1]);
-        if ($scope.qualifiers[codes[0]] && $scope.qualifiers[codes[1]]) {
-            $scope.teamsForSelect[codeToUpdate] = [$scope.qualifiers[codes[0]], $scope.qualifiers[codes[1]]];
-        }
-    };
-
-    var setThirdPlaceList = function () {
-        $scope.teamsForSelect.WINNER_THIRD_PLACE = [];
-
-        if ($scope.qualifiers.WINNER_SF1 && $scope.teamsForSelect.WINNER_SF1.length > 0) {
-            var loser1 = $scope.teamsForSelect.WINNER_SF1.filter(function (team) {
-                return team.name !== $scope.qualifiers.WINNER_SF1.name;
-            });
-            if (loser1 && loser1[0]) {
-                $scope.qualifiers.LOSER_SF1 = loser1[0];
-                $scope.teamsForSelect.WINNER_THIRD_PLACE.push(loser1[0]);
-            }
-        }
-
-        if ($scope.qualifiers.WINNER_SF2 && $scope.teamsForSelect.WINNER_SF2.length > 0) {
-            var loser2 = $scope.teamsForSelect.WINNER_SF2.filter(function (team) {
-                return team.name !== $scope.qualifiers.WINNER_SF2.name;
-            });
-            if (loser2 && loser2[0]) {
-                $scope.qualifiers.LOSER_SF2 = loser2[0];
-                $scope.teamsForSelect.WINNER_THIRD_PLACE.push(loser2[0]);
-            }
-        }
-    };
+    // ============== Init ==============
 
     var init = function () {
-        getTeams();
-        getQualifiers()
+        Tournament.getConfig().then(function (config) {
+            buildFromConfig(config);
+            Teams.getAllTeams().then(function (teams) {
+                populateGroupTeams(teams);
+                getQualifiers();
+            });
+        });
     };
 
     init();

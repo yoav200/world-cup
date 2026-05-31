@@ -7,7 +7,7 @@ angular.module('worldcup').directive('team', function () {
             team: '=data'
         },
         template: '<span ng-if="team">'
-                    + '<img title="Rank: {{team.fifaRanking}}" class="flag" data-ng-src="/images/teams/{{team.confederation | spaceToUnderscore}}/{{team.code}}.png"/>&nbsp;&nbsp;'
+                    + '<span title="Rank: {{team.fifaRanking}}" class="fi fi-{{team.isoCode}}" style="font-size: 1.5em; vertical-align: middle;"></span>&nbsp;&nbsp;'
                     + '{{team.name | capitalize }}'
                 + '</span>',
     }

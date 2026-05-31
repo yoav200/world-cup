@@ -2,9 +2,13 @@
 
 angular.module('worldcup').factory('Ranking', function($http) {
 
-    var getLeaderboard = function() {
-        return $http.get("api/ranking/").then(function(response) {
-            return  response.data;
+    var getLeaderboard = function(leagueId) {
+        var params = {};
+        if (leagueId) {
+            params.leagueId = leagueId;
+        }
+        return $http.get("api/ranking/", {params: params}).then(function(response) {
+            return response.data;
         });
     };
 

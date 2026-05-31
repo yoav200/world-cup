@@ -4,10 +4,11 @@ import com.ab.worldcup.web.components.SessionManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
-public class WebConfig extends WebMvcConfigurerAdapter {
+public class WebConfig implements WebMvcConfigurer {
 
     @Bean
     SessionManager getSessionManager() {
@@ -19,5 +20,10 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         registry.addInterceptor(getSessionManager())
                 .addPathPatterns("/**")
                 .excludePathPatterns("/resources/**", "/api/heartbeat");
+    }
+
+    @Override
+    public void configurePathMatch(PathMatchConfigurer configurer) {
+        configurer.setUseTrailingSlashMatch(true);
     }
 }

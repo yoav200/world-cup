@@ -1,5 +1,17 @@
+
 server:
-  port: 8080
+  port: 8050
+  servlet:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+  tomcat:
+    server-header: ""
+  error:
+    include-stacktrace: never
+    include-message: never
+    include-exception: false
 
 spring:
   application:
@@ -17,9 +29,6 @@ spring:
       ddl-auto: none # none create, create-drop, validate, update
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQL81Dialect
     show-sql: true
     open-in-view: false
 
@@ -30,37 +39,69 @@ spring:
   flyway:
     enabled: true
 
-  mail:
-    host: smtp.gmail.com
-    port: 587
-    username: top.ten.ranker@gmail.com
-    password: ${EMAIL_SERVER_PASSWORD}
-    properties:
-      mail:
-        smtp.auth: true
-        smtp.starttls.enable: true
-        smtp.timeout: 5000
-        smtp.writetimeout: 5000
+  security:
+    oauth2:
+      client:
+        registration:
+          bny:
+            client-id: ${OAUTH2_CLIENT_ID}
+            client-secret: ${OAUTH2_CLIENT_SECRET}
+            scope: openid
+            authorization-grant-type: authorization_code
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+        provider:
+          bny:
+            issuer-uri: https://authenticate.qa.bnymellon.com
+            user-name-attribute: email
 
 management:
   endpoints:
     web:
       exposure:
-        include: "*"
-      base-path: "/actuator"
+        include: health,info,prometheus,metrics,caches,clustermembers
+      base-path: /actuator
+  endpoint:
     health:
-      show-details: always
+      show-details: when_authorized
+      show-components: when_authorized
+    prometheus:
+      access: read_only
+  info:
+    env:
+      enabled: true
+    java:
+      enabled: true
+    os:
+      enabled: true
+  metrics:
+    tags:
+      application: ${spring.application.name}
+  tracing:
+    sampling:
+      probability: 1.0
 
 logging:
   level:
-    root: info
-    org.springframework: info
+    root: WARN
+    org.springframework: INFO
     com.ab.worldcup: debug
 
 
 worldcup:
-  start-date-time-config: '2022-11-20 16:00:00+00'
-  admin-emails: "yoav200@gmail.com,yoav.alhalel@bnymellon.com"
-  confirmation-timeout-minutes: 60
-  app-url: "http://localhost:8080"
-  allowed-domains: ""
+  start-date-time-config: '2026-06-11 19:00:00+00'
+  admin-emails: "yoav.alhalel@bny.com"
+  app-url: "http://localhost:8050"
+
+coins:
+  rates:
+    login: 10
+    bet-placed: 25
+    qualifier-bet-placed: 50
+    full-round: 100
+    start-seed: 5000
+    second-round-bonus: 3000
+    end-bonus: 2000
+  distribution:
+    1: 50
+    2: 30
+    3: 20

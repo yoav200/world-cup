@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.hibernate.annotations.Immutable;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Entity
 @Immutable
@@ -24,6 +24,9 @@ public class Team {
     private String name;
 
     private String code;
+
+    @Column(name = "iso_code")
+    private String isoCode;
 
     private Integer fifaRanking;
 

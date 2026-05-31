@@ -1,115 +1,103 @@
 <section id="bets-overview" permission="['ROLE_USER']">
 
-    <div class="jumbotron">
-        <h2>Your bets overview</h2>
+    <div>
+        <h2 class="mb-3"><i class="bi bi-eye me-2"></i>Your Bets Overview</h2>
 
-        <div class="panel panel-default">
-            <div class="panel-body">
-                <div><span class="bg-info">&nbsp;&nbsp;</span> Bet Result</div>
-                <div><span class="bg-success">&nbsp;&nbsp;</span> Points Gained</div>
-            </div>
+        <div class="d-flex gap-3 mb-3">
+            <small><span class="badge bg-info">Your Bet</span></small>
+            <small><span class="badge bg-success">Points</span></small>
         </div>
 
-        <uib-tabset active="active" justified="true">
+        <uib-tabset active="active" justified="true" class="view-tabset">
             <uib-tab index="0" heading="Match Bets">
-                <div class="panel panel-default" style="margin: 10px;"
-                     ng-repeat="data in overviewData.match | orderBy: 'kickoff'">
-                    <div class="panel-heading" title="Bet number {{data.bet.id}}">
-                        <div>{{data.match.kickoff | date : 'dd MMM yy, HH:mm'}}, {{data.match.stageId}} {{data.match.groupId}}</div>
-                    </div>
-                    <div class="panel-body">
-                        <div class="row">
-                            <div class="col-sm-10">
-                                <div class="row">
-                                    <div class="col-xs-8 col-sm-8">
-                                        <span ng-switch="data.match.homeTeam || '_undefined_'" >
+                <div class="row g-3 mt-1">
+                    <div class="col-lg-4 col-md-6" ng-repeat="data in overviewData.match | orderBy: 'kickoff'">
+                        <div class="card bet-card h-100" title="Bet number {{data.bet.id}}">
+
+                            <div class="card-header py-1 d-flex justify-content-between align-items-center">
+                                <small class="text-muted">{{data.match.kickoff | date : 'dd MMM yy, HH:mm'}}</small>
+                                <small><strong>{{data.match.stageId === 'GROUP_STAGE' ? 'Group ' + data.match.groupId : data.match.groupId}}</strong></small>
+                            </div>
+
+                            <div class="card-body py-2">
+                                <!-- Home team row -->
+                                <div class="d-flex align-items-center mb-1">
+                                    <span class="bet-team flex-grow-1">
+                                        <span ng-switch="data.match.homeTeam || '_undefined_'">
                                             <span ng-switch-when="_undefined_">{{data.match.homeTeamCode}}</span>
                                             <span ng-switch-default><team data="data.match.homeTeam"/></span>
                                         </span>
-                                    </div>
-                                    <div class="col-xs-1 col-sm-2">
-                                        <span ng-switch="data.matchResult || '_undefined_'" >
-                                            <span ng-switch-when="_undefined_">-</span>
-                                            <span ng-switch-default>{{data.matchResult.homeTeamGoals}}</span>
-                                        </span>
-                                    </div>
-                                    <div class="col-xs-1 col-sm-2 bg-info">
-                                        <span ng-switch="data.calculatedUserBet.userBet || '_undefined_'" >
-                                            <span ng-switch-when="_undefined_">-</span>
-                                            <span ng-switch-default>{{data.calculatedUserBet.userBet.homeTeamGoals}}</span>
-                                        </span>
-                                    </div>
+                                    </span>
+                                    <span class="bet-score" ng-switch="data.matchResult || '_undefined_'">
+                                        <span ng-switch-when="_undefined_">-</span>
+                                        <span ng-switch-default>{{data.matchResult.homeTeamGoals}}</span>
+                                    </span>
+                                    <span class="bet-user-score badge bg-info" ng-switch="data.calculatedUserBet.userBet || '_undefined_'">
+                                        <span ng-switch-when="_undefined_">-</span>
+                                        <span ng-switch-default>{{data.calculatedUserBet.userBet.homeTeamGoals}}</span>
+                                    </span>
                                 </div>
-                                <div class="row">
-                                    <div class="col-xs-8 col-sm-8">
-                                        <span ng-switch="data.match.awayTeam || '_undefined_'" >
+                                <!-- Away team row -->
+                                <div class="d-flex align-items-center">
+                                    <span class="bet-team flex-grow-1">
+                                        <span ng-switch="data.match.awayTeam || '_undefined_'">
                                             <span ng-switch-when="_undefined_">{{data.match.awayTeamCode}}</span>
                                             <span ng-switch-default><team data="data.match.awayTeam"/></span>
                                         </span>
-                                    </div>
-                                    <div class="col-xs-1 col-sm-2">
-                                        <span ng-switch="data.matchResult || '_undefined_'" >
-                                            <span ng-switch-when="_undefined_">-</span>
-                                            <span ng-switch-default>{{data.matchResult.awayTeamGoals}}</span>
-                                        </span>
-                                    </div>
-                                    <div class="col-xs-1 col-sm-2 bg-info">
-                                        <span ng-switch="data.calculatedUserBet.userBet || '_undefined_'" >
-                                            <span ng-switch-when="_undefined_">-</span>
-                                            <span ng-switch-default>{{data.calculatedUserBet.userBet.awayTeamGoals}}</span>
-                                         </span>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-xs-8 col-sm-8"></div>
-                                    <div class="col-xs-1 col-sm-2"></div>
-                                    <div class="col-xs-1 col-sm-2 bg-success">
-                                        <span ng-switch="data.calculatedUserBet.userBet || '_undefined_'" >
-                                            <span ng-switch-when="_undefined_">-</span>
-                                            <span ng-switch-default title="Point Gained"><b>{{data.calculatedUserBet.totalPoints}}</b></span>
-                                         </span>
-                                    </div>
+                                    </span>
+                                    <span class="bet-score" ng-switch="data.matchResult || '_undefined_'">
+                                        <span ng-switch-when="_undefined_">-</span>
+                                        <span ng-switch-default>{{data.matchResult.awayTeamGoals}}</span>
+                                    </span>
+                                    <span class="bet-user-score badge bg-info" ng-switch="data.calculatedUserBet.userBet || '_undefined_'">
+                                        <span ng-switch-when="_undefined_">-</span>
+                                        <span ng-switch-default>{{data.calculatedUserBet.userBet.awayTeamGoals}}</span>
+                                    </span>
                                 </div>
                             </div>
+
+                            <div class="card-footer py-1 d-flex justify-content-between align-items-center">
+                                <small><match-links data="data.match"/></small>
+                                <span class="badge bg-success" ng-switch="data.calculatedUserBet.userBet || '_undefined_'">
+                                    <span ng-switch-when="_undefined_">-</span>
+                                    <span ng-switch-default>{{data.calculatedUserBet.totalPoints}} pts</span>
+                                </span>
+                            </div>
+
                         </div>
-                    </div>
-                    <div class="panel-footer" id="match-{{data.match.matchId}}-link">
-                        <match-links data="data.match"/>
                     </div>
                 </div>
             </uib-tab>
 
-
             <uib-tab index="1" heading="Qualifiers Bets">
-                <div class="panel panel-default" style="margin: 10px;" ng-repeat="data in overviewData.qualifier">
-                    <div class="panel-heading" title="Bet number {{data.bet.id}}">
-                        <div>{{data.bet.description}}</div>
-                    </div>
-                    <div class="panel-body">
-                        <div class="row">
-                            <div class="col-sm-10">
-                                <div class="row">
-                                    <div class="col-xs-8 col-sm-8">
-                                        <span ng-switch="data.calculatedUserBet.userBet.qualifier || '_undefined_'" >
+                <div class="row g-3 mt-1">
+                    <div class="col-lg-4 col-md-6" ng-repeat="data in overviewData.qualifier">
+                        <div class="card bet-card h-100" title="Bet number {{data.bet.id}}">
+
+                            <div class="card-header py-1">
+                                <small><strong>{{data.bet.description}}</strong></small>
+                            </div>
+
+                            <div class="card-body py-2">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <span class="bet-team">
+                                        <span ng-switch="data.calculatedUserBet.userBet.qualifier || '_undefined_'">
                                             <span ng-switch-when="_undefined_">{{data.bet.stageId}}</span>
                                             <span ng-switch-default><team data="data.calculatedUserBet.userBet.qualifier"/></span>
                                         </span>
-                                    </div>
-                                    <div class="col-xs-2 col-sm-4 bg-info">
-                                        <span ng-switch="data.calculatedUserBet.isCorrectQualifier">
-                                            <span ng-switch-when="True">True</span>
-                                            <span ng-switch-when="False">False</span>
-                                            <span ng-switch-default>NA</span>
-                                        </span>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-xs-8 col-sm-8"></div>
-                                    <div class="col-xs-2 col-sm-4 bg-success">
-                                       <b>{{data.calculatedUserBet.totalPoints}}</b>
-                                    </div>
+                                    </span>
+                                    <span ng-switch="data.calculatedUserBet.isCorrectQualifier">
+                                        <span ng-switch-when="True" class="badge bg-success">Correct</span>
+                                        <span ng-switch-when="False" class="badge bg-danger">Wrong</span>
+                                        <span ng-switch-default class="badge bg-secondary">Pending</span>
+                                    </span>
                                 </div>
                             </div>
+
+                            <div class="card-footer py-1 text-end">
+                                <span class="badge bg-success">{{data.calculatedUserBet.totalPoints}} pts</span>
+                            </div>
+
                         </div>
                     </div>
                 </div>

@@ -2,6 +2,8 @@ package com.ab.worldcup.bet;
 
 import com.ab.worldcup.account.Account;
 import com.ab.worldcup.config.ApplicationConfig;
+import com.ab.worldcup.events.BetPlacedEvent;
+import com.ab.worldcup.events.QualifierBetPlacedEvent;
 import com.ab.worldcup.group.GroupService;
 import com.ab.worldcup.knockout.KnockoutMatchQualifier;
 import com.ab.worldcup.match.Match;
@@ -25,6 +27,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -42,6 +45,8 @@ public class BetService {
   private final ResultsService resultsService;
 
   private final ApplicationConfig applicationConfig;
+
+  private final ApplicationEventPublisher eventPublisher;
 
   @Cacheable("allBets")
   public List<Bet> getAllBets() {
@@ -76,6 +81,9 @@ public class BetService {
 
   public UserBet updateMatchBet(Account account, UserBetData userBetData) {
     Bet bet = getBetById(userBetData.getBetId());
+    if (bet.isLock()) {
+      throw new IllegalStateException("Cannot place bet — betting is closed for this match");
+    }
     Match match = matchService.getMatchById(bet.getMatchId());
     UserBet userBet = userBetRepository.findByUserBetIdAccountIdAndUserBetIdBetId(account.getId(),
         userBetData.getBetId());
@@ -98,7 +106,9 @@ public class BetService {
       userBet.setHomeTeam(match.getHomeTeam());
       userBet.setAwayTeam(match.getAwayTeam());
     }
-    return userBetRepository.save(userBet);
+    UserBet saved = userBetRepository.save(userBet);
+    eventPublisher.publishEvent(new BetPlacedEvent(account.getId(), bet.getId()));
+    return saved;
   }
 
   public List<BetOverviewData> getOverview(Long accountId) {
@@ -147,6 +157,7 @@ public class BetService {
         .filter(b -> b.getUserBetId().getBet().getType().equals(BetType.QUALIFIER))
         .collect(Collectors.toMap(b -> b.getUserBetId().getBet().getId(), Function.identity()));
 
+    final Long accountId = account.getId();
     userQualifiersByStageMap.forEach((stage, userQualifierList) -> {
       List<Bet> qualifierBetsByStage = stageListMap.get(stage);
       if (qualifierBetsByStage != null) {
@@ -166,14 +177,18 @@ public class BetService {
         }
       }
     });
+    eventPublisher.publishEvent(new QualifierBetPlacedEvent(accountId));
   }
 
   public QualifierBetData getQualifierBets(Long accountId) {
     List<UserBet> allBetsForUser = userBetRepository.findByUserBetIdAccountId(accountId);
-    List<Qualifier> qualifierList = allBetsForUser.stream().
-        filter(t -> t.getUserBetId().getBet().getType().equals(BetType.QUALIFIER)).
-        map(t -> buildQualifier(t.getUserBetId().getBet().getStageId(), t.getQualifier(), t.getKnockoutTeamCode())).
-        collect(Collectors.toList());
+    List<Qualifier> qualifierList = allBetsForUser.stream()
+        .filter(t -> t.getUserBetId().getBet().getType().equals(BetType.QUALIFIER))
+        .map(t -> buildQualifier(
+            t.getUserBetId().getBet().getStageId(),
+            t.getQualifier(),
+            t.getKnockoutTeamCode()))
+        .toList();
 
     return QualifierBetData.builder()
         .qualifiersList(qualifierList)

@@ -1,215 +1,164 @@
-<style>
-.ss-wp-tnp {
-    width: 100%;
-    line-height: 12px;
-    margin-bottom: 8px;
-}
-.ss-wp-tnr {
-    font-size: 12px;
-    line-height: 16px;
-}
-.ss-wp-ft {
-    text-align: left;
-    width: 33%;
-}
-.ss-wp-d {
-    text-align: center;
-    width: 33%;
-}
-.ss-wp-st {
-    text-align: right;
-    width: 33%;
-}
-.ss-wp-tp {
-    font-size: 14px;
-}
-.ss-wp-dp {
-    text-align: center;
-    color: #70757a;
-}
-.ss-wp-br {
-    height: 8px;
-}
-.ss-wp-b {
-    width: 100%;
-}
-.ss-wp-bc {
-    transition: width 0.3s;
-}
-</style>
 <section id="bets-matches" permission="['ROLE_USER']">
-    <h1>Set bets for games
-        <small>Only you can see your bets</small>
-    </h1>
-    <div class="panel panel-primary">
-        <div class="panel-heading">Select game panel</div>
-        <div class="panel-body">
-            <form class="form-horizontal" action="">
 
-                <div class="form-group">
-                    <label class="control-label col-sm-2" for="firstStageMatchesList">First Stage Matches:</label>
-                    <div class="col-sm-10">
-                        <select id="firstStageMatchesList"
-                                class="form-control"
-                                ng-options="match as match.label for match in data.matches.firstStage track by match.matchId"
-                                ng-model="selected.match"
-                                ng-change="onMatchSelected('first')"></select>
+    <!-- Header -->
+    <div class="d-flex flex-wrap align-items-center justify-content-between mb-4">
+        <div>
+            <h2 class="mb-1"><i class="bi bi-pencil-square me-2"></i>Place Your Bets</h2>
+            <p class="text-muted mb-0">Only you can see your predictions</p>
+        </div>
+    </div>
+
+    <!-- Match selector card -->
+    <div class="card bet-selector-card mb-4">
+        <div class="card-header bg-white">
+            <h6 class="mb-0"><i class="bi bi-list-ul me-2"></i>Select a Match</h6>
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold small text-uppercase text-muted"
+                           for="firstStageMatchesList">Group Stage</label>
+                    <select id="firstStageMatchesList"
+                            class="form-select"
+                            ng-options="match as match.label for match in data.matches.firstStage track by match.matchId"
+                            ng-model="selected.match"
+                            ng-change="onMatchSelected('first')">
+                        <option value="">-- Choose a match --</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold small text-uppercase text-muted"
+                           for="secondStageMatchesList">Knockout Stage</label>
+                    <select id="secondStageMatchesList"
+                            class="form-select"
+                            ng-options="match as match.label for match in data.matches.secondStage | filter:{ready:true} track by match.matchId"
+                            ng-model="selected.match"
+                            ng-change="onMatchSelected('second')">
+                        <option value="">-- Choose a match --</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bet form card -->
+    <div class="card bet-form-card" ng-if="selected.match">
+        <div class="card-header bet-form-header d-flex align-items-center justify-content-between">
+            <span><i class="bi bi-trophy me-2"></i>Match #{{selected.match.matchId}}</span>
+            <span class="badge bg-light text-dark">
+                <i class="bi bi-clock me-1"></i>{{selected.match.kickoff | date : 'MMM d, HH:mm'}}
+            </span>
+        </div>
+
+        <div class="card-body">
+            <form data-ng-submit="postUserBet()">
+
+                <!-- Match started warning -->
+                <div class="alert alert-warning d-flex align-items-center small mb-3" ng-show="selected.match.started">
+                    <i class="bi bi-lock-fill me-2"></i>
+                    This match has started. Bets are locked.
+                </div>
+
+                <!-- Score input area -->
+                <div class="bet-score-row mb-4">
+                    <div class="bet-team-side text-end">
+                        <team data="selected.match.homeTeam"></team>
+                    </div>
+                    <div class="bet-score-inputs">
+                        <input type="number" min="0" max="20"
+                               class="form-control form-control-lg bet-score-input"
+                               id="homeTeamGoals"
+                               placeholder="-"
+                               ng-model="userBet.homeTeamGoals"
+                               data-ng-disabled="selected.match.started">
+                        <span class="bet-score-separator">:</span>
+                        <input type="number" min="0" max="20"
+                               class="form-control form-control-lg bet-score-input"
+                               id="awayTeamGoals"
+                               placeholder="-"
+                               ng-model="userBet.awayTeamGoals"
+                               data-ng-disabled="selected.match.started">
+                    </div>
+                    <div class="bet-team-side text-start">
+                        <team data="selected.match.awayTeam"></team>
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label class="control-label col-sm-2" for="secondStageMatchesList">Second Stage Matches:</label>
-                    <div class="col-sm-10">
-                        <select id="secondStageMatchesList"
-                                class="form-control"
-                                ng-options="match as match.label for match in data.matches.secondStage | filter:{ready:true} track by match.matchId"
-                                ng-model="selected.match"
-                                ng-change="onMatchSelected('second')"></select>
+                <!-- Bet Statistics -->
+                <div class="bet-stats-card mb-4" ng-show="infoPopover.betsOnHomeTeamPercent != null">
+                    <div class="d-flex align-items-center mb-2">
+                        <i class="bi bi-bar-chart-fill text-muted me-2"></i>
+                        <span class="fw-semibold small text-uppercase text-muted">Bet Statistics</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-1 small">
+                        <span>{{selected.match.homeTeam.name | capitalize}}</span>
+                        <span class="text-muted">Draw</span>
+                        <span>{{selected.match.awayTeam.name | capitalize}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="fw-bold bet-stat-home">{{infoPopover.betsOnHomeTeamPercent}}%</span>
+                        <span class="fw-bold bet-stat-draw">{{infoPopover.betsOnDrawPercent}}%</span>
+                        <span class="fw-bold bet-stat-away">{{infoPopover.betsOnAwayTeamPercent}}%</span>
+                    </div>
+                    <div class="bet-stat-bar">
+                        <div class="bet-stat-bar-home" style="width: {{infoPopover.betsOnHomeTeamPercent}}%"></div>
+                        <div class="bet-stat-bar-draw" style="width: {{infoPopover.betsOnDrawPercent}}%"></div>
+                        <div class="bet-stat-bar-away" style="width: {{infoPopover.betsOnAwayTeamPercent}}%"></div>
                     </div>
                 </div>
+
+                <!-- Actions -->
+                <div class="d-flex align-items-center justify-content-between">
+                    <div class="btn-group">
+                        <button type="submit" class="btn btn-primary"
+                                data-ng-disabled="selected.match.started">
+                            <i class="bi bi-check-lg me-1"></i>Save Bet
+                        </button>
+                        <button type="button" class="btn btn-outline-danger"
+                                data-ng-disabled="selected.match.started"
+                                data-ng-click="confirmDeleteBet()">
+                            <i class="bi bi-trash me-1"></i>Delete
+                        </button>
+                    </div>
+                    <div class="d-flex align-items-center gap-1">
+                        <button type="button" class="btn btn-sm btn-outline-secondary"
+                                data-ng-click="scrollMatches('prev')" title="Previous match">
+                            <i class="bi bi-chevron-left"></i>
+                        </button>
+                        <span class="text-muted small px-1">{{selected.match.matchId}}</span>
+                        <button type="button" class="btn btn-sm btn-outline-secondary"
+                                data-ng-click="scrollMatches('next')" title="Next match">
+                            <i class="bi bi-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+
             </form>
         </div>
     </div>
 
-    <div class="panel panel-primary" ng-if="selected.match">
-        <div class="panel-heading">Result Form</div>
-        <div class="panel-body">
-
-            <form class="form-horizontal" data-ng-submit="postUserBet()" >
-
-                <div class="form-group">
-                    <label class="control-label col-sm-2">Kickoff:</label>
-                    <div class="col-sm-4">
-                        <p class="form-control-static">{{selected.match.kickoff | date : 'MMM d, HH:mm' }}</p>
-                    </div>
-                </div>
-
-
-
-                <div class="form-group">
-                    <label class="control-label col-sm-2">Bet Statistics:</label>
-                    <div class="col-sm-10">
-                        <table class="ss-wp-tnp">
-                        <tbody>
-                        <tr class="ss-wp-tnr">
-                            <td class="ss-wp-ft">{{selected.match.homeTeam.name}}</td>
-                            <td class="ss-wp-d">Draw</td>
-                            <td class="ss-wp-st">{{selected.match.awayTeam.name}}</td>
-                        </tr>
-                        <tr class="ss-wp-tp">
-                            <td class="ss-wp-ft" style="color:#4285F4">{{infoPopover.betsOnHomeTeamPercent}}%</td>
-                            <td class="ss-wp-dp">{{infoPopover.betsOnDrawPercent}}%</td>
-                            <td class="ss-wp-st" style="color:#216A3C">{{infoPopover.betsOnAwayTeamPercent}}%</td>
-                        </tr>
-                        </tbody>
-                        </table>
-
-                        <table class="ss-wp-b">
-                        <tbody>
-                            <tr class="ss-wp-br">
-                                <td class="ss-wp-bc" style="background-color:#4285F4" width="{{infoPopover.betsOnHomeTeamPercent}}%"></td>
-                                <td class="ss-wp-bc" style="background-color:#D6D6D6" width="{{infoPopover.betsOnDrawPercent}}%"></td>
-                                <td class="ss-wp-bc" style="background-color:#216A3C" width="{{infoPopover.betsOnAwayTeamPercent}}%"></td>
-                            </tr>
-                        </tbody>
-                        </table>
-                    </div>
-                </div>
-
-
-                <div class="form-group">
-                    <label class="control-label col-sm-2">Match:</label>
-                    <div class="col-sm-10">
-                        <table class="table table-bordered table-striped">
-                        <tbody>
-                        <tr>
-                            <td class="col-md-4"><team data="selected.match.homeTeam"></team></td>
-
-<!--                            <td class="col-md-1 text-center">-->
-<!--                                <button type="button"-->
-<!--                                        class="btn btn-default"-->
-<!--                                        uib-popover-template="infoPopover.templateUrl"-->
-<!--                                        popover-title="{{infoPopover.title}}">-->
-<!--                                    <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>-->
-<!--                                </button>-->
-<!--                            </td>-->
-                            <td class="col-md-2 text-center">
-                                <input type="number"
-                                       min="0" max="20"
-                                       class="form-control"
-                                       id="homeTeamGoals"
-                                       placeholder="Enter score"
-                                       ng-model="userBet.homeTeamGoals"
-                                       data-ng-disabled="selected.match.started"
-                                       size="3">
-                            </td>
-<!--                            <td class="col-md-1 text-center">:</td>-->
-                            <td class="col-md-2 text-center">
-                                <input type="number"
-                                       min="0" max="20"
-                                       class="form-control"
-                                       id="awayTeamGoals"
-                                       placeholder="Enter score"
-                                       ng-model="userBet.awayTeamGoals"
-                                       data-ng-disabled="selected.match.started"
-                                       size="3">
-                            </td>
-                            <td class="col-md-4"><team data="selected.match.awayTeam"></team></td>
-                        </tr>
-                        </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <div class="col-sm-offset-2 col-sm-4">
-                        <p class="form-control-static">
-                            <a role="button" data-ng-click="scrollMatches('prev')">Previous Match</a>
-                            {{selected.match.matchId}}
-                            <a role="button" data-ng-click="scrollMatches('next')">Next Match</a>
-                        </p>
-                    </div>
-                </div>
-
-
-                <div class="form-group">
-                    <div class="col-sm-offset-2 col-sm-10">
-                        <button type="submit" class="btn btn-primary" data-ng-disabled="selected.match.started">Submit</button>
-                        <button type="button" class="btn btn-danger" data-ng-disabled="selected.match.started" data-ng-click="confirmDeleteBet()">Delete</button>
-                    </div>
-
-                </div>
-            </form>
-
-        </div>
+    <!-- Empty state -->
+    <div class="text-center text-muted py-5" ng-if="!selected.match">
+        <i class="bi bi-hand-index-thumb" style="font-size: 2.5rem;"></i>
+        <p class="mt-2">Select a match above to place your bet</p>
     </div>
 
+    <!-- Confirm delete modal -->
     <script type="text/ng-template" id="confirmModalContent.html">
         <div class="modal-header">
-            <h3 class="modal-title" id="modal-title">Confirm Delete</h3>
+            <h5 class="modal-title" id="modal-title">
+                <i class="bi bi-exclamation-triangle text-warning me-2"></i>Confirm Delete
+            </h5>
         </div>
         <div class="modal-body" id="modal-body">
-           Are you sure you want to delete your Bet?
+            Are you sure you want to delete your bet?
         </div>
         <div class="modal-footer">
-            <button class="btn btn-primary" type="button" ng-click="deleteBet()">OK</button>
-            <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+            <button class="btn btn-outline-secondary" type="button" ng-click="cancel()">Cancel</button>
+            <button class="btn btn-danger" type="button" ng-click="deleteBet()">
+                <i class="bi bi-trash me-1"></i>Delete
+            </button>
         </div>
-    </script>
-
-    <script type="text/ng-template" id="infoPopoverTemplate.html">
-        <table class="table table-bordered table-striped">
-            <tr>
-                <th class="text-center">1</th>
-                <th class="text-center">X</th>
-                <th class="text-center">2</th>
-            </tr>
-            <tr>
-                <td>{{infoPopover.betsOnHomeTeamPercent}}%</td>
-                <td>{{infoPopover.betsOnDrawPercent}}%</td>
-                <td>{{infoPopover.betsOnAwayTeamPercent}}%</td>
-            </tr>
-        </table>
     </script>
 
 </section>

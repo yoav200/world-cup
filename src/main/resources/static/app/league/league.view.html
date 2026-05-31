@@ -1,0 +1,108 @@
+<section id="leagues">
+
+    <h2 class="mb-4">My Leagues</h2>
+
+    <div class="row g-4">
+
+        <!-- Left: League list + create -->
+        <div class="col-md-4">
+
+            <!-- Create new -->
+            <div class="card league-card mb-3" ng-show="canCreate">
+                <div class="card-body">
+                    <h6 class="card-title mb-2">Create League</h6>
+                    <form ng-submit="createLeague()" class="d-flex gap-2">
+                        <input type="text" class="form-control form-control-sm"
+                               ng-model="newLeagueName" placeholder="League name"
+                               maxlength="100" required>
+                        <button type="submit" class="btn btn-primary btn-sm text-nowrap">
+                            <i class="bi bi-plus-lg"></i> Create
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="alert alert-info small" ng-hide="canCreate">
+                <i class="bi bi-info-circle"></i> You've reached the limit of 2 leagues.
+            </div>
+
+            <!-- League list -->
+            <div class="list-group">
+                <a role="button" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
+                   ng-repeat="league in leagues"
+                   ng-click="selectLeague(league)"
+                   ng-class="{'active': selectedLeague.id === league.id}">
+                    <span><i class="bi bi-people-fill me-2"></i>{{league.name}}</span>
+                    <span class="badge bg-primary rounded-pill" ng-show="selectedLeague.id === league.id">
+                        <i class="bi bi-chevron-right"></i>
+                    </span>
+                </a>
+            </div>
+
+            <p class="text-muted small mt-2" ng-hide="leagues.length">
+                You haven't created any leagues yet.
+            </p>
+        </div>
+
+        <!-- Right: Selected league details -->
+        <div class="col-md-8" ng-show="selectedLeague">
+
+            <div class="card league-card">
+                <div class="card-header league-card-header d-flex align-items-center justify-content-between">
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="bi bi-people-fill"></i>
+                        <span>{{selectedLeague.name}}</span>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-sm btn-outline-light" ng-click="deleteLeague()"
+                                title="Delete league">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <!-- Add member -->
+                    <h6 class="mb-2">Add Member</h6>
+                    <form ng-submit="addMember()" class="d-flex gap-2 mb-4">
+                        <input type="email" class="form-control form-control-sm"
+                               ng-model="newMemberEmail" placeholder="Email address" required>
+                        <button type="submit" class="btn btn-outline-primary btn-sm text-nowrap">
+                            <i class="bi bi-person-plus"></i> Add
+                        </button>
+                    </form>
+
+                    <!-- Members list -->
+                    <h6 class="mb-2">Members <span class="badge bg-secondary">{{members.length}}</span></h6>
+                    <div class="list-group">
+                        <div class="list-group-item d-flex justify-content-between align-items-center"
+                             ng-repeat="m in members">
+                            <div>
+                                <span ng-if="m.account">{{m.account.fullName}}</span>
+                                <span ng-if="!m.account" class="text-muted fst-italic">{{m.email}}</span>
+                                <span ng-if="!m.account" class="badge bg-warning text-dark ms-1">Pending</span>
+                                <span ng-if="isCreator(m)" class="badge bg-info ms-1">Creator</span>
+                            </div>
+                            <button class="btn btn-sm btn-outline-danger"
+                                    ng-click="removeMember(m)"
+                                    ng-hide="isCreator(m)"
+                                    title="Remove member">
+                                <i class="bi bi-x-lg"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="col-md-8" ng-hide="selectedLeague">
+            <div class="text-center text-muted py-5">
+                <i class="bi bi-arrow-left-circle" style="font-size: 2rem;"></i>
+                <p class="mt-2">Select a league to manage its members</p>
+            </div>
+        </div>
+
+    </div>
+
+</section>

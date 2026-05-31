@@ -1,67 +1,75 @@
 <section id="groups">
-    <div class="jumbotron">
-        <h2>Groups
-            <small>
-                <br><a role="button" ng-click="scrollTo('group-id-'+group.groupId)" ng-repeat="group in groups"> {{group.groupId}} </a>
-            </small>
-        </h2>
 
-        <div id="group-id-{{group.groupId}}" class="panel panel-primary" ng-repeat="group in groups" ui-view>
+    <!-- Quick-scroll nav -->
+    <div class="d-flex flex-wrap align-items-center gap-2 mb-4">
+        <h2 class="mb-0">Groups</h2>
+        <div class="d-flex flex-wrap gap-1 ms-3">
+            <a role="button" class="btn btn-outline-primary btn-sm"
+               ng-click="scrollTo('group-id-'+group.groupId)"
+               ng-repeat="group in groups">{{group.groupId}}</a>
+        </div>
+    </div>
 
-            <div class="panel-heading" >Group {{group.groupId}}</div>
+    <!-- Group cards -->
+    <div id="group-id-{{group.groupId}}" class="card group-card mb-4" ng-repeat="group in groups">
 
-            <table class="table table-hover table-condensed ">
+        <div class="card-header group-card-header">
+            <i class="bi bi-people-fill me-1"></i> Group {{group.groupId}}
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-hover table-sm align-middle mb-0">
                 <thead>
-                <tr>
-                    <th style="width: 3px;"></th>
+                <tr class="table-light">
+                    <th class="group-qualify-col"></th>
                     <th scope="col">Team</th>
-                    <th scope="col" title="Game Played">P</th>
-                    <th scope="col" title="Games Won">W</th>
-                    <th scope="col" title="Draw">D</th>
-                    <th scope="col" title="Games Lost">L</th>
-                    <th scope="col" title="Goals For">GF</th>
-                    <th scope="col" title="Goals Against">GA</th>
-                    <th scope="col" title="Goals Difference">GD</th>
-                    <th scope="col" title="Points">Pts</th>
+                    <th scope="col" class="text-center" title="Games Played">P</th>
+                    <th scope="col" class="text-center" title="Games Won">W</th>
+                    <th scope="col" class="text-center" title="Draw">D</th>
+                    <th scope="col" class="text-center" title="Games Lost">L</th>
+                    <th scope="col" class="text-center" title="Goals For">GF</th>
+                    <th scope="col" class="text-center" title="Goals Against">GA</th>
+                    <th scope="col" class="text-center" title="Goal Difference">GD</th>
+                    <th scope="col" class="text-center" title="Points"><strong>Pts</strong></th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr ng-repeat-start="teamInGroup in prepareTeamsInGroup(group.teamsInGroup)"
-                    data-toggle="collapse"
-                    data-target="#team-{{teamInGroup.team.code}}-matches" style="cursor: pointer;">
-                    <td style="padding: 0px;">
-                        <div ng-if="$index == 0 || $index == 1" style="width: 3px; height:45px; background-color:#4285F4"></div>
+                    class="group-team-row"
+                    ng-class="{'group-qualify': $index < 2}"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#team-{{teamInGroup.team.code}}-matches">
+                    <td class="group-qualify-col">
+                        <div ng-if="$index < 2" class="group-qualify-bar"></div>
                     </td>
                     <td><team data="teamInGroup.team"/></td>
-                    <td>{{teamInGroup.gamesPlayed }}</td>
-                    <td>{{teamInGroup.gamesWon }}</td>
-                    <td>{{teamInGroup.gamesTied }}</td>
-                    <td>{{teamInGroup.gamesLose }}</td>
-                    <td>{{teamInGroup.goalsScored }}</td>
-                    <td>{{teamInGroup.goalsReceived }}</td>
-                    <td>{{(teamInGroup.goalsScored - teamInGroup.goalsReceived)}}</td>
-                    <td>{{teamInGroup.points | number}}</td>
+                    <td class="text-center">{{teamInGroup.gamesPlayed}}</td>
+                    <td class="text-center">{{teamInGroup.gamesWon}}</td>
+                    <td class="text-center">{{teamInGroup.gamesTied}}</td>
+                    <td class="text-center">{{teamInGroup.gamesLose}}</td>
+                    <td class="text-center">{{teamInGroup.goalsScored}}</td>
+                    <td class="text-center">{{teamInGroup.goalsReceived}}</td>
+                    <td class="text-center">{{(teamInGroup.goalsScored - teamInGroup.goalsReceived)}}</td>
+                    <td class="text-center"><strong>{{teamInGroup.points | number}}</strong></td>
                 </tr>
-                <tr ng-repeat-end>
-                    <td colspan="10" style="padding: 0px;">
+                <tr ng-repeat-end class="group-matches-row">
+                    <td colspan="10" class="p-0 border-0">
                         <div id="team-{{teamInGroup.team.code}}-matches" class="collapse">
-                            <matches data="teamInGroup.matches"></matches>
+                            <div class="p-3 bg-light">
+                                <matches data="teamInGroup.matches"></matches>
+                            </div>
                         </div>
                     </td>
                 </tr>
                 </tbody>
             </table>
         </div>
-
-        <div class="panel panel-default">
-            <div class="panel-body">
-                <div  style="padding:10px; height: 44px; border-left: 3px solid #4285F4;">Advance to Next Round</div>
-            </div>
-        </div>
-
     </div>
+
+    <!-- Legend -->
+    <div class="d-flex align-items-center text-muted small mt-2 mb-4">
+        <div class="group-qualify-bar me-2" style="height: 16px;"></div>
+        Advances to next round
+    </div>
+
 </section>
-
-
-
-

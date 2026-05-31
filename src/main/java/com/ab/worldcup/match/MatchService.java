@@ -72,7 +72,7 @@ public class MatchService {
         if (match.getStageId().equals(Stage.FINAL) || match.getStageId().equals(Stage.THIRD_PLACE)) {
             Qualifier qualifier = Qualifier.builder()
                     .team(match.getResult().getKnockoutQualifier())
-                    .stageId(match.getStageId().getNextStage().get(0))
+                    .stageId(match.getStageId().getNextStage().getFirst())
                     .knockoutTeamCode(match.getStageId().equals(Stage.FINAL) ? KnockoutTeamCode.WINNER_FINAL
                             : KnockoutTeamCode.WINNER_THIRD_PLACE)
                     .build();
@@ -117,7 +117,7 @@ public class MatchService {
     public MatchesData getMatchesData(List<? extends ResultInterface> allResults) {
         // filter match results only
         List<? extends ResultInterface> matchResults = allResults.stream().filter(r -> r.getMatchId() != null)
-                .collect(Collectors.toList());
+                .toList();
         List<GroupMatch> allGroupMatches = addResultsToMatches(groupService.getAllGroupMatches(), matchResults);
         allGroupMatches.sort(Comparator.comparing(o -> o.matchId));
 

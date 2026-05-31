@@ -8,7 +8,6 @@ var app = angular.module('worldcup', [
     'ui.router.stateHelper',
     'ui.bootstrap',
     'ngCookies',
-    'xeditable',
     'ngResource',
     'ngAnimate',
     'ngSanitize',
@@ -38,9 +37,10 @@ app.config(function ($urlRouterProvider, $httpProvider, growlProvider) {
         return {
             'responseError': function(errorResponse) {
                 switch (errorResponse.status) {
+                    case 401:
                     case 403:
                         $timeout(function () {
-                            $window.location = '/';
+                            $window.location = '/oauth2/authorization/bny';
                         }, 500);
                         break;
                 }
@@ -77,24 +77,6 @@ app.config(function ($urlRouterProvider, $httpProvider, growlProvider) {
                 templateUrl: 'app/rules/rules.view.html'
             }
         }
-    }).state('join', {
-        parent: 'site',
-        url: "/join/:token",
-        views: {
-            'content@': {
-                templateUrl: 'app/register/register.view.html',
-                controller: 'registerCtrl'
-            }
-        }
-    }).state('email-validation', {
-          parent: 'site',
-          url: "/email-validation",
-          views: {
-              'content@': {
-                  templateUrl: 'app/register/email-validation.view.html',
-                  controller: 'registerCtrl'
-              }
-          }
     }).state('login', {
         parent: 'site',
         url: "/login/:token",
@@ -207,6 +189,19 @@ app.config(function ($urlRouterProvider, $httpProvider, growlProvider) {
         }
     });
 
+    // Leagues
+    $stateProvider.state('leagues', {
+        parent: 'site',
+        permissions: ['ROLE_USER'],
+        url: '/leagues',
+        views: {
+            'content@': {
+                templateUrl: 'app/league/league.view.html',
+                controller: 'leagueCtrl'
+            }
+        }
+    });
+
     // Accounts
     $stateProvider.state('accounts', {
         parent: 'site',
@@ -238,12 +233,11 @@ app.config(function ($urlRouterProvider, $httpProvider, growlProvider) {
 
     $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
         if (!Auth.checkPermissionForView(toState)) {
-            Auth.setStateUrl(toState.name);
             event.preventDefault();
-            $state.go('login');
+            Auth.login();
         }
     });
-}).run(function($rootScope, $location, $anchorScroll, $document, editableOptions) {
+}).run(function($rootScope, $location, $anchorScroll, $document) {
 
     $rootScope.scrollTo = function (id) {
         $location.hash(id);
@@ -251,14 +245,11 @@ app.config(function ($urlRouterProvider, $httpProvider, growlProvider) {
         $anchorScroll();
     };
 
-    // inline edit style
-    // bootstrap3 theme. Can be also 'bs2', 'default'
-    editableOptions.theme = 'bs3';
-
-
-    $document.on('click','.navbar-collapse.in',function(e) {
+    // BS5: auto-close navbar on link click (mobile)
+    $document.on('click','.navbar-collapse.show',function(e) {
         if( $(e.target).is('a:not(".dropdown-toggle")') ) {
-            $(this).collapse('hide');
+            var bsCollapse = bootstrap.Collapse.getInstance(this) || new bootstrap.Collapse(this);
+            bsCollapse.hide();
         }
     });
 

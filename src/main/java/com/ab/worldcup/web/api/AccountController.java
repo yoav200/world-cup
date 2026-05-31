@@ -2,10 +2,7 @@ package com.ab.worldcup.web.api;
 
 import com.ab.worldcup.account.Account;
 import com.ab.worldcup.account.AccountService;
-import com.ab.worldcup.registration.RegistrationRequest;
-import com.ab.worldcup.web.components.BadRequestException;
 import java.util.List;
-import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -16,7 +13,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -43,17 +39,6 @@ public class AccountController {
             }
         }
         return account;
-    }
-
-    @PreAuthorize("hasRole('ROLE_USER')")
-    @PutMapping
-    public Account updateAccount(@Valid @RequestBody RegistrationRequest request) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.getName().equals(request.getEmail())) {
-            Account account = accountService.findAccountByEmail(authentication.getName());
-            return accountService.updateAccountDetails(account, request);
-        }
-        throw new BadRequestException("Unauthorized access");
     }
 
     // ~ ===============================  ADMIN ONLY ==========================

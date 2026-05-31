@@ -1,13 +1,11 @@
 <section id="games">
-    <div>
-        <h1>Matches <small>{{view.section}}</small></h1>
+    <h2 class="mb-3"><i class="bi bi-calendar-event me-2"></i>Matches</h2>
 
-        <ul class="nav nav-tabs nav-justified">
-            <li role="presentation" ui-sref-active="active"><a ui-sref="games.firststage">First Stage</a></li>
-            <li role="presentation" ui-sref-active="active"><a ui-sref="games.secondstage">Second Stage</a></li>
-        </ul>
-    </div>
+    <ul class="view-tabs">
+        <li class="nav-item" ui-sref-active="active"><a class="nav-link" ui-sref="games.firststage"><i class="bi bi-list-ul me-1"></i>Group Stage</a></li>
+        <li class="nav-item" ui-sref-active="active"><a class="nav-link" ui-sref="games.secondstage"><i class="bi bi-diagram-3 me-1"></i>Knockout</a></li>
+    </ul>
 
-    <div class="panel" ui-view></div>
+    <div ui-view></div>
 
 </section>

@@ -1,55 +1,32 @@
-<div class="panel panel-default" ng-repeat="(confederation,teams) in confederation">
+<div class="card confederation-card mb-4" ng-repeat="(confederation,teams) in confederation">
 
-  <div class="container">
-    <div class="row">
-
-      <div class="media">
-        <div class="media-left media-middle">
-          <a href="#">
-            <img class="media-object" ng-src="/images/confederations/{{confederation | spaceToUnderscore}}.jpg"/>
-          </a>
+    <div class="card-header confederation-header">
+        <div class="d-flex align-items-center gap-3">
+            <img class="confederation-logo rounded-circle"
+                 ng-src="/images/confederations/{{confederation | spaceToUnderscore}}.jpg"
+                 alt="{{confederation | underscoreToSpace | capitalize}}"/>
+            <div class="flex-grow-1">
+                <h5 class="mb-0 text-white">{{confederation | underscoreToSpace | capitalize}}</h5>
+            </div>
+            <span class="badge bg-white text-dark">{{teams.length}} teams</span>
         </div>
-        <div class="media-body">
-          <h2 class="media-heading">{{confederation | underscoreToSpace | capitalize}}</h2>
+    </div>
+
+    <div class="card-body p-3">
+        <div class="row g-2">
+            <div class="col-lg-4 col-md-6" ng-repeat="team in teams | orderBy:propertyName:reverse">
+                <div class="d-flex align-items-center gap-2 confederation-team-row p-2 rounded">
+                    <span class="fi fi-{{team.isoCode}} team-tile-flag"></span>
+                    <div class="flex-grow-1">
+                        <span class="fw-medium">{{team.name | capitalize}}</span>
+                    </div>
+                    <span class="badge bg-light text-dark" title="FIFA Ranking">#{{team.fifaRanking}}</span>
+                    <span class="text-muted small" ng-show="team.titles > 0" title="World Cup titles">
+                        <i class="bi bi-trophy-fill text-warning"></i> {{team.titles}}
+                    </span>
+                </div>
+            </div>
         </div>
-      </div>
-
     </div>
-    <div class="row">
-
-      <table class="table table-condensed">
-        <thead>
-        <tr>
-          <th scope="col">Team</th>
-          <th scope="col">
-            <button class="btn btn-link" ng-click="sortBy('fifaRanking')">Ranking
-              <span class="sortorder" ng-show="propertyName === 'fifaRanking'" ng-class="{reverse: reverse}"></span>
-            </button>
-          </th>
-          <th scope="col">
-            <button class="btn btn-link" ng-click="sortBy('titles')">Titles
-              <span class="sortorder" ng-show="propertyName === 'titles'" ng-class="{reverse: reverse}"></span>
-            </button>
-          </th>
-          <th scope="col">
-            <button class="btn btn-link" ng-click="sortBy('appearances')">Appearances
-              <span class="sortorder" ng-show="propertyName === 'appearances'" ng-class="{reverse: reverse}"></span>
-            </button>
-          </th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr ng-repeat="team in teams | orderBy:propertyName:reverse">
-          <td><team data="team"/></td>
-          <td>{{team.fifaRanking}}</td>
-          <td>{{team.titles}}</td>
-          <td>{{team.appearances}}</td>
-        </tr>
-        </tbody>
-      </table>
-
-    </div>
-  </div>
-
 
 </div>

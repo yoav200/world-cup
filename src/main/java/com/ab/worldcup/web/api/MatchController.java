@@ -1,5 +1,6 @@
 package com.ab.worldcup.web.api;
 
+import com.ab.worldcup.events.MatchResultEnteredEvent;
 import com.ab.worldcup.group.GroupService;
 import com.ab.worldcup.knockout.KnockoutService;
 import com.ab.worldcup.match.GroupMatch;
@@ -11,11 +12,11 @@ import com.ab.worldcup.results.MatchResult;
 import com.ab.worldcup.results.ResultsService;
 import com.ab.worldcup.web.model.MatchResultData;
 import com.ab.worldcup.web.model.MatchesData;
-import java.time.LocalDateTime;
 import java.util.List;
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.Validator;
 import org.springframework.web.bind.WebDataBinder;
@@ -45,6 +46,9 @@ public class MatchController {
 
     @Autowired
     private RankingService rankingService;
+
+    @Autowired
+    private ApplicationEventPublisher eventPublisher;
 
     @Autowired
     @Qualifier("MatchResultDataValidator")
@@ -84,8 +88,11 @@ public class MatchController {
     public Match updateGroupMatches(@PathVariable Long matchId, @RequestBody @Valid MatchResultData matchResultData) {
         Match match = matchService.updateMatchResult(matchId, matchResultData);
         matchService.onMatchFinish(match);
-        // trigger ranking creation - this is done async
-        rankingService.createRankingAsync(LocalDateTime.now());
+        // trigger event-sourced ranking — scores bets and saves snapshot async
+        rankingService.onMatchResultUpdated(matchId);
+
+        // Publish match result event (coin listener will handle coin logic)
+        eventPublisher.publishEvent(new MatchResultEnteredEvent(matchId, match.getStageId()));
 
         return match;
     }

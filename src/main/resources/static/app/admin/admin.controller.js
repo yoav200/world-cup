@@ -39,8 +39,8 @@ angular.module('worldcup').controller('adminCtrl', function ($rootScope, $scope,
             if($stateParams.matchId) {
                 var match;
                 var stage;
-                if($stateParams.matchId < 49) {
-                    match = selectByMatchId(response.firstStage, $stateParams.matchId);
+                match = selectByMatchId(response.firstStage, $stateParams.matchId);
+                if (match) {
                     stage = 'first';
                 } else {
                     match = selectByMatchId(response.secondStage, $stateParams.matchId);

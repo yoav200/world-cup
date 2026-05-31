@@ -1,31 +1,36 @@
+<div class="row g-3">
+    <div class="col-lg-4 col-md-6" ng-repeat="team in teams | orderBy:propertyName:reverse">
+        <div class="card team-tile h-100">
+            <div class="card-body d-flex align-items-center gap-3 py-2 px-3">
+                <span class="fi fi-{{team.isoCode}} team-tile-flag"></span>
+                <div class="flex-grow-1">
+                    <h6 class="mb-0">{{team.name | capitalize}}</h6>
+                    <small class="text-muted">FIFA #{{team.fifaRanking}}</small>
+                </div>
+                <div class="d-flex gap-3 text-center">
+                    <div class="team-tile-stat">
+                        <div class="team-tile-stat-value">{{team.titles}}</div>
+                        <div class="team-tile-stat-label">Titles</div>
+                    </div>
+                    <div class="team-tile-stat">
+                        <div class="team-tile-stat-value">{{team.appearances}}</div>
+                        <div class="team-tile-stat-label">Apps</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-<table class="table table-condensed">
-    <thead>
-    <tr>
-        <th scope="col">Team</th>
-        <th scope="col">
-            <button class="btn btn-link" ng-click="sortBy('fifaRanking')">Ranking
-                <span class="sortorder" ng-show="propertyName === 'fifaRanking'" ng-class="{reverse: reverse}"></span>
-            </button>
-        </th>
-        <th scope="col">
-            <button class="btn btn-link" ng-click="sortBy('titles')">Titles
-                <span class="sortorder" ng-show="propertyName === 'titles'" ng-class="{reverse: reverse}"></span>
-            </button>
-        </th>
-        <th scope="col">
-            <button class="btn btn-link" ng-click="sortBy('appearances')">Appearances
-                <span class="sortorder" ng-show="propertyName === 'appearances'" ng-class="{reverse: reverse}"></span>
-            </button>
-        </th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr ng-repeat="team in teams | orderBy:propertyName:reverse">
-        <td><team data="team"/></td>
-        <td>{{team.fifaRanking}}</td>
-        <td>{{team.titles}}</td>
-        <td>{{team.appearances}}</td>
-    </tr>
-    </tbody>
-</table>
+<div class="d-flex flex-wrap gap-2 mt-3">
+    <small class="text-muted">Sort by:</small>
+    <a role="button" class="badge"
+       ng-class="propertyName === 'fifaRanking' ? 'bg-primary' : 'bg-light text-dark'"
+       ng-click="sortBy('fifaRanking')">Ranking <span class="sortorder" ng-show="propertyName === 'fifaRanking'" ng-class="{reverse: reverse}"></span></a>
+    <a role="button" class="badge"
+       ng-class="propertyName === 'titles' ? 'bg-primary' : 'bg-light text-dark'"
+       ng-click="sortBy('titles')">Titles <span class="sortorder" ng-show="propertyName === 'titles'" ng-class="{reverse: reverse}"></span></a>
+    <a role="button" class="badge"
+       ng-class="propertyName === 'appearances' ? 'bg-primary' : 'bg-light text-dark'"
+       ng-click="sortBy('appearances')">Appearances <span class="sortorder" ng-show="propertyName === 'appearances'" ng-class="{reverse: reverse}"></span></a>
+</div>

@@ -14,7 +14,6 @@ angular.module('worldcup').factory('Auth', function ($rootScope, $state, $http, 
     var heartBeat = function () {
         $http.post('api/heartbeat', Account).then(function (response) {
             if (!response.data.valid) {
-                //auth.logout();
                 window.location.href = "/#/";
             }
             $timeout(heartBeat, TIMEOUT_MILLIS);
@@ -36,28 +35,25 @@ angular.module('worldcup').factory('Auth', function ($rootScope, $state, $http, 
         $log.info("Initiate authentication");
 
         getAccount().then(function (response) {
-            Account = {
-                authenticate: true,
-                id : response.id,
-                roles: response.roles,
-                displayName: response.fullName,
-                firstName: response.firstName,
-                lastName: response.lastName,
-                email: response.email,
-                imageUrl: response.profileImageUrl,
-                provider: undefined
-            };
+            if (response) {
+                Account = {
+                    authenticate: true,
+                    id: response.id,
+                    roles: response.roles,
+                    displayName: response.fullName,
+                    firstName: response.firstName,
+                    lastName: response.lastName,
+                    email: response.email,
+                    imageUrl: response.profileImageUrl
+                };
 
-            if (auth.isLoggedIn()) {
-                $rootScope.Account = Account;
+                if (auth.isLoggedIn()) {
+                    $rootScope.Account = Account;
+                }
             }
-
-            var stateName = $cookies.get("state_name");
-            if(stateName) {
-                $log.info("found state to goto", stateName);
-                $cookies.remove("state_name");
-                //$state.go(stateName)
-            }
+        }, function () {
+            // Not authenticated - user will need to click Login
+            $log.info("User not authenticated");
         });
         // start polling
         heartBeat();
@@ -98,10 +94,9 @@ angular.module('worldcup').factory('Auth', function ($rootScope, $state, $http, 
         return (Account && Account.roles && Account.roles.length > 0);
     };
 
-//    auth.socialLogin = function (provider) {
-//        console.log(provider);
-//        $state.go('login', {'provider': provider, view : callbackState});
-//    };
+    auth.login = function () {
+        window.location.href = '/oauth2/authorization/bny';
+    };
 
     auth.currentAccount = function () {
         return Account;
